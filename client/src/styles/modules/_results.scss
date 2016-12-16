@@ -1,0 +1,111 @@
+.mapForm{
+	float:left;
+	position: relative;
+	margin-top: 30px;
+	margin-left: 850px;
+	border-left-style: solid;
+	border-width: 2px;
+	padding-left: 120pt;
+	padding-bottom: 20pt;
+}
+.selections{
+	position: absolute;
+	margin-top: 60px;
+	margin-left: 100px;
+	width: 580px;
+}
+.img{
+	float: left;
+	padding-top: 30pt;
+	padding-left: 30pt;
+	margin-right: 30px;
+	width: 35%;
+	height: 35%;
+
+}
+.location{
+	text-align: left;
+	background-color: #E9E8DC;
+	padding-top: 30pt;
+	padding-bottom: 80pt;
+	padding-right: 40pt;
+	padding-left: 250pt;
+	margin-bottom: 50px;
+	
+}
+.restaurantName{
+	font-size: 20pt;
+}
+.selectionH{
+    color: #FFFFCC;
+	background-color: #404040;
+	padding-right: 20pt;
+	padding-left: 10pt;
+	text-align: left;
+	margin-bottom: -5px;
+	padding-top: 4pt;
+	padding-bottom: 7pt;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+}
+.headerOne{
+	background-color: #F56B66;
+	margin-right: -30px;
+	margin-left: -30px;
+	padding-left: 110px;
+	padding-top: 10pt;
+	padding-bottom: 10pt;
+}
+.header3{
+	margin-top: 50px;
+	font-size: 17pt;
+}
+.subhead{
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+.step3{
+	background-image: url("http://erratique.ch/software/vg/doc/doc-gray-circle.png");
+	display: inline-block;
+	height: 35px;
+	width: 35px;
+	margin-top: 10px;
+	margin-left: 3px;
+	margin-right: 8px;
+	margin-bottom: -20px;
+	text-align: center;
+	background-size: 35px 35px;
+	background-repeat: no-repeat;
+	color: white;
+	
+}
+.address{
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+iframe{
+	margin-top: 5px;
+	margin-left: 40px;
+}
+.twilioForm{
+	margin-top: 30px;
+	
+}
+.twilioInput{
+	height: 25px;
+	width: 250px;
+	padding: 12px 20px;
+	margin-bottom: 10px;
+}
+.twilioButton{
+	background-color: #95DFFA;
+	margin-left: 240px;
+	margin-bottom: 20px;
+	border-radius: 5px;
+	padding: 6px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
