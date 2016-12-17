@@ -4,17 +4,16 @@ const Sequelize = require('sequelize');
  * Define paths to each model
  */
 const modelPaths = [
-  // __dirname + '/../db/booking/BookingModel.js',
-  // __dirname + '/../db/category/CategoryModel.js',
-  // __dirname + '/../db/lesson/LessonModel.js',
-  // __dirname + '/../db/rating/RatingModel.js',
-  // __dirname + '/../db/request/RequestModel.js',
-  // __dirname + '/../db/user/UserModel.js'
+  __dirname + '/../db/Library/LibraryModel.js',
+  __dirname + '/../db/User/UserModel.js',
+  __dirname + '/../db/Room/RoomModel.js',
+  __dirname + '/../db/Commend/CommendModel.js'
 ];
 
 const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.DB_PASS, {
   host: process.env.DB_HOST,
   dialect: 'mysql',
+  logging: false,
   pool: {
     max: 5,
     min: 0,
