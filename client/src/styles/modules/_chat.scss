@@ -12,11 +12,20 @@
 	padding: 1rem 0;
 }
 .chat-bubble{
-	padding: .5rem;
-	margin-bottom: 1rem;
+	position: relative;
+	padding: .4rem;
+	margin-bottom: 2rem;
+	margin-left: 1rem;
 	border-radius: 20px;
 	background-color: $white;
 	max-width: 50%;
+}
+.bubble-name{
+	position: absolute;
+	bottom: -17px;
+	    left: 20px;
+	    font-size: .8rem;
+	    color: darken($blue-lt, 23%);
 }
 form{
 	width: 100%;

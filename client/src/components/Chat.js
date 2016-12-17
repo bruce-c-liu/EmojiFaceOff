@@ -2,33 +2,41 @@ import React, { Component } from 'react';
 import io from 'socket.io-client';
 import Bubble from './Bubble';
 
-//const socket = io();
+const socket = io('http://localhost:3001');
 
 class Chat  extends Component{
 constructor(){
 	super()
 	this.state = {
-		msg: '',
-		name: '',
-		chats: ["ONE", "TWO", "THREE"]
+		message: '',
+		user: '',
+		chats: []
 	}
+}
+componentDidMount(){
+	socket.on('message', (message) => {
+		console.log("SOCKET",message )
+		this.setState({chats: [...this.state.chats, message] })									
+	})
 }
 handleNameChange(e){
 	this.setState({
-		name: e.target.value
+		user: e.target.value
 	})
 }
 handleChange(e){
 	this.setState({
-		msg: e.target.value
+		message: e.target.value
 	})
 }
-handleSubmit(e){
+sendMessage(e){
 	e.preventDefault();
+	const userMessage = { user: this.state.user, text: this.state.message }
+	socket.emit('message',  userMessage)
 	this.setState({
-		chats: [...this.state.chats, this.state.msg],
-		msg: '',
-		name: ''
+		chats: [...this.state.chats, userMessage],
+		message: '',
+		user: ''
 	})
 }	
   render () {
@@ -45,9 +53,9 @@ handleSubmit(e){
       		<div className="chat-messages">
       			{chatList}
       		</div>
-      		<form onSubmit={this.handleSubmit.bind(this)}>
-      			<input type="text" value={this.state.name} onChange={this.handleNameChange.bind(this)} placeholder="Name"/>
-      			<input type="text" value={this.state.msg} onChange={this.handleChange.bind(this)} placeholder="Message"/>
+      		<form onSubmit={this.sendMessage.bind(this)}>
+      			<input type="text" value={this.state.user} onChange={this.handleNameChange.bind(this)} placeholder="Name"/>
+      			<input type="text" value={this.state.message} onChange={this.handleChange.bind(this)} placeholder="Message"/>
       			<input type="submit" value="Submit"/>
       		</form>
       </div>

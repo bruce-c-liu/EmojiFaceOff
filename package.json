@@ -4,18 +4,23 @@
   "description": "",
   "main": "server/server.js",
   "dependencies": {
-    "body-parser": "^1.15.2",
     "bluebird": "^3.4.6",
+    "body-parser": "^1.15.2",
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
+    "http": "0.0.0",
     "morgan": "^1.7.0",
     "sequelize": "^3.27.0",
+    "socket.io": "^1.7.2",
     "ws": "^1.1.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "concurrently": "^3.1.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server/server.js"
+    "start": "nodemon server/server.js",
+    "dev": "concurrently  \" nodemon server/server.js \"   \"cd client && npm run watch  \"  "
   },
   "repository": {
     "type": "git",
