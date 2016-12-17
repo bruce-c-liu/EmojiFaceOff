@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3001/",
   "devDependencies": {
     "react-scripts": "0.8.4",
     "concurrently": "^3.1.0",
@@ -9,6 +10,7 @@
     "postcss-cli": "^2.6.0"
   },
   "dependencies": {
+    "auth0-js": "^7.5.0",
     "axios": "^0.15.3",
     "classnames": "^2.2.5",
     "react": "^15.4.1",
@@ -18,6 +20,7 @@
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
+    "socket.io-client": "^1.7.2",
     "velocity-animate": "^1.2.3"
   },
   "scripts": {

@@ -1,0 +1,33 @@
+
+.chat-view{
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	background-color: $blue-lt;
+}
+
+.chat-messages{
+	flex-grow: 1;
+	padding: 1rem 0;
+}
+.chat-bubble{
+	padding: .5rem;
+	margin-bottom: 1rem;
+	border-radius: 20px;
+	background-color: $white;
+	max-width: 50%;
+}
+form{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: .5rem;
+}
+input[type="text"]{
+	height: 30px;
+	flex-grow: 1;
+}
+input[type="submit"]{
+	height: 30px;
+}
