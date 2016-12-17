@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Interweave from 'interweave';
 import classNames from 'classnames';
 
 class Bubble  extends Component{
@@ -9,7 +10,12 @@ class Bubble  extends Component{
   	})
     return (
       <div className={bubbleClass}>
-      		{this.props.deets.text}
+    		{/* {this.props.deets.text} */}
+      		
+      		<Interweave
+      		  tagName="span"
+      		  content={this.props.deets.text}
+      		/>
       		<div className="bubble-name">
       			{this.props.deets.user}
       		</div>
