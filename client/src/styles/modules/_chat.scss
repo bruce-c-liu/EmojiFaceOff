@@ -8,17 +8,30 @@
 }
 
 .chat-messages{
+	display: flex;
+	flex-direction: column;
+	//flex-direction: column-reverse;
 	flex-grow: 1;
 	padding: 1rem 0;
+	overflow-y: auto; 
 }
 .chat-bubble{
 	position: relative;
-	padding: .4rem;
+	min-width: 24%;
+	align-self: flex-end;
+	padding: .4rem .6rem;
 	margin-bottom: 2rem;
-	margin-left: 1rem;
+	margin-right: 1rem;
 	border-radius: 20px;
-	background-color: $white;
+	background-color: $gray-xlt;
 	max-width: 50%;
+
+	&.on-left{
+		align-self: flex-start;
+		margin-left: 1rem;
+		background-color: darken($blue-lt, 23%);
+		color: $white;
+	}
 }
 .bubble-name{
 	position: absolute;
