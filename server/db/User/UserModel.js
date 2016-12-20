@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     banned: {
       type: DataTypes.BOOLEAN,
-      defaultValue: 0
+      defaultValue: false
     },
     auth: {
       type: DataTypes.TEXT
@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     classMethods: {
       associate: (models) => {
         User.belongsTo(models.Room);
+        User.hasMany(models.Library);
       }
     }
   });
