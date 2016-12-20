@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
-import AuthService from '../helpers/AuthService.js'
 
 class Login  extends Component{
-  render () {
 
-  const { auth } = this.props;
-  	
+handleLoginClick(e){
+	this.props.handleAuth(e);
+}	
+  render () {
     return (
-      <div>
-      	<h1>LOGIN</h1>
+      <div className="login-wrap">
+      		<h1 className="brand-title">Emoji Faceoff</h1>
+      		<button className="btn-login" onClick={this.handleLoginClick.bind(this)}>
+      			Start Play!
+      		</button>
       </div>
     )
   }
 }
 export default Login
+

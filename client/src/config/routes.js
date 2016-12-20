@@ -1,39 +1,27 @@
 import React from 'react';
-import { Router, Route} from 'react-router';
-import { Provider } from 'react-redux';
+import { Router, Route, IndexRoute} from 'react-router';
 import  store, { history } from '../store/store.js';
-import AuthService from '../helpers/AuthService.js';
 
 import App   from '../containers/App';
 import Chat   from '../components/Chat';
+import Login   from '../components/Login';
+import ModeSelect   from '../components/ModeSelect';
+import NoWhere   from '../components/ModeSelect';
+import AuthContainer   from '../containers/AuthContainer';
 
-const auth = new AuthService('RDcdqraF0aJI1V2gPOwORf0EtdlSVdPs', 'screengroove.auth0.com');
 
 
-const requireAuth = (nextState, replace) => {
-  if (!auth.loggedIn()) {
-    replace({ pathname: '/login' })
-  }
+export default function getRoutes (checkAuth) {
+  return(
+      <Router history={ history }>       
+          <Route path='/' component={App} />  
+          	<Route path='login'  component={AuthContainer} onEnter={checkAuth} />
+            	<Route path='chat/:roomID' component={Chat}  onEnter={checkAuth} /> 
+            	<Route path='mode'  component={ModeSelect} onEnter={checkAuth} />
+            	<Route path='nowhere' component={NoWhere}  />
+          <Route/>
+      </Router>
+    )
 }
 
-// OnEnter for callback url to parse access_token
-const parseAuthHash = (nextState, replace) => {
-  if (nextState.location.hash) {
-  	console.log("parseAuthHash" )  		
-    auth.parseHash(nextState.location.hash)
-    replace({ pathname: '/admin' })
-  }
-}
 
-
-const routes = (
-<Provider store={store}>	
-	  <Router history={ history }>	     
-		<Route path='/' component={App} />  
-			<Route path='chat/:roomID' component={Chat} />  
-		<Route/>
-	  </Router>
-  </Provider>
-)
-
-export default routes;

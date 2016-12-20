@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import main  from '../styles/main.css';
+import auth from '../helpers/auth.js';
+import { bindActionCreators } from 'redux';
+import * as actionCreators  from  '../actions/actionCreators.js';
+import { browserHistory } from 'react-router';
+import { connect } from 'react-redux';
+import { formatUserInfo } from '../helpers/utils';
+import { firebaseAuth } from '../config/constants.js'
 
 class App extends Component {
+
+  
 
   render() {
   	let children = null;
@@ -18,4 +27,7 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(
+  (state) => ({isAuthed: state.isAuthed, isFetching: state.isFetching}),
+  (dispatch) => bindActionCreators(actionCreators, dispatch)
+)(App)
