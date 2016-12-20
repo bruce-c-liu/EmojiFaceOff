@@ -4,7 +4,10 @@ const redClient = require('../../config/redis.config.js');
 
 module.exports = {
 
-  init: () => {
+  /**
+   * Initialize Prompts with Answers with a prefix "PRA:" in redis
+   */
+  initPRA: () => {
     return LibraryCtrl.allSolutionByLibrary()
     .then(result => {
       return result.map(libEntry => {
@@ -17,11 +20,8 @@ module.exports = {
       });
     })
     .then(result => {
-      // console.log('Lib Entries With Solutions', result);
-      // return redClient.sadd(result[0].prompt, result[0].solutions);
       return Promise.all(result.map(entry => {
-        // console.log('trying to store: ', entry.prompt, entry.solutions);
-        return redClient.sadd(entry.prompt, entry.solutions);
+        return redClient.sadd(`PRA:${entry.prompt}`, entry.solutions);
       }));
     })
     .then(result => {
@@ -32,9 +32,61 @@ module.exports = {
     });
   },
 
+  /**
+   * Initialize levels with Prompts with a prefix L1P
+   * for level 1 prompts in redis
+   */
+  initLTP: () => {
+    return LibraryCtrl.allSolutionByLibrary()
+    .then(result => {
+      let LTPkeys = [
+        [],   // level 0
+        [],   // level 1
+        [],   // level 2
+        [],   // level 3
+        [],   // level 4
+        []    // level 5
+      ];
+      result.map(libEntry => {
+        LTPkeys[libEntry.level].push(libEntry.prompt);
+      });
+      return LTPkeys;
+    })
+    .then(result => {
+      return Promise.all(result.map((prompt, level) => {
+        if (prompt.length) return redClient.sadd(`L${level}P`, prompt);
+      }));
+    })
+    .then(result => {
+      return result;
+    })
+    .catch(err => {
+      throw err;
+    });
+  },
+
+  initAll: () => {
+    return module.exports.initPRA()
+    .then(result => {
+      if (result) return module.exports.initLTP();
+    })
+    .catch(err => {
+      throw err;
+    });
+  },
+
+  /**
+   * Return the prompts for the specified level,
+   * if not level is given then return all prompts
+   */
+  getPrompts: (level) => {
+    if (level) return redClient.smembers(`L${level}P`);
+    else return redClient.sunion(`L0P`, `L1P`, `L2P`, `L3P`, `L4P`, `L5P`);
+  },
+
   checkAnswer: (prompt, answer) => {
     console.log('checking answer....', prompt, answer);
-    return redClient.sismember(prompt, answer)
+    return redClient.sismember(`PRA:${prompt}`, answer)
     .then(result => {
       console.log('checkanswer result', result);
       return result;
