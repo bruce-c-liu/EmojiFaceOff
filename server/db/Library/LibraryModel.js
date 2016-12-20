@@ -4,16 +4,13 @@ module.exports = (sequelize, DataTypes) => {
     prompt: {
       type: DataTypes.TEXT
     },
-    answer: {
-      type: DataTypes.TEXT
-    },
     level: {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
     approved: {
       type: DataTypes.BOOLEAN,
-      defaultValue: 0
+      defaultValue: false
     },
     spareTxt: {
       type: DataTypes.TEXT
@@ -26,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     classMethods: {
       associate: (models) => {
         Library.belongsTo(models.User);
+        Library.hasMany(models.Solution);
       }
     }
   });

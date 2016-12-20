@@ -5,10 +5,12 @@ const redis = require('promise-redis')(resolver => {
   return new Promise(resolver);
 });
 
-const port = process.env.REDIS_PORT || 6379;
-const host = process.env.REDIS_HOST || '127.0.0.1';
+const client = redis.createClient(process.env.REDIS_URL);
 
-const client = redis.createClient(port, host);
+/**
+ * To connect to local redis uncomment the line below
+ */
+// const client = redis.createClient();
 
 client.on('error', err => {
   console.log('uh oh Redis had an error connecting', err);
@@ -19,9 +21,27 @@ client.on('error', err => {
  * Note: uncomment the below if you want the guardian news to be cached
  * this was commented out to prevent hitting the max limit of api calls
  * during testing
- */
+*/
 client.on('connect', () => {
-  console.log(`Redis connection established to ${host}:${port}`);
+  console.log(`Redis connection established to: ${process.env.REDIS_HOST}`);
+  // client.flushall()
+  // .then(result => {
+  //   console.log('hye', result);
+  //   if (result) {
+  //     console.log('Flush finished');
+  //     return require('../db/Redis/RedisController.js').init();
+  //   }
+  // })
+  // .then((result) => {
+  //   console.log('yo', result);
+  //   if (result) return require('../db/Redis/RedisController.js').checkAnswer('buff', '&#x1F4AA;');
+  // })
+  // .then(result => {
+  //   console.log('is a member ', result);
+  // })
+  // .catch(err => {
+  //   throw err;
+  // });
 });
 
 module.exports = client;
