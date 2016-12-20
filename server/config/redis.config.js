@@ -5,12 +5,8 @@ const redis = require('promise-redis')(resolver => {
   return new Promise(resolver);
 });
 
-// const client = redis.createClient(process.env.REDIS_URL);
-
-/**
- * To connect to local redis uncomment the line below
- */
-const client = redis.createClient();
+const client = redis.createClient(process.env.REDIS_URL);
+// const client = redis.createClient();
 
 client.on('error', err => {
   console.log('uh oh Redis had an error connecting', err);
@@ -26,23 +22,22 @@ client.on('connect', () => {
   console.log(`Redis connection established to: ${process.env.REDIS_HOST}`);
   client.flushall()
   .then(result => {
-    console.log('hye', result);
     if (result) {
-      console.log('Flush finished');
-      return require('../db/Redis/RedisController.js').initAll();
+      console.log('Redis data flushed');
+      return require('./helpers.js').initRedis();
     }
   })
   .then((result) => {
-    console.log('yo', result);
-    if (result) return require('../db/Redis/RedisController.js').checkAnswer('buff', '&#x1F4AA;');
+    if (result) console.log('Redis has finished intializing data.');
+    // if (result) return require('../db/Redis/RedisController.js').checkAnswer('buff', '&#x1F4AA;');
   })
-  .then(result => {
-    console.log('is a member ', result);
-    if (result) return require('../db/Redis/RedisController.js').getPrompts(1);
-  })
-  .then(prompts => {
-    if (prompts) console.log('prompts...', prompts);
-  })
+  // .then(result => {
+  //   console.log('is a member ', result);
+  //   if (result) return require('../db/Redis/RedisController.js').getPrompts();
+  // })
+  // .then(prompts => {
+  //   if (prompts) console.log('prompts...', prompts);
+  // })
   .catch(err => {
     throw err;
   });

@@ -11,7 +11,9 @@ const modelPaths = [
   path.join(__dirname, '/../db/Solution/SolutionModel.js')
 ];
 
-const sequelize = new Sequelize(process.env.DB_URL);
+const sequelize = new Sequelize(process.env.DB_URL, {
+  logging: false
+});
 
 /**
  * Verify SQL connection has been established
