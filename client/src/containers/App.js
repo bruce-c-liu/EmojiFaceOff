@@ -6,7 +6,8 @@ import * as actionCreators  from  '../actions/actionCreators.js';
 import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { formatUserInfo } from '../helpers/utils';
-import { firebaseAuth } from '../config/constants.js'
+import { firebaseAuth } from '../config/constants.js';
+import wallpaper from '../assets/wallpaper.png'
 
 class App extends Component {
 
@@ -23,7 +24,7 @@ class App extends Component {
       <div className="wrap">
       		{children}
       </div>
-    );
+    )
   }
 }
 

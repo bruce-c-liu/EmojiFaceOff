@@ -106,6 +106,13 @@ body {
   z-index: 10;
   box-shadow: 0px 3px 14px 7px rgba(0, 0, 0, 0.52); }
 
+.inner-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+
 .btn-select {
   display: block;
   margin-bottom: 2rem;
@@ -131,6 +138,8 @@ body {
   border-radius: 3px;
   font-size: 1rem;
   color: #FFFFFF; }
+  .btn-login.is-full {
+    display: block; }
 
 .btn-round {
   width: 250px;
@@ -299,3 +308,30 @@ input[type="submit"] {
   color: #FF6B6B;
   font-size: 3.5rem;
   text-align: center; }
+
+.avatar {
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center center; }
+  .avatar.is-md {
+    height: 55px;
+    width: 55px; }
+
+.mode-select_wrap {
+  width: 90%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 2rem;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.6);
+  text-align: center; }
+
+.mode-select_vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem auto; }
+  .mode-select_vs .avatar {
+    margin: 0 1rem; }

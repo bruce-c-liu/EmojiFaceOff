@@ -77,7 +77,7 @@ export default function users (state = initialState, action) {
           ...state,
           isFetching: false,
           error: '',
-          [action.uid]: user(state[action.uid], action),
+         profile: user(state[action.uid], action),
         }
     default :
       return state

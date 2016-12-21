@@ -15,6 +15,7 @@
     "classnames": "^2.2.5",
     "firebase": "^3.6.4",
     "interweave": "^2.0.1",
+    "lodash": "^4.17.2",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-redux": "^4.4.5",

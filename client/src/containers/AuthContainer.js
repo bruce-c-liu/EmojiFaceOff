@@ -42,6 +42,9 @@ handleAuth (e) {
     return (
     <div className="login-wrap">
     		<h1 className="brand-title">Emoji Faceoff</h1>
+       
+        <a href="fb-messenger://share/?link=https://emoji-faceoff.firebaseapp.com/&app_id=727951743985191">Send In Messenger</a>
+       <a href="fb-messenger://share/?link=https%3A%2F%2Femoji-faceoff.firebaseapp.com%2F%26app_id%3D727951743985191">Encodedr</a>
     		<button className="btn-login" onClick={this.handleAuth.bind(this)}>
     			Start Play!
     		</button>

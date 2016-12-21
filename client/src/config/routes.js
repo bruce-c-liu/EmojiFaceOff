@@ -16,8 +16,8 @@ export default function getRoutes (checkAuth) {
       <Router history={ history }>       
           <Route path='/' component={App} />  
           	<Route path='login'  component={AuthContainer} onEnter={checkAuth} />
+              <Route path='mode'  component={ModeSelect} onEnter={checkAuth} />
             	<Route path='chat/:roomID' component={Chat}  onEnter={checkAuth} /> 
-            	<Route path='mode'  component={ModeSelect} onEnter={checkAuth} />
             	<Route path='nowhere' component={NoWhere}  />
           <Route/>
       </Router>

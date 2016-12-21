@@ -5,7 +5,6 @@ import Bubble from './Bubble';
 // console.log("IPHONE",iphone )
 	
 const socket = io('http://localhost:3000');
-console.log('socket = ', socket);
 
 class Chat  extends Component{
 constructor(){
