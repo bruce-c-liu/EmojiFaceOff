@@ -8,19 +8,19 @@ const socket = io('http://localhost:3000');
 
 class Chat extends Component {
   constructor () {
-  super();
-  this.state = {
-  message: '',
-  user: '',
-  chats: []
-};
-  socket.on('message', (message) => {
-  this.setState({chats: [...this.state.chats, message] });
-});
-}
+    super();
+    this.state = {
+    message: '',
+    user: '',
+    chats: []
+  };
+    socket.on('message', (message) => {
+    this.setState({chats: [...this.state.chats, message] });
+  });
+  }
   componentDidMount () {
 
-}
+  }
   handleNameChange (e) {
     this.setState({
       user: e.target.value
@@ -33,9 +33,8 @@ class Chat extends Component {
   }
   sendMessage (e) {
     e.preventDefault();
-    const userMessage = { user: this.state.user, text: this.state.message };
+    const userMessage = { user: this.state.user, text: this.state.message, roomId: this.state.roomId};
     socket.emit('message', userMessage);
-    socket.emit('newSinglePlayerRoom');
     this.setState({
       chats: [...this.state.chats, userMessage],
       message: '',
@@ -47,18 +46,17 @@ class Chat extends Component {
   		return <Bubble deets={item} key={i} />;
   	});
   	const roomID = this.props.params.roomID;
-  	console.log(roomID);
 
     return (
       <div className='chat-view'>
-      		      <h3>ROOM ID / SOCKET ROOM ID:     { roomID }</h3>
-      		      <div className='chat-messages'>
-      			      {chatList}
+      		        <h3>ROOM ID / SOCKET ROOM ID:      { roomID }</h3>
+      		        <div className='chat-messages'>
+      			        {chatList}
       		</div>
-      		      <form onSubmit={this.sendMessage.bind(this)}>
-      			      <input type='text' value={this.state.user} onChange={this.handleNameChange.bind(this)} placeholder='Name' />
-      			      <input type='text' value={this.state.message} onChange={this.handleChange.bind(this)} placeholder='Message' />
-      			      <input type='submit' value='Submit' />
+      		        <form onSubmit={this.sendMessage.bind(this)}>
+      			        <input type='text' value={this.state.user} onChange={this.handleNameChange.bind(this)} placeholder='Name' />
+      			        <input type='text' value={this.state.message} onChange={this.handleChange.bind(this)} placeholder='Message' />
+      			        <input type='submit' value='Submit' />
       		</form>
       </div>
     );

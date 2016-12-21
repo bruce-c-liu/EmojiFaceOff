@@ -11,23 +11,26 @@ module.exports = (server) => {
       score: 0,
       name: ''
     };
-    let user = openConnections[socket.id];
 
     socket.on('message', data => {
-      user.name = data.name;
+      let roomId = data.roomId;
       let userMessage = data.text;
+      let room = io.nsps['/'].adapter.rooms[roomId];
+      let user = openConnections[socket.id];
+      user.name = data.name;
       let botResponse = '';
-      let roomId = data.roomId;                   // client
-      let level = data.level;                     // client
+      let level = room.level;                     // client
       let promptIndex;
-      let roundNum = data.roundNum;               // client
-      let prompt = data.prompt;                   // client
-      let selectedIndices = data.selectedIndices; // client: Prompts that have already been shown
+      let roundNum = room.roundNum;               // client
+      let prompt = room.prompt;                   // client
+      let selectedIndices = room.selectedIndices; // client: Prompts that have already been shown
 
+      console.log('outside', roomId, roundNum);
       if (roundNum === 0) {
         if (userMessage === 'start') {
           RedisController.getPrompts(level)
             .then(filteredPrompts => {
+              console.log(filteredPrompts);
               do {                              // Find a new selectable prompt at random.
                 promptIndex = Math.floor(Math.random() * filteredPrompts.length);
               } while (selectedIndices.includes(promptIndex));
@@ -39,13 +42,12 @@ module.exports = (server) => {
                     Please translate '${prompt}' into emoji form~`
               };
               io.sockets.in(roomId).emit('message', botResponse);
-              io.sockets.in(roomId).emit('update', {
-                roundNum: 1,
-                prompt: prompt,
-                selectedIndices: selectedIndices.push(promptIndex)
-              });
+              room.roundNum = 1;
+              room.prompt = prompt;
+              room.selectedIndices.push(promptIndex);
             });
         } else {
+          console.log(roomId);
           botResponse = {
             'user': 'ebot',
             'text': `Send 'start' to begin the game, dumbass.`
@@ -71,12 +73,9 @@ module.exports = (server) => {
                       Please translate '${prompt}' into emoji form~`
                     };
                     io.sockets.in(roomId).emit('message', botResponse);
-                    io.sockets.in(roomId).emit('update', {
-                      selectedIndices: selectedIndices.push(promptIndex),
-                      roundNum: roundNum + 1,
-                      prompt: prompt
-                    });
-                    socket.emit('correct');
+                    room.roundNum++;
+                    room.prompt = prompt;
+                    room.selectedIndices.push(promptIndex);
                   });
               } else if (roundNum === 5) {                   // Current game has ended.
                 let clients = io.nsps['/'].adapter.rooms[roomId].sockets;
@@ -93,11 +92,9 @@ module.exports = (server) => {
                    Send 'start' to begin a new game.`
                 };
                 io.sockets.in(roomId).emit('message', botResponse);
-                io.sockets.in(roomId).emit('update', {
-                  selectedIndices: [],
-                  roundNum: 0,
-                  prompt: ''
-                });
+                room.roundNum = 0;
+                room.prompt = '';
+                room.selectedIndices = [];
               }
             } else if (!correct) {                                       // A user replied with an incorrect answer.
               botResponse = {
@@ -120,9 +117,10 @@ module.exports = (server) => {
       });
       let room = io.nsps['/'].adapter.rooms[roomId];
       room.level = 1;
-      room.round = 0;
+      room.roundNum = 0;
       room.prompt = '';
       room.host = '';
+      room.selectedIndices = [];
       // console.log(room);
       // console.log(socket.nsp.adapter.rooms);
       // console.log('LOOK!', openConnections);
