@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Solution = sequelize.define('Solution', {
     name: {
-      type: DataTypes.TEXT
+      type: DataTypes.STRING
     }
   }, {
     freezeTableName: true,

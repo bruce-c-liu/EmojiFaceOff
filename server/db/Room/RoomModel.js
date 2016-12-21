@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Room = sequelize.define('Room', {
     name: {
-      type: DataTypes.TEXT
+      type: DataTypes.STRING
     },
     round: {
       type: DataTypes.INTEGER,

@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Commend = sequelize.define('Commend', {
     url: {
-      type: DataTypes.TEXT
+      type: DataTypes.STRING
     },
     insultFlag: {
       type: DataTypes.BOOLEAN,

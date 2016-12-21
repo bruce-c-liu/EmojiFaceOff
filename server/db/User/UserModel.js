@@ -2,20 +2,20 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     displayName: {
-      type: DataTypes.TEXT
+      type: DataTypes.STRING
     },
     imgUrl: {
-      type: DataTypes.TEXT
+      type: DataTypes.STRING
     },
     role: {
-      type: DataTypes.TEXT
+      type: DataTypes.STRING
     },
     banned: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
     auth: {
-      type: DataTypes.TEXT
+      type: DataTypes.STRING
     },
     mmr: {
       type: DataTypes.INTEGER

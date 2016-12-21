@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Library = sequelize.define('Library', {
     prompt: {
-      type: DataTypes.TEXT
+      type: DataTypes.STRING
     },
     level: {
       type: DataTypes.INTEGER,
