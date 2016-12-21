@@ -8,7 +8,7 @@ module.exports = {
    * Redis
    * Initialize Prompts with Answers with a prefix "PRA:" in redis
    */
-  initPRA: () => {
+  initPTA: () => {
     return LibraryCtrl.allSolutionByLibrary()
     .then(result => {
       return result.map(libEntry => {
@@ -22,7 +22,7 @@ module.exports = {
     })
     .then(result => {
       return Promise.all(result.map(entry => {
-        return redClient.sadd(`PRA:${entry.prompt}`, entry.solutions);
+        return redClient.sadd(`PTA:${entry.prompt}`, entry.solutions);
       }));
     })
     .catch(err => {
@@ -64,7 +64,7 @@ module.exports = {
    * Redis initialize all
    */
   initRedis: () => {
-    return module.exports.initPRA()
+    return module.exports.initPTA()
     .then(result => {
       if (result) return module.exports.initLTP();
     })

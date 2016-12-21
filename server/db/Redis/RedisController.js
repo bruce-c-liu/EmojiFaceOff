@@ -14,7 +14,7 @@ module.exports = {
 
   checkAnswer: (prompt, answer) => {
     console.log('checking answer....', prompt, answer);
-    return redClient.sismember(`PRA:${prompt}`, answer)
+    return redClient.sismember(`PTA:${prompt}`, answer)
     .then(result => {
       console.log('checkanswer result', result);
       return result;
