@@ -6,99 +6,107 @@ module.exports = (server) => {
   const io = require('socket.io')(server);
 
   io.on('connection', (socket) => {
-    openConnections[socket.id] = {socket: socket};
-    let connection = openConnections[socket.id];
-    RedisController.getPrompts(1).then(prompts => console.log(prompts));
-    socket.emit('user connected');
-
-    let roundNum;                  // via redis: current round of this room
-    let promptIndex;               // calculated here when necessary
-    let prompt;                    // via redis: current prompt that is being worked on
-    let botResponse;               // created on message
-    let userMessage;               // alias for incoming user's text
-    let usersInRoom;               // via redis: retrieve all users in this room.
-    let level;                     // via redis: difficulty of this room right now
+    openConnections[socket.id] = {
+      socket: socket,
+      score: 0,
+      name: ''
+    };
+    let user = openConnections[socket.id];
 
     socket.on('message', data => {
+      user.name = data.name;
       let userMessage = data.text;
-      let level = data.level;
-      let roundNum = data.roundNum;
-      let prompt = data.prompt;
-      RedisController.getPrompts(level)
-        .then(prompts => {
-          let libraryFilteredByLevel = prompts;
-        });
+      let botResponse = '';
+      let roomId = data.roomId;                   // client
+      let level = data.level;                     // client
+      let promptIndex;
+      let roundNum = data.roundNum;               // client
+      let prompt = data.prompt;                   // client
+      let selectedIndices = data.selectedIndices; // client: Prompts that have already been shown
 
       if (roundNum === 0) {
         if (userMessage === 'start') {
           RedisController.getPrompts(level)
-        .then(prompts => {
-          let libraryFilteredByLevel = prompts;
-        });
-          do {                              // Find a new selectable prompt at random.
-            promptIndex = Math.floor(Math.random() * libraryFilteredByLevel.length);
-          } while (libraryFilteredByLevel[promptIndex].selectable === false);
-          prompt = libraryFilteredByLevel[promptIndex];
-          botResponse = {
-            'user': 'ebot',
-            'text': `Welcome to Emoji Face Off! 
-                 Round ${roundNum}
-                 Please translate '${prompt.prompt}' into emoji form~`
-          };
-          socket.emit('message', botResponse);
+            .then(filteredPrompts => {
+              do {                              // Find a new selectable prompt at random.
+                promptIndex = Math.floor(Math.random() * filteredPrompts.length);
+              } while (selectedIndices.includes(promptIndex));
+              prompt = filteredPrompts[promptIndex];
+              botResponse = {
+                'user': 'ebot',
+                'text': `Welcome to Emoji Face Off! 
+                    Round 1
+                    Please translate '${prompt}' into emoji form~`
+              };
+              io.sockets.in(roomId).emit('message', botResponse);
+              io.sockets.in(roomId).emit('update', {
+                roundNum: 1,
+                prompt: prompt,
+                selectedIndices: selectedIndices.push(promptIndex)
+              });
+            });
         } else {
           botResponse = {
             'user': 'ebot',
             'text': `Send 'start' to begin the game, dumbass.`
           };
-          socket.emit('message', botResponse);
+          io.sockets.in(roomId).emit('message', botResponse);
         }
       } else if (roundNum <= 5) {
-        if (prompt.answers.includes(userMessage)) {        // A user replied with a correct answer.
-          prompt.selectable = false;                       // Make the prompt not selectable anymore.
-          for (let user of usersInRoom) {                  // Increment the user's score.
-            if (user.name === data.user) {
-              user.score++;
-            }
-          }
+        RedisController.checkAnswer(prompt, userMessage)
+          .then(correct => {
+            if (correct) {        // A user replied with a correct answer.
+              user.score++;       // Increment the user's score.
+              if (roundNum < 5) {
+                RedisController.getPrompts(level)
+                  .then(filteredPrompts => {
+                    do {                                         // Find a new selectable prompt at random.
+                      promptIndex = Math.floor(Math.random() * filteredPrompts.length);
+                    } while (selectedIndices.includes(promptIndex));
+                    prompt = filteredPrompts[promptIndex];
+                    botResponse = {
+                      'user': 'ebot',
+                      'text': `Good job, ${data.user}! 
+                      Round ${roundNum + 1}
+                      Please translate '${prompt}' into emoji form~`
+                    };
+                    io.sockets.in(roomId).emit('message', botResponse);
+                    io.sockets.in(roomId).emit('update', {
+                      selectedIndices: selectedIndices.push(promptIndex),
+                      roundNum: roundNum + 1,
+                      prompt: prompt
+                    });
+                    socket.emit('correct');
+                  });
+              } else if (roundNum === 5) {                   // Current game has ended.
+                let clients = io.nsps['/'].adapter.rooms[roomId].sockets;
+                let winner = clients.reduce((winner, currUser) => {
+                  if (openConnections[currUser].score > openConnections[winner].score) {
+                    return currUser;
+                  }
+                })[0];
 
-          if (roundNum < 5) {
-            roundNum++;                                  // Increment round number.
-            do {                                         // Find a new selectable prompt at random.
-              promptIndex = Math.floor(Math.random() * libraryFilteredByLevel.length);
-            } while (libraryFilteredByLevel[promptIndex].selectable === false);
-            prompt = libraryFilteredByLevel[promptIndex];
-            botResponse = {
-              'user': 'ebot',
-              'text': `Good job, ${data.user}! 
-                   Round ${roundNum}
-                   Please translate '${prompt.prompt}' into emoji form~`
-            };
-            socket.emit('message', botResponse);
-          } else if (roundNum === 5) {                   // Current game has ended.
-            roundNum = 0;                                // Reset round number.
-            let winner = usersInRoom.reduce((prevUser, currUser) => {
-              if (currUser.score > prevUser.score) {
-                return currUser;
-              }
-            })[0];
-            botResponse = {
-              'user': 'ebot',
-              'text': `Good job, ${data.user}!
+                botResponse = {
+                  'user': 'ebot',
+                  'text': `Good job, ${data.user}!
                    The winner is ${winner.name} with ${winner.score} points!
                    Send 'start' to begin a new game.`
-            };
-            usersInRoom.forEach(user => {              // Reset user scores.
-              user.score = 0;
-            });
-          }
-        } else {                                       // A user replied with an incorrect answer.
-          botResponse = {
-            'user': 'ebot',
-            'text': `That is not the correct answer, ${data.user}!`
-          };
-          socket.emit('message', botResponse);
-        }
+                };
+                io.sockets.in(roomId).emit('message', botResponse);
+                io.sockets.in(roomId).emit('update', {
+                  selectedIndices: [],
+                  roundNum: 0,
+                  prompt: ''
+                });
+              }
+            } else if (!correct) {                                       // A user replied with an incorrect answer.
+              botResponse = {
+                'user': 'ebot',
+                'text': `That is not the correct answer, ${data.user}!`
+              };
+              io.sockets.in(roomId).emit('message', botResponse);
+            }
+          });
       }
     });
 
@@ -115,7 +123,6 @@ module.exports = (server) => {
       room.round = 0;
       room.prompt = '';
       room.host = '';
-      connection.roomId = roomId;
       // console.log(room);
       // console.log(socket.nsp.adapter.rooms);
       // console.log('LOOK!', openConnections);
