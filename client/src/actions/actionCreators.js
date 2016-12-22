@@ -1,33 +1,74 @@
-import { push } from 'react-router-redux';
-import { browserHistory } from 'react-router';
+import auth, { logout, saveUser } from '../helpers/auth';
+import { formatUserInfo } from '../helpers/utils';
 
-export const LOGIN_REQUEST = 'LOGIN_REQUEST'
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
-export const LOGIN_FAILURE = 'LOGIN_FAILURE'
+const AUTH_USER = 'AUTH_USER'
+const UNAUTH_USER = 'UNAUTH_USER'
+const FETCHING_USER = 'FETCHING_USER'
+const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE'
+const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS'
+const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER'
 
-function requestLogin(creds) {
+export function authUser (uid) {
   return {
-    type: LOGIN_REQUEST,
-    isFetching: true,
-    isAuthenticated: false,
-    creds
+    type: AUTH_USER,
+    uid,
   }
 }
 
-function receiveLogin(user) {
+function unauthUser () {
   return {
-    type: LOGIN_SUCCESS,
-    isFetching: false,
-    isAuthenticated: true,
-    id_token: user.id_token
+    type: UNAUTH_USER,
   }
 }
 
-function loginError(message) {
+function fetchingUser () {
   return {
-    type: LOGIN_FAILURE,
-    isFetching: false,
-    isAuthenticated: false,
-    message
+    type: FETCHING_USER,
+  }
+}
+
+function fetchingUserFailure (error) {
+  console.warn(error)
+  return {
+    type: FETCHING_USER_FAILURE,
+    error: 'Error fetching user.',
+  }
+}
+
+export function fetchingUserSuccess (uid, user, timestamp) {
+  return {
+    type: FETCHING_USER_SUCCESS,
+    uid,
+    user,
+    timestamp,
+  }
+}
+
+export function fetchAndHandleAuthedUser () {
+  return function (dispatch) {
+    dispatch(fetchingUser())
+    console.log("IN fetchAndHandleAuthedUser action" )
+      
+    return auth().then(({user, credential}) => {
+      const userData = user.providerData[0]
+      const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid)
+      return dispatch(fetchingUserSuccess(user.uid, userInfo, Date.now()))
+    })
+    .then(({user}) => saveUser(user))
+    .then((user) => dispatch(authUser(user.uid)))
+    .catch((error) => dispatch(fetchingUserFailure(error)))
+  }
+}
+
+export function logoutAndUnauth () {
+  return function (dispatch) {
+    logout()
+    dispatch(unauthUser())
+  }
+}
+
+export function removeFetchingUser () {
+  return {
+    type: REMOVE_FETCHING_USER
   }
 }

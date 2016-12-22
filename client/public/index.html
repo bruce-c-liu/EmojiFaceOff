@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Abel|Source+Sans+Pro:300,400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Abel|Source+Sans+Pro:300,400|Fredoka+One" rel="stylesheet">
     <!--
       Notice the use of %PUBLIC_URL% in the tag above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -17,7 +17,25 @@
     <title>EFO</title>
   </head>
   <body>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1847699278800536',
+        xfbml      : true,
+        version    : 'v2.8'
+      });
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "//connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
     <div id="root"></div>
+
 
   </body>
 </html>
