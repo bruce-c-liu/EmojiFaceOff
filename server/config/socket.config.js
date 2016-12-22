@@ -108,21 +108,21 @@ module.exports = (server) => {
 
     // incoming data should include the "user" who is requesting to create this room
     socket.on('newSinglePlayerRoom', (data) => {
-      let roomId = data.roomId;
-      socket.join(roomId);
-      // Add the new room to DB and (redis?)
-      io.sockets.in(roomId).emit('roomCreated', {     // only emit to sockets in that room
-        roomId: roomId
+          let roomId = data.roomId;
+          socket.join(roomId);
+          // Add the new room to DB and (redis?)
+          io.sockets.in(roomId).emit('roomCreated', {     // only emit to sockets in that room
+            roomId: roomId
+          });
+          let room = io.nsps['/'].adapter.rooms[roomId];
+          room.level = 1;
+          room.roundNum = 0;
+          room.prompt = '';
+          room.host = '';                      // IMPLEMENT LATER
+          room.selectedIndices = [];
+          // console.log(room);
+          // console.log(socket.nsp.adapter.rooms);
+          // console.log('LOOK!', openConnections);
+        });
       });
-      let room = io.nsps['/'].adapter.rooms[roomId];
-      room.level = 1;
-      room.roundNum = 0;
-      room.prompt = '';
-      room.host = '';                      // IMPLEMENT LATER
-      room.selectedIndices = [];
-      // console.log(room);
-      // console.log(socket.nsp.adapter.rooms);
-      // console.log('LOOK!', openConnections);
-    });
-  });
 };

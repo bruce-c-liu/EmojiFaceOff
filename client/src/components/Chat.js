@@ -7,29 +7,43 @@ import Bubble from './Bubble';
 // import iphone from '../../assets/iphone.png';
 // console.log("IPHONE",iphone )
 
-	
+
 const socket = io('http://localhost:3001');
 
-class Chat extends Component {
-  constructor () {
-    super();
-    this.state = {
-      message: '',
-      user: '',
-      chats: [],
-      roomId: ''
-    };
-    socket.on('message', (message) => {
-      this.setState({chats: [...this.state.chats, message] });
-    });
 
-    socket.emit('newSinglePlayerRoom', {roomId: '123'});
-    socket.on('roomCreated', data => {
-      this.state.roomId = data.roomId;
+
+class Chat extends Component {
+
+  constructor () {
+
+        super();
+        this.state = {
+        message: '',
+        user: 'PTR',
+        roomId: null,
+        chats: []
+      };
+        socket.on('message', (message) => {
+          console.log("INCOMING MESSAGE",message )   
+        this.setState({chats: [...this.state.chats, message] });
+      });
+  }
+
+  componentWillMount(){
+      socket.on('roomCreated', (room) => {
+        console.log("ROOM CREATED", room ) 
+        const roomID = room.roomId
+        // this.setState({
+        //     roomId: urlRoom
+        // })
+        //socket.emit('newSinglePlayerRoom', "YO");
+        //browserHistory.push(`/chat/${roomID}`)  
     });
   }
-  componentDidMount () {
 
+  componentDidMount () {
+    //const urlRoom = this.props.params.roomID;      
+    //socket.emit('newSinglePlayerRoom', "YO");
   }
   handleNameChange (e) {
     this.setState({
@@ -69,7 +83,6 @@ class Chat extends Component {
       		<form className="chat-form" onSubmit={this.sendMessage.bind(this)}>
       			<input type="text" value={this.state.message} onChange={this.handleChange.bind(this)} placeholder="Message"/>
       			<input type="submit" value="Submit"/>
-
       		</form>
       </div>
     );

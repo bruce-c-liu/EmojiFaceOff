@@ -1,4 +1,5 @@
 import auth, { logout, saveUser } from '../helpers/auth';
+import { CALL_API } from 'redux-api-middleware';
 import { formatUserInfo } from '../helpers/utils';
 
 const AUTH_USER = 'AUTH_USER'
@@ -7,6 +8,9 @@ const FETCHING_USER = 'FETCHING_USER'
 const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE'
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS'
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER'
+const REQUEST = 'REQUEST'
+const SUCCESS = 'SUCCESS'
+const FAILURE = 'FAILURE'
 
 export function authUser (uid) {
   return {
@@ -70,5 +74,17 @@ export function logoutAndUnauth () {
 export function removeFetchingUser () {
   return {
     type: REMOVE_FETCHING_USER
+  }
+}
+
+export function fetchRoomId(id) {
+  console.log("INSIDE FETCHROOMID ACTION" )
+    
+  return {
+    [CALL_API]: {
+      endpoint: 'https://jsonplaceholder.typicode.com/posts/1',
+      method: 'GET',
+      types: [REQUEST, 'ROOM.SUCCESS', FAILURE]
+    }
   }
 }
