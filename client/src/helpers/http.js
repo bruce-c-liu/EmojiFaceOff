@@ -1,12 +1,7 @@
 import axios from 'axios';
 
-export function postCHAT(message) {
-    return axios.get('/api/chat', {
-            params: {
-		user: message.user,
-		text: message.text
-            }
-        })
+export function getRoomID() {
+    return axios.get('/api/getRoom')
         .catch((err)=>{
             console.log(err )            
         })

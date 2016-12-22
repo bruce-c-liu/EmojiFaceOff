@@ -1,6 +1,8 @@
 import auth, { logout, saveUser } from '../helpers/auth';
 import { CALL_API } from 'redux-api-middleware';
+import { getRoomID } from '../helpers/http.js';
 import { formatUserInfo } from '../helpers/utils';
+import { browserHistory } from 'react-router';
 
 const AUTH_USER = 'AUTH_USER'
 const UNAUTH_USER = 'UNAUTH_USER'
@@ -77,14 +79,30 @@ export function removeFetchingUser () {
   }
 }
 
-export function fetchRoomId(id) {
-  console.log("INSIDE FETCHROOMID ACTION" )
-    
-  return {
-    [CALL_API]: {
-      endpoint: 'https://jsonplaceholder.typicode.com/posts/1',
-      method: 'GET',
-      types: [REQUEST, 'ROOM.SUCCESS', FAILURE]
-    }
-  }
+export function fetchRoomId() {
+    return function(dispatch) {
+        getRoomID()
+            .then(function(response) {
+                    console.log("API RESPONSE", response);
+                    dispatch({
+                        type: 'FETCH_ROOM',
+                        payload: response.data
+                    });
+                    browserHistory.push(`/chat/${response.data}`)
+                })
+
+      }
 }
+
+
+// export function fetchRoomId(id) {
+//   console.log("INSIDE FETCHROOMID ACTION" )
+    
+//   return {
+//     [CALL_API]: {
+//       endpoint: 'https://jsonplaceholder.typicode.com/posts/1',
+//       method: 'GET',
+//       types: [REQUEST, 'ROOM.SUCCESS', FAILURE]
+//     }
+//   }
+// }
