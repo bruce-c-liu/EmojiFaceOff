@@ -1,4 +1,3 @@
-const shortid = require('shortid');
 const RedisController = require('../db/Redis/RedisController.js');
 let openConnections = {};
 
@@ -109,7 +108,7 @@ module.exports = (server) => {
 
     // incoming data should include the "user" who is requesting to create this room
     socket.on('newSinglePlayerRoom', (data) => {
-      let roomId = shortid.generate();
+      let roomId = data.roomId;
       socket.join(roomId);
       // Add the new room to DB and (redis?)
       io.sockets.in(roomId).emit('roomCreated', {     // only emit to sockets in that room
@@ -119,7 +118,7 @@ module.exports = (server) => {
       room.level = 1;
       room.roundNum = 0;
       room.prompt = '';
-      room.host = '';
+      room.host = '';                      // IMPLEMENT LATER
       room.selectedIndices = [];
       // console.log(room);
       // console.log(socket.nsp.adapter.rooms);
