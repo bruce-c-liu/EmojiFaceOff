@@ -13,15 +13,17 @@ module.exports = {
   },
 
   checkAnswer: (prompt, answer) => {
-    console.log('checking answer....', prompt, answer);
-    return redClient.sismember(`PTA:${prompt}`, answer)
-    .then(result => {
-      console.log('checkanswer result', result);
-      return result;
-    })
-    .catch(err => {
-      throw err;
-    });
+    let tmp = answer;
+    console.log('\u{1F4AA}' === '💪');
+    console.log('checking answer....', prompt, tmp);
+    return redClient.smembers(`PTA:${prompt}`)
+      .then(answers => {
+        console.log('ANSWERS:', answers);
+        return answers.includes(answer);
+      })
+      .catch(err => {
+        throw err;
+      });
   }
 
 };
