@@ -13,10 +13,11 @@ module.exports = (server) => {
 
     socket.on('message', data => {
       let roomId = data.roomId;
+      io.sockets.in(roomId).emit('message', data);
       let userMessage = data.text;
       let room = io.nsps['/'].adapter.rooms[roomId];
       let user = openConnections[socket.id];
-      user.name = data.name;
+      user.name = data.user;
       let botResponse = '';
       let level = room.level;                     // client
       let promptIndex;
@@ -78,11 +79,21 @@ module.exports = (server) => {
                   });
               } else if (roundNum === 3) {                   // Current game has ended.
                 let clients = io.nsps['/'].adapter.rooms[roomId].sockets;
-                let winner = clients.reduce((winner, currUser) => {
+                let clientsArray = Object.keys(clients);
+                console.log('CLIENTS:', clientsArray);
+
+                let winner = clientsArray.reduce((winner, currUser) => {
+                  console.log(openConnections[currUser].score);
+                  console.log(openConnections[winner].score);
                   if (openConnections[currUser].score > openConnections[winner].score) {
                     return currUser;
+                  } else {
+                    return winner;
                   }
-                })[0];
+                });
+
+                console.log(winner);
+                winner = openConnections[winner];
 
                 botResponse = {
                   'user': 'ebot',
