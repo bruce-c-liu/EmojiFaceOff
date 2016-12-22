@@ -25,26 +25,20 @@ class Chat extends Component {
       };
         socket.on('message', (message) => {
           console.log("INCOMING MESSAGE",message )   
-        this.setState({chats: [...this.state.chats, message] });
+          this.setState({chats: [...this.state.chats, message] });
       });
   }
 
   componentWillMount(){
-      socket.on('roomCreated', (room) => {
-        console.log("ROOM CREATED", room ) 
-        const roomID = room.roomId
-        // this.setState({
-        //     roomId: urlRoom
-        // })
-        //socket.emit('newSinglePlayerRoom', "YO");
-        //browserHistory.push(`/chat/${roomID}`)  
-    });
+    socket.emit('newSinglePlayerRoom', {roomId:this.props.session.roomID});
   }
 
   componentDidMount () {
-    //const urlRoom = this.props.params.roomID;      
-    //socket.emit('newSinglePlayerRoom', "YO");
+      socket.on('roomCreated', (room) => {
+        console.log("ROOM CREATED", room ) 
+    });
   }
+
   handleNameChange (e) {
     this.setState({
       user: e.target.value
@@ -57,7 +51,7 @@ class Chat extends Component {
   }
   sendMessage (e) {
     e.preventDefault();
-    const userMessage = { user: this.state.user, text: this.state.message, roomId: this.state.roomId};
+    const userMessage = { user: this.state.user, text: this.state.message, roomId: this.props.session.roomID};
     socket.emit('message', userMessage);
     this.setState({
       chats: [...this.state.chats, userMessage],
@@ -92,7 +86,8 @@ class Chat extends Component {
 function mapStateToProps(state) {
   return {
     users: state.users,
-    ui: state.ui
+    ui: state.ui,
+    session: state.session
   }
 }
 function mapDispachToProps(dispatch) {
