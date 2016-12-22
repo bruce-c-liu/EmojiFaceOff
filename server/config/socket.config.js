@@ -54,12 +54,12 @@ module.exports = (server) => {
           };
           io.sockets.in(roomId).emit('message', botResponse);
         }
-      } else if (roundNum <= 5) {
+      } else if (roundNum <= 3) {
         RedisController.checkAnswer(prompt, userMessage)
           .then(correct => {
             if (correct) {        // A user replied with a correct answer.
               user.score++;       // Increment the user's score.
-              if (roundNum < 5) {
+              if (roundNum < 3) {
                 RedisController.getPrompts(level)
                   .then(filteredPrompts => {
                     do {                                         // Find a new selectable prompt at random.
@@ -77,7 +77,7 @@ module.exports = (server) => {
                     room.prompt = prompt;
                     room.selectedIndices.push(promptIndex);
                   });
-              } else if (roundNum === 5) {                   // Current game has ended.
+              } else if (roundNum === 3) {                   // Current game has ended.
                 let clients = io.nsps['/'].adapter.rooms[roomId].sockets;
                 let winner = clients.reduce((winner, currUser) => {
                   if (openConnections[currUser].score > openConnections[winner].score) {

@@ -13,6 +13,9 @@
 -- INSERT INTO `Solution` (`id`,`name`,`createdAt`,`updatedAt`,`LibraryId`) VALUES
 -- ('','','','','');
 
+DELETE FROM "User";
+DELETE FROM "Library";
+DELETE FROM "Solution";
 
 INSERT INTO "User" ("displayName", "imgUrl", "role", "banned", "createdAt", "updatedAt") 
 Values ('Khoa', 'http://doge2048.com/meta/doge-600.png', 'admin', false, NOW(), NOW());
