@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'
+import * as actionCreators  from  '../actions/actionCreators.js';
 import io from 'socket.io-client';
 import Bubble from './Bubble';
 // import iphone from '../../assets/iphone.png';
 // console.log("IPHONE",iphone )
 	
-const socket = io('http://localhost:3000');
+const socket = io('http://localhost:3001');
 
 class Chat  extends Component{
 constructor(){
@@ -51,12 +54,13 @@ sendMessage(e){
 
     return (
       <div className="chat-view">
-      		<h3>ROOM ID / SOCKET ROOM ID:  { roomID }</h3>
+      		<div className="chat-head">
+      			
+      		</div>
       		<div className="chat-messages">
       			{chatList}
       		</div>
-      		<form onSubmit={this.sendMessage.bind(this)}>
-      			<input type="text" value={this.state.user} onChange={this.handleNameChange.bind(this)} placeholder="Name"/>
+      		<form className="chat-form" onSubmit={this.sendMessage.bind(this)}>
       			<input type="text" value={this.state.message} onChange={this.handleChange.bind(this)} placeholder="Message"/>
       			<input type="submit" value="Submit"/>
       		</form>
@@ -64,4 +68,13 @@ sendMessage(e){
     )
   }
 }
-export default Chat
+function mapStateToProps(state) {
+  return {
+    users: state.users,
+    ui: state.ui
+  }
+}
+function mapDispachToProps(dispatch) {
+  return bindActionCreators(actionCreators, dispatch);
+}
+ export default connect(mapStateToProps,mapDispachToProps)(Chat);
