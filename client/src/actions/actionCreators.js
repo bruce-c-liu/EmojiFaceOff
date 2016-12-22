@@ -94,6 +94,17 @@ export function fetchRoomId() {
       }
 }
 
+export function counterInc(){
+  return {
+       type: 'INVITE_INC'
+    }
+}
+export function counterDec(){
+  return {
+       type: 'INVITE_DEC'
+    }
+}
+
 
 // export function fetchRoomId(id) {
 //   console.log("INSIDE FETCHROOMID ACTION" )

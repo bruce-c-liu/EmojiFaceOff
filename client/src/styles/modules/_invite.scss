@@ -1,0 +1,41 @@
+
+
+
+.count-selector{
+	display: flex;
+	align-items: center;
+	i{
+		font-size: 1.5rem;
+		color: $orange;
+	}
+}
+
+.count-digit{
+	font-size: 7rem;
+	margin: 0 2rem;
+}
+
+.form-sms{
+	width: 100%;
+}
+
+.input-inline{
+	display: flex;
+	align-items: center;
+	margin: 1rem auto;
+	padding: .5rem;
+	width: 70%;
+	background-color: $white;
+	border-radius: 4px;
+	input[type="phone"]{
+		padding: 0 1rem;
+		flex-grow: 1;
+		border: none;
+		outline: none;
+		background-color: transparent;
+		font-size: 1.5rem;
+	}
+	i{
+		font-size: 1.5rem;
+	}
+}

@@ -6,6 +6,7 @@ import App   from '../containers/App';
 import Chat   from '../components/Chat';
 import Login   from '../components/Login';
 import ModeSelect   from '../components/ModeSelect';
+import Invite   from '../components/Invite';
 import NoWhere   from '../components/ModeSelect';
 import AuthContainer   from '../containers/AuthContainer';
 
@@ -17,6 +18,7 @@ export default function getRoutes (checkAuth) {
           <Route path='/' component={App} />  
           	<Route path='login'  component={AuthContainer} onEnter={checkAuth} />
               <Route path='mode'  component={ModeSelect} onEnter={checkAuth} />
+              <Route path='invite'  component={Invite} onEnter={checkAuth} />
             	<Route path='chat/:roomID' component={Chat}  onEnter={checkAuth} /> 
             	<Route path='nowhere' component={NoWhere}  />
           <Route/>

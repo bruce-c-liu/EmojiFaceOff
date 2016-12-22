@@ -131,6 +131,12 @@ body {
   .btn-select.is-selected {
     background-color: #009d7e; }
 
+.btn-input {
+  padding: .5rem 1rem;
+  background-color: #FF6B6B;
+  color: #FFFFFF;
+  border-radius: 4px; }
+
 .btn-login {
   width: 100%;
   height: 50px;
@@ -216,6 +222,21 @@ body {
 .example-leave.example-leave-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in; }
+
+.count-enter {
+  transition: all .25s;
+  transform: translateY(100%); }
+  .count-enter.count-enter-active {
+    transform: translateY(0); }
+
+.count-leave {
+  transition: all .25s;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: translateY(0); }
+  .count-leave.count-leave-active {
+    transform: translateY(-100%); }
 
 .loader {
   width: 100%;
@@ -340,3 +361,64 @@ input[type="submit"] {
   margin: 1rem auto; }
   .mode-select_vs .avatar {
     margin: 0 1rem; }
+
+.count-selector {
+  display: flex;
+  align-items: center; }
+  .count-selector i {
+    font-size: 1.5rem;
+    color: #FF6B6B; }
+
+.count-digit {
+  font-size: 7rem;
+  margin: 0 2rem; }
+
+.form-sms {
+  width: 100%; }
+
+.input-inline {
+  display: flex;
+  align-items: center;
+  margin: 1rem auto;
+  padding: .5rem;
+  width: 70%;
+  background-color: #FFFFFF;
+  border-radius: 4px; }
+  .input-inline input[type="phone"] {
+    padding: 0 1rem;
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-size: 1.5rem; }
+  .input-inline i {
+    font-size: 1.5rem; }
+
+.example-enter {
+  opacity: 0.01; }
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in; }
+
+.example-leave {
+  opacity: 1; }
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in; }
+
+.count-enter {
+  transition: all .25s;
+  transform: translateY(100%); }
+  .count-enter.count-enter-active {
+    transform: translateY(0); }
+
+.count-leave {
+  transition: all .25s;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: translateY(0); }
+  .count-leave.count-leave-active {
+    transform: translateY(-100%); }
