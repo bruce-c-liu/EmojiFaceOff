@@ -10,9 +10,6 @@ import { firebaseAuth } from '../config/constants.js';
 import wallpaper from '../assets/wallpaper.png'
 
 class App extends Component {
-
-  
-
   render() {
   	let children = null;
   	if (this.props.children) {

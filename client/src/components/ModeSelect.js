@@ -4,9 +4,7 @@ import { bindActionCreators } from 'redux'
 import * as actionCreators  from  '../actions/actionCreators.js';
 import { browserHistory } from 'react-router';
 import _ from 'lodash';
-import io from 'socket.io-client';
 
-//const socket = io('http://192.168.1.43:3000');
 
 class ModeSelect  extends Component{
   constructor(){
@@ -28,14 +26,15 @@ componentWillMount(){
       this.setState({
         tempUser: JSON.parse(aValue)
       })
+
+
   }
 
   initGameFriends(e){
     e.preventDefault();
     //socket.emit('create', {});
     console.log("Create Room" )
-    browserHistory.push('/chat/1234')
-      
+    this.props.fetchRoomId("YO")
   }
 
 
@@ -48,7 +47,7 @@ componentWillMount(){
 
 
     return (
-      <div className="inner-container">
+      <div className="inner-container is-center">
             <div className="mode-select_wrap">
             <div>
               <div className="mode-select_vs">
@@ -81,7 +80,8 @@ componentWillMount(){
 function mapStateToProps(state) {
   return {
     users: state.users,
-    ui: state.ui
+    ui: state.ui,
+    session: state.session
   }
 }
 function mapDispachToProps(dispatch) {
