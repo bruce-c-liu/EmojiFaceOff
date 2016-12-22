@@ -11,19 +11,36 @@ const socket = io('http://localhost:3001');
 
 
 class Chat extends Component {
-  constructor () {
-    super();
-    this.state = {
-    message: '',
-    user: '',
-    chats: []
-  };
-    socket.on('message', (message) => {
-    this.setState({chats: [...this.state.chats, message] });
-  });
-  }
-  componentDidMount () {
 
+  constructor () {
+        super();
+        this.state = {
+        message: '',
+        user: 'PTR',
+        roomId: null,
+        chats: []
+      };
+        socket.on('message', (message) => {
+          console.log("INCOMING MESSAGE",message )   
+        this.setState({chats: [...this.state.chats, message] });
+      });
+  }
+
+  componentWillMount(){
+      socket.on('roomCreated', (room) => {
+        console.log("ROOM CREATED", room ) 
+        const roomID = room.roomId
+        // this.setState({
+        //     roomId: urlRoom
+        // })
+        //socket.emit('newSinglePlayerRoom', "YO");
+        //browserHistory.push(`/chat/${roomID}`)  
+    });
+  }
+
+  componentDidMount () {
+    //const urlRoom = this.props.params.roomID;      
+    //socket.emit('newSinglePlayerRoom', "YO");
   }
   handleNameChange (e) {
     this.setState({
