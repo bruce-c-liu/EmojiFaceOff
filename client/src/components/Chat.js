@@ -50,9 +50,7 @@ class Chat extends Component {
     const userMessage = { user: this.state.user, text: this.state.message, roomId: this.props.session.roomID };
     socket.emit('message', userMessage);
     this.setState({
-      chats: [...this.state.chats, userMessage],
-      message: '',
-      user: ''
+      message: ''
     });
   }
   render () {
@@ -84,8 +82,8 @@ function mapStateToProps (state) {
     session: state.session
   };
 }
+
 function mapDispachToProps (dispatch) {
   return bindActionCreators(actionCreators, dispatch);
 }
 export default connect(mapStateToProps, mapDispachToProps)(Chat);
-

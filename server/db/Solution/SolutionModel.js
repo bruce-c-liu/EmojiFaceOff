@@ -14,5 +14,4 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   return Solution;
-}
-;
+};
