@@ -17,6 +17,7 @@
     "interweave": "^2.0.1",
     "lodash": "^4.17.2",
     "react": "^15.4.1",
+    "react-addons-css-transition-group": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-redux": "^4.4.5",
     "react-router": "^2.4.0",
