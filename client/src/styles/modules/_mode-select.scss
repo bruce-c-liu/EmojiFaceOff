@@ -1,0 +1,23 @@
+
+
+.mode-select_wrap{
+	width: 90%;
+	height: 80%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	padding: 2rem;
+	border-radius: 4px;
+	background-color: rgba($white, 0.6);
+	text-align: center;
+}
+
+.mode-select_vs{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 1rem auto;
+	.avatar{
+		margin: 0 1rem;
+	}
+}

@@ -4,10 +4,7 @@ import Bubble from './Bubble';
 // import iphone from '../../assets/iphone.png';
 // console.log("IPHONE",iphone )
 	
-
-console.log('is this even running? if so, when?');
 const socket = io('http://localhost:3000');
-console.log('socket = ', socket);
 
 class Chat  extends Component{
 constructor(){
@@ -17,12 +14,9 @@ constructor(){
 		user: '',
 		chats: []
 	}
-	console.log('socket inside of constructor() = ', socket);
 	socket.on('message', (message) => {
-		console.log("SOCKET",message, typeof message )
 		this.setState({chats: [...this.state.chats, message] })									
 	})
-	console.log("ANYTHING" )
 }
 componentDidMount(){
 

@@ -1,0 +1,11 @@
+
+
+.avatar{
+	border-radius: 50%;
+	background-size: cover;
+	background-position: center center;
+	&.is-md{
+		height: 55px;
+		width: 55px;
+	}
+}

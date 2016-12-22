@@ -66,6 +66,12 @@ io.on('connection', (socket) => {
       }
     }
   });
+
+  socket.on('create', function(room) {
+    console.log("IN SERVER ON ROOM CREATE" )
+      
+      socket.join(room);
+    });
 });
 server.listen(port, () => {
   console.log('Listening on ' + server.address().port);

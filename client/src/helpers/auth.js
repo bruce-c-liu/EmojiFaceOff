@@ -1,0 +1,20 @@
+import { ref, firebaseAuth } from '../config/constants.js';
+import firebase from 'firebase';
+
+export default function auth () {
+  return firebaseAuth().signInWithPopup(new firebase.auth.FacebookAuthProvider())
+}
+
+export function checkIfAuthed (store) {
+  return store.getState().isAuthed === true
+}
+
+export function logout () {
+  return firebaseAuth().signOut()
+}
+
+export function saveUser (user) {
+  return ref.child(`users/${user.uid}`)
+    .set(user)
+    .then(() => user)
+}
