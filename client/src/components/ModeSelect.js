@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import _ from 'lodash';
 import io from 'socket.io-client';
 
-//const socket = io('http://192.168.1.43:3000');
+const socket = io('http://192.168.1.43:3001');
 
 class ModeSelect  extends Component{
   constructor(){
@@ -48,7 +48,7 @@ componentWillMount(){
 
 
     return (
-      <div className="inner-container">
+      <div className="inner-container is-center">
             <div className="mode-select_wrap">
             <div>
               <div className="mode-select_vs">
