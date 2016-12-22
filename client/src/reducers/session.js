@@ -5,10 +5,9 @@ const initialState = {
 
 function session(state = initialState , action) {
   switch(action.type){    
-      case 'ROOM.SUCCESS':
-      console.log("SESSION GET", action.payload )       
+      case 'FETCH_ROOM':
         return Object.assign( { }, state, {
-          roomID: action.payload.title
+          roomID: action.payload
         });
 
     default:
