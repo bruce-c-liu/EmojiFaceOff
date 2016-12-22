@@ -19,7 +19,7 @@ class Chat extends Component {
       this.setState({chats: [...this.state.chats, message] });
     });
 
-    socket.emit('newSinglePlayerRoom');
+    socket.emit('newSinglePlayerRoom', {roomId: '123'});
     socket.on('roomCreated', data => {
       this.state.roomId = data.roomId;
     });
@@ -55,14 +55,14 @@ class Chat extends Component {
 
     return (
       <div className='chat-view'>
-      		            <h3>ROOM ID / SOCKET ROOM ID:        { roomID }</h3>
-      		            <div className='chat-messages'>
-      			            {chatList}
+      		              <h3>ROOM ID / SOCKET ROOM ID:         { roomID }</h3>
+      		              <div className='chat-messages'>
+      			              {chatList}
       		</div>
-      		            <form onSubmit={this.sendMessage.bind(this)}>
-      			            <input type='text' value={this.state.user} onChange={this.handleNameChange.bind(this)} placeholder='Name' />
-      			            <input type='text' value={this.state.message} onChange={this.handleChange.bind(this)} placeholder='Message' />
-      			            <input type='submit' value='Submit' />
+      		              <form onSubmit={this.sendMessage.bind(this)}>
+      			              <input type='text' value={this.state.user} onChange={this.handleNameChange.bind(this)} placeholder='Name' />
+      			              <input type='text' value={this.state.message} onChange={this.handleChange.bind(this)} placeholder='Message' />
+      			              <input type='submit' value='Submit' />
       		</form>
       </div>
     );

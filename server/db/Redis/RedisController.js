@@ -19,7 +19,13 @@ module.exports = {
     return redClient.smembers(`PTA:${prompt}`)
       .then(answers => {
         console.log('ANSWERS:', answers);
-        return answers.includes(answer);
+        for (let a of answers) {
+          console.log(a, tmp, a === tmp);
+          if (a === tmp) {
+            return true;
+          }
+        }
+        return false;
       })
       .catch(err => {
         throw err;
