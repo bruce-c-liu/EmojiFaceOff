@@ -96,10 +96,9 @@ body {
   background-size: cover; }
 
 #root {
-  width: 540px;
+  width: 100%;
+  max-width: 540px;
   height: 100vh;
-  border-radius: 5px;
-  padding: 3rem 3.5rem;
   background-image: url("/static/media/wallpaper.063f4ab6.png");
   background-repeat: repeat;
   background-position: center center;
@@ -112,6 +111,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center; }
+  .inner-container.is-center {
+    justify-content: center; }
 
 .btn-select {
   display: block;
@@ -251,7 +252,7 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #54abee; }
+  background-color: #e4ebf5; }
 
 .chat-messages {
   display: flex;
@@ -259,6 +260,15 @@ body {
   flex-grow: 1;
   padding: 1rem 0;
   overflow-y: auto; }
+
+.chat-form {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  padding: .5rem;
+  border-top: 1px solid #d1ddee;
+  background-color: #FFFFFF; }
 
 .chat-bubble {
   position: relative;
@@ -269,7 +279,8 @@ body {
   margin-right: 1rem;
   border-radius: 20px;
   background-color: #f7f7f7;
-  max-width: 50%; }
+  max-width: 50%;
+  font-size: .85rem; }
   .chat-bubble.on-left {
     align-self: flex-start;
     margin-left: 1rem;
@@ -282,12 +293,6 @@ body {
   left: 20px;
   font-size: .8rem;
   color: #1371ba; }
-
-form {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: .5rem; }
 
 input[type="text"] {
   height: 30px;

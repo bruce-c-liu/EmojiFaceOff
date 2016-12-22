@@ -14,10 +14,9 @@ body {
   background-size: cover;
 }
 #root {
-    width: 540px;
+  width: 100%;
+    max-width: 540px;
     height: 100vh;
-    border-radius: 5px;
-    padding:  3rem 3.5rem;
   background-image: url('/static/media/wallpaper.063f4ab6.png');
   background-repeat: repeat;
   background-position: center center;
@@ -32,5 +31,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  &.is-center{
+    justify-content: center;
+  }
 }
 
