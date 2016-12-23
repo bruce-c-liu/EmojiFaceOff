@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
+import CSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
 import io from 'socket.io-client';
 import Bubble from './Bubble';
-// import iphone from '../../assets/iphone.png';
-// console.log("IPHONE",iphone )
 
-// const socket =
 
 class Chat extends Component {
 
@@ -17,12 +15,18 @@ class Chat extends Component {
       message: '',
       user: 'PTR',
       roomId: null,
+      round: '',
+      score: null,
       chats: []
     };
     this.socket = io('http://localhost:3001');
     this.socket.on('message', (message) => {
       console.log('INCOMING MESSAGE', message);
-      this.setState({ chats: [...this.state.chats, message] });
+      this.setState({ 
+        chats: [...this.state.chats, message],
+        round: message.roundNum,
+        score: message.score
+       });
     });
     this.socket.on('roomJoined', (room) => {
       console.log('JOINED ROOM:', room);
@@ -32,20 +36,20 @@ class Chat extends Component {
   componentWillMount () {
     this.socket.emit('joinRoom', { roomId: this.props.session.roomID });
   }
-
-  componentDidMount () {
-
+  componentDidUpdate(){
+        const node = this.refs.chatScroll;
+        node.scrollTop = node.scrollHeight + 200;          
   }
 
-  handleNameChange (e) {
-    this.setState({
-      user: e.target.value
-    });
-  }
   handleChange (e) {
     this.setState({
       message: e.target.value
     });
+  }
+  startGame(e){
+    e.preventDefault();
+    this.socket.emit('message', {user: this.state.user, text: 'start', roomId: this.props.session.roomID });
+
   }
   sendMessage (e) {
     e.preventDefault();
@@ -57,21 +61,53 @@ class Chat extends Component {
     });
   }
   render () {
+    const { users } = this.props;
     const chatList = this.state.chats.map((item, i) => {
-      return <Bubble deets={item} key={i} />;
+      return <Bubble deets={item} profile={users.profile} key={i} />;
     });
+    const startBtn = this.state.chats.length >= 1
+                                ? null
+                                :  <button className="btn-start" onClick={this.startGame.bind(this)}>START</button>
     const roomID = this.props.params.roomID;
 
     return (
 
       <div className='chat-view'>
-        <div className='chat-head' />
-        <div className='chat-messages'>
-          {chatList}
+        <div className='chat-head' >
+           {startBtn}
+
+           <div className="flip-stat">
+              <p> ROUND</p>
+              <CSSTransitionGroup
+                transitionName="count"
+                transitionEnterTimeout={250}
+                transitionLeaveTimeout={250}
+              > 
+              <span key={this.state.round} >{this.state.round}</span>
+              </CSSTransitionGroup>
+           </div>
+           <div className="flip-stat">
+              <p> SCORE</p>
+              <CSSTransitionGroup
+                transitionName="count"
+                transitionEnterTimeout={250}
+                transitionLeaveTimeout={250}
+              > 
+              <span key={this.state.score} >{this.state.score}</span>
+              </CSSTransitionGroup>
+           </div>
+
         </div>
+
+        <div className='chat-messages' ref="chatScroll">       
+              {chatList}
+          </div>
+
         <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
-          <input type='text' value={this.state.message} onChange={this.handleChange.bind(this)} placeholder='Message' />
-          <input type='submit' value='Submit' />
+          <input type='text' value={this.state.message} 
+                                            onChange={this.handleChange.bind(this)} 
+                                            placeholder='Your Message Here' />
+          <input className="btn-input" type='submit' value='Submit' />
         </form>
       </div>
     );
