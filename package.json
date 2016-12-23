@@ -17,7 +17,7 @@
     "sequelize": "^3.27.0",
     "shortid": "^2.2.6",
     "socket.io": "^1.7.2",
-    "twilio-chat": "^0.11.1",
+    "twilio": "^2.11.1",
     "ws": "^1.1.1"
   },
   "devDependencies": {
