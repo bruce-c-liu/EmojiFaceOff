@@ -6,9 +6,7 @@ import { connect } from 'react-redux';
 import * as actionCreators  from  '../actions/actionCreators.js';
 import { formatUserInfo } from '../helpers/utils';
 import { firebaseAuth } from '../config/constants.js';
-
-
-
+import { Link} from 'react-router';
 
 
 class AuthContainer  extends Component{
@@ -24,10 +22,10 @@ componentDidMount () {
       this.props.fetchingUserSuccess(user.uid, userInfo, Date.now())
       if (this.props.route.path === '/login') {
         browserHistory.push('/mode')
-        //alert("HERE I AM")
       }
     } else {
        this.props.removeFetchingUser()
+       console.log("NOT LOGGED IN" )
     }
   })
 }	
@@ -39,14 +37,14 @@ handleAuth (e) {
 }
 
  render () {
+
+
     return (
     <div className="login-wrap">
-    		<h1 className="brand-title">Emoji Faceoff</h1>
-       
-        <a href="fb-messenger://share/?link=https://emoji-faceoff.firebaseapp.com/&app_id=727951743985191">Send In Messenger</a>
-       <a href="fb-messenger://share/?link=https%3A%2F%2Femoji-faceoff.firebaseapp.com%2F%26app_id%3D727951743985191">Encodedr</a>
+    		<h1 className="brand-title">Emoji Faceoff</h1> 
+            <Link to="/mode">Choose Mode</Link>
     		<button className="btn-login" onClick={this.handleAuth.bind(this)}>
-    			Start Play!
+    			Login
     		</button>
     </div>
 
@@ -55,20 +53,7 @@ handleAuth (e) {
 }
 
 
-function mapStateToProps(state) {
-  return {
-    users: state.users,
-    ui: state.ui
-  }
-}
-function mapDispachToProps(dispatch) {
-  return bindActionCreators(actionCreators, dispatch);
-}
- export default connect(mapStateToProps,mapDispachToProps)(AuthContainer);
-
-
-
-// export default connect(
-//   (state) => ({isFetching: state.isFetching, error: state.error}),
-//   (dispatch) => bindActionCreators(actionCreators, dispatch)
-// )(AuthContainer)
+export default connect(
+  (state) => ({users: state.users, ui: state.ui}),
+  (dispatch) => bindActionCreators(actionCreators, dispatch)
+)(AuthContainer)

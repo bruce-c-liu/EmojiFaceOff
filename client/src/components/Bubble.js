@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Interweave from 'interweave';
 import classNames from 'classnames';
+import nerd from '../assets/emoji_nerd.png';
 
 class Bubble  extends Component{
   render () {
@@ -8,6 +9,15 @@ class Bubble  extends Component{
   		'chat-bubble': true,
   		'on-left': this.props.deets.user === 'ebot'
   	})
+    const avatarProp =  this.props.profile 
+                                    ? this.props.profile.info.avatar
+                                    : null; 
+    const avatarSrc = this.props.deets.user === 'ebot'  && this.props.profile
+                                    ? nerd
+                                    : avatarProp;
+    const avatarBG = {
+      backgroundImage:  `url(${avatarSrc})`
+    }
     return (
       <div className={bubbleClass}>
     		{/* {this.props.deets.text} */}
@@ -16,8 +26,8 @@ class Bubble  extends Component{
       		  tagName="span"
       		  content={this.props.deets.text}
       		/>
-      		<div className="bubble-name">
-      			{this.props.deets.user}
+      		<div className="bubble-name" style={avatarBG}>
+
       		</div>
       </div>
     )
