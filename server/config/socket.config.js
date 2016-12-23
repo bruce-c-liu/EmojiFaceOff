@@ -9,7 +9,7 @@ function addToOpenConnections (socket) {
   };
 }
 
-function messageHandler (data, io) {
+function messageHandler (data, io, socket) {
   // Populate all info from this socket room.
   let roomId = data.roomId;
   let room = io.nsps['/'].adapter.rooms[roomId];
@@ -38,9 +38,10 @@ function messageHandler (data, io) {
             promptIndex = Math.floor(Math.random() * filteredPrompts.length);
           } while (selectedIndices.includes(promptIndex));
           prompt = filteredPrompts[promptIndex];
-          botResponse.text = `Welcome to Emoji Face Off! 
-                                  Round 1
-                                  Please translate '${prompt}' into emoji form~`;
+          botResponse.text = `Welcome to Emoji Face Off!
+                              Round 1
+                              Please translate [${prompt}] into emoji form~`;
+          io.sockets.in(roomId).emit('message', botResponse);
           room.roundNum = 1;
           room.prompt = prompt;
           room.selectedIndices.push(promptIndex);
@@ -48,6 +49,7 @@ function messageHandler (data, io) {
     } else {
       console.log(roomId);
       botResponse.text = `Send 'start' to begin the game, dumbass.`;
+      io.sockets.in(roomId).emit('message', botResponse);
     }
   } else if (roundNum <= 3) {
     RedisController.checkAnswer(prompt, userMessage)
@@ -64,7 +66,8 @@ function messageHandler (data, io) {
                 prompt = filteredPrompts[promptIndex];
                 botResponse.text = `Good job, ${data.user}! 
                                         Round ${roundNum + 1}
-                                        Please translate '${prompt}' into emoji form~`;
+                                        Please translate [${prompt}] into emoji form~`;
+                io.sockets.in(roomId).emit('message', botResponse);
                 room.roundNum++;
                 room.prompt = prompt;
                 room.selectedIndices.push(promptIndex);
@@ -90,16 +93,17 @@ function messageHandler (data, io) {
             botResponse.text = `Good job, ${data.user}!
                                     The winner is ${winner.name} with ${winner.score} points!
                                     Send 'start' to begin a new game.`;
+            io.sockets.in(roomId).emit('message', botResponse);
             room.roundNum = 0;
             room.prompt = '';
             room.selectedIndices = [];
           }
         } else if (!correct) {                                       // A user replied with an incorrect answer.
           botResponse.text = `That is not the correct answer, ${data.user}!`;
+          io.sockets.in(roomId).emit('message', botResponse);
         }
       });
   }
-  io.sockets.in(roomId).emit('message', botResponse);
 }
 
 function joinRoomHandler (data, io, socket) {
@@ -120,10 +124,11 @@ module.exports = (server) => {
   const io = require('socket.io')(server);
 
   io.on('connection', (socket) => {
+    console.log('connected!');
     addToOpenConnections(socket);
 
     socket.on('message', data => {
-      messageHandler(data, io);
+      messageHandler(data, io, socket);
     });
 
     // incoming data should include the "user" who is requesting to create this room
@@ -133,6 +138,7 @@ module.exports = (server) => {
 
     socket.on('disconnect', () => {
       delete openConnections[socket.id];
+      console.log('disconnected!');
     });
   });
 };

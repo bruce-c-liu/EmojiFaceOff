@@ -7,7 +7,7 @@ import Bubble from './Bubble';
 // import iphone from '../../assets/iphone.png';
 // console.log("IPHONE",iphone )
 
-const socket = io('http://localhost:3001');
+// const socket =
 
 class Chat extends Component {
 
@@ -19,17 +19,18 @@ class Chat extends Component {
       roomId: null,
       chats: []
     };
-    socket.on('message', (message) => {
+    this.socket = io('http://localhost:3001');
+    this.socket.on('message', (message) => {
       console.log('INCOMING MESSAGE', message);
       this.setState({ chats: [...this.state.chats, message] });
     });
-    socket.on('roomJoined', (room) => {
+    this.socket.on('roomJoined', (room) => {
       console.log('JOINED ROOM:', room);
     });
   }
 
   componentWillMount () {
-    socket.emit('joinRoom', { roomId: this.props.session.roomID });
+    this.socket.emit('joinRoom', { roomId: this.props.session.roomID });
   }
 
   componentDidMount () {
@@ -49,7 +50,7 @@ class Chat extends Component {
   sendMessage (e) {
     e.preventDefault();
     const userMessage = { user: this.state.user, text: this.state.message, roomId: this.props.session.roomID };
-    socket.emit('message', userMessage);
+    this.socket.emit('message', userMessage);
     this.setState({
       message: ''
     });
