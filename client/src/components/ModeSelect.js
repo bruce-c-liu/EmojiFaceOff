@@ -30,6 +30,10 @@ componentWillMount(){
 
   }
 
+  testSound(){
+    this.props.playSound()
+  }
+
   initGameFriends(e){
     e.preventDefault();
     //socket.emit('create', {});
@@ -55,7 +59,7 @@ componentWillMount(){
                   <span>vs.</span>
                   <div className="avatar is-md" style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png')`}}></div>
               </div>
-              <button className="btn-login is-full">
+              <button className="btn-login is-full" onClick={this.testSound.bind(this)}>
                 Single Player Mode
               </button>
             </div>

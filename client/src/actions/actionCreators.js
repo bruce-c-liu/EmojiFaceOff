@@ -105,6 +105,12 @@ export function counterDec(){
     }
 }
 
+export function playSFX(sound){
+  return {
+    meta: {sound: sound }
+  }
+}
+
 
 // export function fetchRoomId(id) {
 //   console.log("INSIDE FETCHROOMID ACTION" )

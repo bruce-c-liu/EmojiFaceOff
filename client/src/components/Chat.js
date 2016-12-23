@@ -49,6 +49,7 @@ class Chat extends Component {
     e.preventDefault();
     const userMessage = { user: this.state.user, text: this.state.message, roomId: this.props.session.roomID };
     socket.emit('message', userMessage);
+    this.props.playSFX('chime')
     this.setState({
       message: ''
     });
