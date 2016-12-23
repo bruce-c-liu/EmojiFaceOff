@@ -14,6 +14,7 @@ models.sequelize.sync().then(() => {
   require('./routes/routes.js')(app, express);
   require('./config/socket.config.js')(server);
   require('./config/redis.config.js');
+  require('./config/twilio.config.js');
   server.listen(port, () => {
     console.log('Server/Socket listening on port ' + port);
   });
