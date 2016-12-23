@@ -23,16 +23,17 @@ class Chat extends Component {
       console.log('INCOMING MESSAGE', message);
       this.setState({ chats: [...this.state.chats, message] });
     });
+    socket.on('roomJoined', (room) => {
+      console.log('JOINED ROOM:', room);
+    });
   }
 
   componentWillMount () {
-    socket.emit('newSinglePlayerRoom', { roomId: this.props.session.roomID });
+    socket.emit('joinRoom', { roomId: this.props.session.roomID });
   }
 
   componentDidMount () {
-    socket.on('roomCreated', (room) => {
-      console.log('ROOM CREATED', room);
-    });
+
   }
 
   handleNameChange (e) {
