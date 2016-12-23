@@ -24,6 +24,7 @@
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
     "redux-api-middleware": "^1.0.2",
+    "redux-sounds": "^1.1.1",
     "redux-thunk": "^2.1.0",
     "socket.io-client": "^1.7.2",
     "velocity-animate": "^1.2.3"
