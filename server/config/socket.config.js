@@ -41,6 +41,8 @@ function messageHandler (data, io, socket) {
           botResponse.text = `Welcome to Emoji Face Off!
                               Round 1
                               Please translate [${prompt}] into emoji form~`;
+          botResponse.roundNum = room.roundNum;
+          botResponse.score = user.score;
           io.sockets.in(roomId).emit('message', botResponse);
           room.roundNum = 1;
           room.prompt = prompt;
@@ -67,6 +69,8 @@ function messageHandler (data, io, socket) {
                 botResponse.text = `Good job, ${data.user}! 
                                         Round ${roundNum + 1}
                                         Please translate [${prompt}] into emoji form~`;
+                botResponse.roundNum = roundNum+1;
+                botResponse.score = user.score;
                 io.sockets.in(roomId).emit('message', botResponse);
                 room.roundNum++;
                 room.prompt = prompt;

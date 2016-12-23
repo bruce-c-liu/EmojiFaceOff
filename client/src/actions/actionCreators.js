@@ -107,6 +107,7 @@ export function counterDec(){
 
 export function playSFX(sound){
   return {
+    type: 'SOUND_FX',
     meta: {sound: sound }
   }
 }
