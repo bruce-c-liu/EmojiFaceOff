@@ -41,7 +41,7 @@ function messageHandler (data, io, socket) {
           botResponse.text = `Welcome to Emoji Face Off!
                               Round 1
                               Please translate [${prompt}] into emoji form~`;
-          botResponse.roundNum = room.roundNum;
+          botResponse.roundNum = 1;
           botResponse.score = user.score;
           io.sockets.in(roomId).emit('message', botResponse);
           room.roundNum = 1;
@@ -69,7 +69,7 @@ function messageHandler (data, io, socket) {
                 botResponse.text = `Good job, ${data.user}! 
                                         Round ${roundNum + 1}
                                         Please translate [${prompt}] into emoji form~`;
-                botResponse.roundNum = roundNum+1;
+                botResponse.roundNum = roundNum + 1;
                 botResponse.score = user.score;
                 io.sockets.in(roomId).emit('message', botResponse);
                 room.roundNum++;
@@ -101,6 +101,7 @@ function messageHandler (data, io, socket) {
             room.roundNum = 0;
             room.prompt = '';
             room.selectedIndices = [];
+            user.score = 0;
           }
         } else if (!correct) {                                       // A user replied with an incorrect answer.
           botResponse.text = `That is not the correct answer, ${data.user}!`;
