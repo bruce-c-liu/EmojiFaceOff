@@ -49,6 +49,9 @@ VALUES('😂',NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='happy'));
 INSERT INTO "Solution" ("name","createdAt","updatedAt","LibraryId") 
 VALUES('😁',NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='happy'));
 
+INSERT INTO "Solution" ("name","createdAt","updatedAt","LibraryId") 
+VALUES('😄',NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='happy'));
+
 -- sad
 INSERT INTO "Library" ("prompt", "level", "approved", "createdAt", "updatedAt", "UserId")
 Values ('sad', 1, true, NOW(), NOW(), (Select "id" from "User" WHERE "displayName"='Bruce'));
