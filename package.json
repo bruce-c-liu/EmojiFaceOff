@@ -27,7 +27,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server/server.js",
     "dev": "concurrently  \" nodemon server/server.js \"   \"cd client && npm run watch  \"  ",
-    "deploy": "node server/server.js",
+    "deploy": "node server/server.js"
   },
   "repository": {
     "type": "git",
