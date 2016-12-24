@@ -42,14 +42,20 @@ function messageHandler (data, io, socket) {
                               Round 1
                               Please translate [${prompt}] into emoji form~`;
           botResponse.roundNum = 1;
-          botResponse.score = user.score;
+          io.sockets.in(roomId).emit('score', 0);
           io.sockets.in(roomId).emit('message', botResponse);
           room.roundNum = 1;
+          roundNum = 1;
           room.prompt = prompt;
           room.selectedIndices.push(promptIndex);
+          setTimeout(() => {
+            console.log('time out called', roundNum, room.roundNum);
+            if (roundNum === room.roundNum) {
+              console.log('TIMED OUT!!!!!!!!!!!!');
+            }
+          }, 7000);
         });
     } else {
-      console.log(roomId);
       botResponse.text = `Send 'start' to begin the game, dumbass.`;
       io.sockets.in(roomId).emit('message', botResponse);
     }
@@ -70,7 +76,7 @@ function messageHandler (data, io, socket) {
                                         Round ${roundNum + 1}
                                         Please translate [${prompt}] into emoji form~`;
                 botResponse.roundNum = roundNum + 1;
-                botResponse.score = user.score;
+                socket.emit('score', user.score);
                 io.sockets.in(roomId).emit('message', botResponse);
                 room.roundNum++;
                 room.prompt = prompt;
@@ -91,12 +97,12 @@ function messageHandler (data, io, socket) {
               }
             });
 
-            console.log(winner);
             winner = openConnections[winner];
 
             botResponse.text = `Good job, ${data.user}!
                                     The winner is ${winner.name} with ${winner.score} points!
                                     Send 'start' to begin a new game.`;
+            io.sockets.in(roomId).emit('score', null);
             io.sockets.in(roomId).emit('message', botResponse);
             room.roundNum = 0;
             room.prompt = '';
@@ -113,10 +119,11 @@ function messageHandler (data, io, socket) {
 
 function joinRoomHandler (data, io, socket) {
   let roomId = data.roomId;
+  let user = openConnections[socket.id];
+  user.name = data.user;
   socket.join(roomId);
-  socket.emit('roomJoined', {
-    roomId: roomId
-  });
+  console.log('wtf', roomId);
+  socket.emit('roomJoined', roomId);
   let room = io.nsps['/'].adapter.rooms[roomId];
   room.level = 1;
   room.roundNum = 0;
