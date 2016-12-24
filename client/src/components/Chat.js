@@ -23,18 +23,34 @@ class Chat extends Component {
       console.log('INCOMING MESSAGE', message);
       this.setState({
         chats: [...this.state.chats, message],
-        round: message.roundNum,
-        score: message.score
+        round: message.roundNum
       });
     });
+
+    this.socket.on('score', score => {
+      this.setState({
+        score: score
+      });
+    });
+
     this.socket.on('roomJoined', (room) => {
       console.log('JOINED ROOM:', room);
     });
   }
 
   componentWillMount () {
-    this.socket.emit('joinRoom', { roomId: this.props.session.roomID });
+    this.setState({
+      roomId: this.props.params.roomID
+    });
   }
+
+  componentDidMount () {
+    this.socket.emit('joinRoom', {
+      roomId: this.state.roomId,
+      user: this.state.user
+    });
+  }
+
   componentDidUpdate () {
     const node = this.refs.chatScroll;
     node.scrollTop = node.scrollHeight + 200;
@@ -45,13 +61,15 @@ class Chat extends Component {
       message: e.target.value
     });
   }
+
   startGame (e) {
     e.preventDefault();
-    this.socket.emit('message', {user: this.state.user, text: 'start', roomId: this.props.session.roomID });
+    this.props.playSFX('chime');
+    this.socket.emit('message', { user: this.state.user, text: 'start', roomId: this.state.roomId });
   }
   sendMessage (e) {
     e.preventDefault();
-    const userMessage = { user: this.state.user, text: this.state.message, roomId: this.props.session.roomID };
+    const userMessage = { user: this.state.user, text: this.state.message, roomId: this.state.roomId };
     this.socket.emit('message', userMessage);
     this.props.playSFX('chime');
     this.setState({
@@ -66,7 +84,6 @@ class Chat extends Component {
     const startBtn = this.state.chats.length >= 1
                                 ? null
                                 : <button className='btn-start' onClick={this.startGame.bind(this)}>START</button>;
-    const roomID = this.props.params.roomID;
 
     return (
 
@@ -75,25 +92,25 @@ class Chat extends Component {
           {startBtn}
 
           <div className='flip-stat'>
-             <p> ROUND</p>
-             <CSSTransitionGroup
-                transitionName='count'
-                transitionEnterTimeout={250}
-                transitionLeaveTimeout={250}
+            <p> ROUND</p>
+            <CSSTransitionGroup
+              transitionName='count'
+              transitionEnterTimeout={250}
+              transitionLeaveTimeout={250}
               >
-                <span key={this.state.round} >{this.state.round}</span>
-              </CSSTransitionGroup>
-           </div>
+              <span key={this.state.round} >{this.state.round}</span>
+            </CSSTransitionGroup>
+          </div>
           <div className='flip-stat'>
-             <p> SCORE</p>
-             <CSSTransitionGroup
-                transitionName='count'
-                transitionEnterTimeout={250}
-                transitionLeaveTimeout={250}
+            <p> SCORE</p>
+            <CSSTransitionGroup
+              transitionName='count'
+              transitionEnterTimeout={250}
+              transitionLeaveTimeout={250}
               >
-                <span key={this.state.score} >{this.state.score}</span>
-              </CSSTransitionGroup>
-           </div>
+              <span key={this.state.score} >{this.state.score}</span>
+            </CSSTransitionGroup>
+          </div>
 
         </div>
 
