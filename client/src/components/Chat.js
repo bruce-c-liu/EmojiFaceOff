@@ -20,7 +20,7 @@ class Chat extends Component {
       score: null,
       chats: []
     };
-    this.socket = io(`http://localhost:${port}`);
+    this.socket = io();
     this.socket.on('message', (message) => {
       console.log('INCOMING MESSAGE', message);
       this.setState({
