@@ -6,6 +6,8 @@ import * as actionCreators from '../actions/actionCreators.js';
 import io from 'socket.io-client';
 import Bubble from './Bubble';
 
+const port = process.env.PORT || 3001;
+
 class Chat extends Component {
 
   constructor () {
@@ -18,7 +20,7 @@ class Chat extends Component {
       score: null,
       chats: []
     };
-    this.socket = io('http://localhost:3001');
+    this.socket = io(`http://localhost:${port}`);
     this.socket.on('message', (message) => {
       console.log('INCOMING MESSAGE', message);
       this.setState({
