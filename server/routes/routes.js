@@ -5,6 +5,6 @@ module.exports = (app, express) => {
   app.get('/api/getRoom', RoomController.getRoom);
   app.post('/api/sendInvite', TwilioController.textMessage);
   app.get('*', (req, res) => {
-  	res.sendfile('./client/public/index.html');
+  	res.sendfile('./client/build/index.html');
   })
 };
