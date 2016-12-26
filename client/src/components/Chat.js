@@ -6,20 +6,20 @@ import * as actionCreators from '../actions/actionCreators.js';
 import io from 'socket.io-client';
 import Bubble from './Bubble';
 
-var port = window.location.port,
-    host = window.location.hostname,
-    protocol = window.location.protocol,
-    path = '/',
-    url, 
-    options = { };
+let port = window.location.port;
+let host = window.location.hostname;
+let protocol = window.location.protocol;
+let path = '/';
+let url;
+let options = {};
 
-if( protocol.indexOf( 'https' ) > -1 ) {
-    protocol = 'wss:';
+if (protocol.indexOf('https') > -1) {
+  protocol = 'wss:';
 } else {
-    protocol = 'ws:'
+  protocol = 'ws:';
 }
 
-url = protocol + "//" + host + ":" + port + path;
+url = protocol + '//' + host + ':' + port + path;
 
 class Chat extends Component {
 
@@ -33,7 +33,7 @@ class Chat extends Component {
       score: null,
       chats: []
     };
-    this.socket = io( url, options );
+    this.socket = io(url, options);
     this.socket.on('message', (message) => {
       console.log('INCOMING MESSAGE', message);
       this.setState({

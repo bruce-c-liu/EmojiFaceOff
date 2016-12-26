@@ -111,6 +111,7 @@ function messageHandler (data, io, socket) {
           }
         } else if (!correct) {                                       // A user replied with an incorrect answer.
           botResponse.text = `That is not the correct answer, ${data.user}!`;
+          botResponse.roundNum = roundNum;
           io.sockets.in(roomId).emit('message', botResponse);
         }
       });
@@ -122,7 +123,7 @@ function joinRoomHandler (data, io, socket) {
   let user = openConnections[socket.id];
   user.name = data.user;
   socket.join(roomId);
-  console.log('wtf', roomId);
+  console.log('Joined room:', roomId);
   socket.emit('roomJoined', roomId);
   let room = io.nsps['/'].adapter.rooms[roomId];
   room.level = 1;
