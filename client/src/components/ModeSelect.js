@@ -22,16 +22,10 @@ componentWillMount(){
             profKey = item      
          }      
       })
-      let aValue = localStorage.getItem(profKey);
+      let aValue =localStorage.getItem(profKey);
       this.setState({
         tempUser: JSON.parse(aValue)
       })
-
-
-  }
-
-  testSound(){
-    this.props.playSound()
   }
 
   initGameFriends(e){
@@ -59,7 +53,7 @@ componentWillMount(){
                   <span>vs.</span>
                   <div className="avatar is-md" style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png')`}}></div>
               </div>
-              <button className="btn-login is-full" onClick={this.testSound.bind(this)}>
+              <button className="btn-login is-full" >
                 Single Player Mode
               </button>
             </div>
@@ -80,6 +74,7 @@ componentWillMount(){
     )
   }
 }
+
 
 function mapStateToProps(state) {
   return {

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
 import io from 'socket.io-client';
+import {socketURL} from '../helpers/utils.js'
 import Bubble from './Bubble';
 
 var port = window.location.port,
@@ -33,7 +34,7 @@ class Chat extends Component {
       score: null,
       chats: []
     };
-    this.socket = io( url, options );
+    this.socket = io( socketURL );
     this.socket.on('message', (message) => {
       console.log('INCOMING MESSAGE', message);
       this.setState({
