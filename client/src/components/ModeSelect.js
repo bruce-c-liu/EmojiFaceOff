@@ -13,22 +13,19 @@ class ModeSelect extends Component {
     };
   }
 
-  componentWillMount () {
-  const lsItems = Object.keys(localStorage);
-  let profKey = null;
-  lsItems.forEach(item => {
-        if (_.startsWith(item, 'firebase:authUser')) {
-           profKey = item;
-         }
-      });
-  let aValue = localStorage.getItem(profKey);
-  this.setState({
-        tempUser: JSON.parse(aValue)
-      });
-}
 
-  testSound () {
-    this.props.playSound();
+componentWillMount(){
+     const lsItems = Object.keys(localStorage);
+     let profKey = null;
+      lsItems.forEach( item =>{
+         if( _.startsWith(item, 'firebase:authUser')){
+            profKey = item      
+         }      
+      })
+      let aValue =localStorage.getItem(profKey);
+      this.setState({
+        tempUser: JSON.parse(aValue)
+      })
   }
 
   initGameFriends (e) {
@@ -54,7 +51,8 @@ class ModeSelect extends Component {
                 <span>vs.</span>
                 <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png')`}} />
               </div>
-              <button className='btn-login is-full' onClick={this.testSound.bind(this)}>
+
+              <button className="btn-login is-full" >
                 Single Player Mode
               </button>
             </div>
@@ -76,7 +74,8 @@ class ModeSelect extends Component {
   }
 }
 
-function mapStateToProps (state) {
+
+function mapStateToProps(state) {
   return {
     users: state.users,
     ui: state.ui,
