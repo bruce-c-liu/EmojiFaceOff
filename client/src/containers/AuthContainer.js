@@ -11,25 +11,6 @@ import { Link} from 'react-router';
 
 class AuthContainer  extends Component{
 
-componentDidMount () {
-  firebaseAuth().onAuthStateChanged((user) => {
-    if (user) {
-      console.log("LOGGED IN", user )
-      console.log("PATH NAME", this.props.location.pathname )
-      const userData = user.providerData[0]
-      const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid)
-      this.props.authUser(user.uid)
-      this.props.fetchingUserSuccess(user.uid, userInfo, Date.now())
-      if (this.props.route.path === '/login') {
-        browserHistory.push('/mode')
-      }
-    } else {
-       this.props.removeFetchingUser()
-       console.log("NOT LOGGED IN" )
-    }
-  })
-}	
-
 handleAuth (e) {
   e.preventDefault()
   this.props.fetchAndHandleAuthedUser()
@@ -41,8 +22,12 @@ handleAuth (e) {
 
     return (
     <div className="login-wrap">
-    		<h1 className="brand-title">Emoji Faceoff</h1> 
-            <Link to="/mode">Choose Mode</Link>
+    		<h1 className="brand-title">Emoji Faceoff</h1>
+            {this.props.users.isAuthed
+                                                  ? <Link to="/mode">YOU ARE LOGGED IN</Link>
+                                                  : null
+            } 
+            
     		<button className="btn-login" onClick={this.handleAuth.bind(this)}>
     			Login
     		</button>
