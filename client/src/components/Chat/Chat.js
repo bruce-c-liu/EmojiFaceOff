@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
-import Transition from 'react-motion-ui-pack'
+import Transition from 'react-motion-ui-pack';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../../actions/actionCreators.js';
@@ -9,14 +9,13 @@ import {socketURL} from '../../helpers/utils.js';
 import ChatHead from './ChatHead';
 import Bubble from './Bubble';
 
-
 class Chat extends Component {
 
   constructor () {
     super();
     this.state = {
       message: '',
-      user: 'PTR',
+      user: 'Patty-Pat-Pat',
       roomId: null,
       round: '',
       score: null,
@@ -24,7 +23,7 @@ class Chat extends Component {
       solution: ['', '', ''],
       clueCount: 0
     };
-    this.socket = io( socketURL );
+    this.socket = io(socketURL);
 
     this.socket.on('message', (message) => {
       console.log('INCOMING MESSAGE', message);
@@ -41,7 +40,7 @@ class Chat extends Component {
     });
 
     this.socket.on('roomJoined', (room) => {
-      console.log('JOINED ROOM:', room);
+      console.log('Server confirms this socket joined room:', room);
     });
   }
 
@@ -83,12 +82,12 @@ class Chat extends Component {
       message: ''
     });
   }
-  requestHint(e){
+  requestHint (e) {
     e.preventDefault();
-    this.state.solution[this.state.clueCount] = '😃'
+    this.state.solution[this.state.clueCount] = '😃';
     this.setState({
       clueCount: ++this.state.clueCount
-    })
+    });
     this.props.playSFX('hint');
   }
   render () {
@@ -97,39 +96,36 @@ class Chat extends Component {
       return <Bubble deets={item} profile={users.profile} key={i} />;
     });
     const chatHeadElements = this.state.chats.length >= 1
-                                ? <ChatHead  deets={this.state} start={this.startGame}/>
-                                : <button className='btn-start' onClick={ this.startGame.bind(this)}>START</button>;
-    
+                                ? <ChatHead deets={this.state} start={this.startGame} />
+                                : <button className='btn-start' onClick={this.startGame.bind(this)}>START</button>;
 
     return (
 
       <div className='chat-view'>
-        <div className='chat-head' >
-              {chatHeadElements}
+        <div className='chat-head'>
+          {chatHeadElements}
         </div>
-      
-          <Transition
-            component="div"
-            className="chat-messages"
-            ref=""
-            enter={{
-              transform: 'scale(1)',
-            }}
-            leave={{
-              opacity: 0,
-            }}
-          > 
-            {chatList}
-            </Transition>
-  
- 
+
+        <Transition
+          component='div'
+          className='chat-messages'
+          ref=''
+          enter={{
+            transform: 'scale(1)'
+          }}
+          leave={{
+            opacity: 0
+          }}
+          >
+          {chatList}
+        </Transition>
 
         <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
-          <button className="btn-hint" onClick={this.requestHint.bind(this)}>?</button>
+          <button className='btn-hint' onClick={this.requestHint.bind(this)}>?</button>
           <input type='text' value={this.state.message}
             onChange={this.handleChange.bind(this)}
             placeholder='Your Message Here' />
-          <input className='btn-input' type='submit' value='Submit'  disabled={this.state.message.length <= 0}/>
+          <input className='btn-input' type='submit' value='Submit' disabled={this.state.message.length <= 0} />
         </form>
       </div>
     );
