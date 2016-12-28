@@ -114,6 +114,11 @@ body {
   .inner-container.is-center {
     justify-content: center; }
 
+button {
+  background-color: transparent;
+  outline: none;
+  border: none; }
+
 .btn-select {
   display: block;
   margin-bottom: 2rem;
@@ -131,10 +136,18 @@ body {
   .btn-select.is-selected {
     background-color: #009d7e; }
 
+.btn-hint {
+  margin-left: 1rem;
+  font-size: 1.65rem;
+  font-family: 'Fredoka One', cursive;
+  color: #FF6B6B; }
+
 .btn-input {
   padding: .5rem 1rem;
   background-color: #FF6B6B;
   color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   border-radius: 4px;
   border: none;
   outline: none; }
@@ -238,6 +251,18 @@ body {
   .count-leave.count-leave-active {
     transform: translateY(-100%); }
 
+.bubs-enter {
+  transition: all .5s ease;
+  transform: scale(0); }
+  .bubs-enter.bubs-enter-active {
+    transform: scale(1); }
+
+.bubs-leave {
+  transition: all .25s;
+  transform: scale(0); }
+  .bubs-leave.bubs-leave-active {
+    transform: scale(1); }
+
 .loader {
   width: 100%;
   height: 100%;
@@ -284,22 +309,29 @@ body {
   background-color: #FF6B6B;
   padding: .25rem 1rem; }
 
+.chat-head_active {
+  width: 100%;
+  min-height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+
 .flip-stat {
   position: relative;
   color: #ff0505; }
   .flip-stat span {
     position: absolute;
-    top: -8px;
+    top: -7px;
     right: -9px;
     font-family: 'Fredoka One', cursive;
     font-size: 2.25rem;
     font-weight: 400; }
   .flip-stat p {
-    font-size: .7rem;
+    font-size: .8rem;
     margin: 0 .5rem;
     color: #ffd1d1; }
-  .flip-stat:last-child {
-    margin-right: 2rem; }
+  .flip-stat:last-child span {
+    left: -9px; }
 
 .btn-start {
   padding: .5rem 1rem;
@@ -346,21 +378,44 @@ body {
     align-self: flex-start;
     margin-left: 2.5rem;
     background-color: #1371ba;
-    font-size: .85rem;
+    font-size: .925rem;
     color: #FFFFFF; }
     .chat-bubble.on-left .bubble-name {
       bottom: 0px;
-      left: -30px; }
+      left: -34px; }
 
 .bubble-name {
-  height: 25px;
-  width: 25px;
+  height: 30px;
+  width: 30px;
   position: absolute;
   bottom: 0px;
-  right: -30px;
+  right: -35px;
   border-radius: 50%;
   background-size: cover;
   background-color: #FF6B6B; }
+
+.hint-wrap {
+  display: flex; }
+
+.hint {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  margin: 0 3px;
+  border-radius: 50%;
+  background-color: #ff8585;
+  border: 1px dashed #ff3838;
+  font-size: 2.6rem; }
+  .hint span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-48%, -44%, 0);
+    line-height: 1;
+    opacity: 0; }
+
+.hint.show-one span:first-child {
+  opacity: 1; }
 
 .login-wrap {
   height: 100%;
@@ -490,3 +545,15 @@ body {
   transform: translateY(0); }
   .count-leave.count-leave-active {
     transform: translateY(-100%); }
+
+.bubs-enter {
+  transition: all .5s ease;
+  transform: scale(0); }
+  .bubs-enter.bubs-enter-active {
+    transform: scale(1); }
+
+.bubs-leave {
+  transition: all .25s;
+  transform: scale(0); }
+  .bubs-leave.bubs-leave-active {
+    transform: scale(1); }

@@ -18,6 +18,7 @@ function messageHandler (data, io, socket) {
   let selectedIndices = room.selectedIndices; // Prompt indices that have already been selected.
   let level = room.level;                     // Room's current difficulty level.
 
+
   // Emit user's message to all sockets connected to this room.
   io.sockets.in(roomId).emit('message', data);
 
@@ -41,6 +42,7 @@ function messageHandler (data, io, socket) {
           botResponse.text = `Welcome to Emoji Face Off!
                               Round 1
                               Please translate [${prompt}] into emoji form~`;
+                      
           botResponse.roundNum = 1;
           io.sockets.in(roomId).emit('score', 0);
           io.sockets.in(roomId).emit('message', botResponse);
@@ -75,6 +77,7 @@ function messageHandler (data, io, socket) {
                 botResponse.text = `Good job, ${data.user}! 
                                         Round ${roundNum + 1}
                                         Please translate [${prompt}] into emoji form~`;
+                botResponse.ansLength = 4;      
                 botResponse.roundNum = roundNum + 1;
                 socket.emit('score', user.score);
                 io.sockets.in(roomId).emit('message', botResponse);

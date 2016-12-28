@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Interweave from 'interweave';
+import {Motion, spring} from 'react-motion';
 import classNames from 'classnames';
-import nerd from '../assets/emoji_nerd.png';
+import nerd from '../../assets/emoji_nerd.png';
 
 class Bubble  extends Component{
   render () {
