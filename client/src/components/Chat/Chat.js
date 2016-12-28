@@ -1,26 +1,14 @@
 import React, { Component } from 'react';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
+import Transition from 'react-motion-ui-pack'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/actionCreators.js';
+import * as actionCreators from '../../actions/actionCreators.js';
 import io from 'socket.io-client';
-import {socketURL} from '../helpers/utils.js'
+import {socketURL} from '../../helpers/utils.js';
+import ChatHead from './ChatHead';
 import Bubble from './Bubble';
 
-let port = window.location.port;
-let host = window.location.hostname;
-let protocol = window.location.protocol;
-let path = '/';
-let url;
-let options = {};
-
-if (protocol.indexOf('https') > -1) {
-  protocol = 'wss:';
-} else {
-  protocol = 'ws:';
-}
-
-url = protocol + '//' + host + ':' + port + path;
 
 class Chat extends Component {
 
@@ -32,7 +20,9 @@ class Chat extends Component {
       roomId: null,
       round: '',
       score: null,
-      chats: []
+      chats: [],
+      solution: ['', '', ''],
+      clueCount: 0
     };
     this.socket = io( socketURL );
 
@@ -68,10 +58,10 @@ class Chat extends Component {
     });
   }
 
-  componentDidUpdate () {
-    const node = this.refs.chatScroll;
-    node.scrollTop = node.scrollHeight + 200;
-  }
+  // componentDidUpdate () {
+  //   const node = this.refs.chatScroll;
+  //   node.scrollTop = node.scrollHeight + 200;
+  // }
 
   handleChange (e) {
     this.setState({
@@ -88,58 +78,58 @@ class Chat extends Component {
     e.preventDefault();
     const userMessage = { user: this.state.user, text: this.state.message, roomId: this.state.roomId };
     this.socket.emit('message', userMessage);
-    this.props.playSFX('chime');
+    this.props.playSFX('message');
     this.setState({
       message: ''
     });
+  }
+  requestHint(e){
+    e.preventDefault();
+    this.state.solution[this.state.clueCount] = '😃'
+    this.setState({
+      clueCount: ++this.state.clueCount
+    })
+    this.props.playSFX('hint');
   }
   render () {
     const { users } = this.props;
     const chatList = this.state.chats.map((item, i) => {
       return <Bubble deets={item} profile={users.profile} key={i} />;
     });
-    const startBtn = this.state.chats.length >= 1
-                                ? null
-                                : <button className='btn-start' onClick={this.startGame.bind(this)}>START</button>;
+    const chatHeadElements = this.state.chats.length >= 1
+                                ? <ChatHead  deets={this.state} start={this.startGame}/>
+                                : <button className='btn-start' onClick={ this.startGame.bind(this)}>START</button>;
+    
 
     return (
 
       <div className='chat-view'>
         <div className='chat-head' >
-          {startBtn}
-
-          <div className='flip-stat'>
-            <p> ROUND</p>
-            <CSSTransitionGroup
-              transitionName='count'
-              transitionEnterTimeout={250}
-              transitionLeaveTimeout={250}
-              >
-              <span key={this.state.round} >{this.state.round}</span>
-            </CSSTransitionGroup>
-          </div>
-          <div className='flip-stat'>
-            <p> SCORE</p>
-            <CSSTransitionGroup
-              transitionName='count'
-              transitionEnterTimeout={250}
-              transitionLeaveTimeout={250}
-              >
-              <span key={this.state.score} >{this.state.score}</span>
-            </CSSTransitionGroup>
-          </div>
-
+              {chatHeadElements}
         </div>
-
-        <div className='chat-messages' ref='chatScroll'>
-          {chatList}
-        </div>
+      
+          <Transition
+            component="div"
+            className="chat-messages"
+            ref=""
+            enter={{
+              transform: 'scale(1)',
+            }}
+            leave={{
+              opacity: 0,
+            }}
+          > 
+            {chatList}
+            </Transition>
+  
+ 
 
         <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
+          <button className="btn-hint" onClick={this.requestHint.bind(this)}>?</button>
           <input type='text' value={this.state.message}
             onChange={this.handleChange.bind(this)}
             placeholder='Your Message Here' />
-          <input className='btn-input' type='submit' value='Submit' />
+          <input className='btn-input' type='submit' value='Submit'  disabled={this.state.message.length <= 0}/>
         </form>
       </div>
     );

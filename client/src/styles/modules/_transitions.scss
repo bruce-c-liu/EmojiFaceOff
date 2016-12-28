@@ -33,3 +33,21 @@
 	}
 
 }
+
+.bubs-enter{
+	transition: all .5s ease;
+	transform: scale(0);
+	&.bubs-enter-active{
+		transform: scale(1);
+	}
+}
+.bubs-leave{
+	transition: all .25s;
+	//position: absolute;
+	//left:0 ; bottom: 0;
+	transform: scale(0);
+	&.bubs-leave-active{
+		transform: scale(1);
+	}
+
+}
