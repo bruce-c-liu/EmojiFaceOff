@@ -3,7 +3,7 @@ import { Router, Route, IndexRoute} from 'react-router';
 import  store, { history } from '../store/store.js';
 
 import MainContainer   from '../containers/MainContainer';
-import Chat   from '../components/Chat';
+import Chat   from '../components/Chat/Chat';
 import Login   from '../components/Login';
 import ModeSelect   from '../components/ModeSelect';
 import Invite   from '../components/Invite';

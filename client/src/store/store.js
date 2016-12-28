@@ -7,8 +7,8 @@ import thunk from 'redux-thunk';
 
 const soundsData = {
   // If no additional configuration is necessary, we can just pass a string  as the path to our file.
-  test: `${process.env.PUBLIC_URL}/sounds/Action_Lock.mp3`,
-  blip: `${process.env.PUBLIC_URL}/sounds/Button_Blip.mp3`,
+  message: `${process.env.PUBLIC_URL}/sounds/message.mp3`,
+  hint: `${process.env.PUBLIC_URL}/sounds/hint.mp3`,
   chime: `${process.env.PUBLIC_URL}/sounds/Selection_Chime.mp3`
 }
 
