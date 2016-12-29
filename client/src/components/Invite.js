@@ -1,19 +1,29 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import * as actionCreators  from  '../actions/actionCreators.js';
+import {inviteBaseURL} from '../helpers/utils.js'
+import { SMSInvite } from '../helpers/http.js';
+import btnIcon  from '../assets/Messenger_Icon.png';
 
 class Invite  extends Component{
 constructor(){
 	super()
 	this.state = {
-		inviteCount: 1
+		inviteCount: 1,
+            inviteURL: null
 	}
+}
+componentDidMount(){
+ // this.props.fetchRoomId();
+   this.setState({
+    inviteURL: inviteBaseURL + this.props.session.roomID
+   })
 }	
 
 InviteCountInc(){
-		
 	this.props.counterInc()
 }
 InviteCountDec(){
@@ -22,11 +32,21 @@ InviteCountDec(){
 		this.props.counterDec()	
 	}	
 }
+inviteBySms(e){
+  e.preventDefault();
+  let userName = this.props.users.profile.info.name;
+  let roomUrl = this.state.inviteURL;
+  let numbers = ReactDOM.findDOMNode(this.refs.toSMS).value
+  SMSInvite(userName, roomUrl, numbers)
+
+}
 
   render () {
+    //const encodedURL = `http%3A%2F%2Femojifaceoff.herokuapp.com%2Fchat%2F${ this.props.session.roomID}`
+    const encodedURL = `fb-messenger://share/?link=http%3A%2F%2Femojifaceoff.herokuapp.com%2Fchat%2F${ this.props.session.roomID}`
     return (
-      <div className="inner-container is-center">
-      		<p> How many friends would you like to invite?</p>
+      <div className="inner-container is-center invite-wrap">
+      		<p> How many friends would you like to invite in this game?</p>
       		<div className="count-selector">	
       			<i className="ion-chevron-down" onClick={this.InviteCountDec.bind(this)} ></i> 
       			<CSSTransitionGroup
@@ -40,13 +60,21 @@ InviteCountDec(){
       			</CSSTransitionGroup>
       			<i className="ion-chevron-up" onClick={this.InviteCountInc.bind(this)}></i>    						
       		</div>
-      		<form className="form-sms" >
+
+      		<form className="form-sms" onSubmit={this.inviteBySms.bind(this)} >
       			<div className="input-inline">
       				<i className="ion-android-call"></i>
-      				<input type="phone"/>
+      				<input type="tel"  ref="toSMS" placeholder="Invite by text message"/>
       				<button className="btn-input">Send</button>
       			</div>
       		</form>
+            <h6 className="or-split">OR</h6>
+
+          <a className="btn-fbshare" href="fb-messenger://share/?link=http%3A%2F%2Femojifaceoff.herokuapp.com%2Fchat%2F1234">
+            <img src={btnIcon} alt=""/>INVITE FACEBOOK FRIENDS
+          </a>
+     
+
 
       </div>
     )

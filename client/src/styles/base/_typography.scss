@@ -16,3 +16,27 @@ h1,h2,h3,h4,h5,h6 {
   -webkit-font-smoothing: antialiased;
 }
 
+.or-split{
+	position: relative;
+	width: 95%;
+	font-size: 1.25rem;
+	color: $gray;
+	text-align: center;
+	&:before{
+		content: '';
+		position: absolute;
+		top: 50%; left: 0;
+		height: 1px;
+		width: 45%;
+		background-color: $gray;
+	}
+	&:after{
+		content: '';
+		position: absolute;
+		top: 50%; right: 0;
+		height: 1px;
+		width: 45%;
+		background-color: $gray;
+	}
+}
+
