@@ -1,5 +1,5 @@
 const RedisController = require('../db/Redis/RedisController.js');
-const friendsVsFriends = require('../game/friendsVsFriends.js');
+const friendsVsFriends = require('../game/modes/friendsVsFriends.js');
 
 let openConnections = {};
 
@@ -12,7 +12,7 @@ function addToOpenConnections (socket) {
 }
 
 const TESTING_NUM_ROUNDS = 3;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
-const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
+const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT DIFFICULTY OF PROMPTS
 function messageHandler (msg, io, socket) {
   friendsVsFriends(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
 }

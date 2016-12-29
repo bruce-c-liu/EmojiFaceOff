@@ -1,4 +1,4 @@
-const skinTones = require('./skinTones.js');
+const ignoredCodePoints = require('../helpers/ignoredCodePoints.js');
 
 module.exports = function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
     // Populate all info from this socket room.
@@ -34,7 +34,7 @@ function checkAnswer (guess, prompt, solutions) {
   let msgCodePoints = [...guess];
   let msgWithoutToneModifiers = '';
   for (let codePoint of msgCodePoints) {
-    if (!skinTones[codePoint]) {     // check to see if it's a skin tone modifier
+    if (!ignoredCodePoints[codePoint]) {     // check to see if it's an ignoredCodePoint
       msgWithoutToneModifiers += codePoint;
     }
   }
