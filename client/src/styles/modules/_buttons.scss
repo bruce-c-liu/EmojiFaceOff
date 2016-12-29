@@ -55,6 +55,28 @@ button{
   }
 }
 
+.btn-fbshare{
+  width: 90%;
+  height: 60px;
+  line-height: 60px;
+  background-color:  lighten( #0071FF, 3%);
+  border-radius: 3px;
+  font-size: 1.25rem;
+  color: $white;
+  font-weight: 300;
+  text-align: center;
+  &.is-full{
+    display: block;
+  }
+  >img{
+    position: relative;
+    left: -30px;
+    max-height: 70%;
+    vertical-align: middle;
+    margin-left: -2rem;
+  }
+}
+
 
 .btn-round {
   width: 250px;
