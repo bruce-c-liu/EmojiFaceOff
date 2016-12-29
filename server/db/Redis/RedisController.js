@@ -1,5 +1,6 @@
 
 const redClient = require('../../config/redis.config.js');
+const Promise = require('bluebird');
 
 module.exports = {
 
@@ -39,7 +40,21 @@ module.exports = {
       .catch(err => {
         throw err;
       });
+  },
+
+  getAllAnswers: (prompts) => {
+    let redisCalls = [];
+    let solutions = {};
+    for (let prompt of prompts) {
+      solutions[prompt] = {};
+      redisCalls.push(redClient.smembers(`PTA:${prompt}`).then(answers => {
+        for (let answer of answers) {
+          solutions[prompt][answer] = true;
+        }
+      }));
+    }
+    return Promise.all(redisCalls).then(() => {
+      return solutions;
+    });
   }
-
 };
-

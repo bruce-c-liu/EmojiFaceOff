@@ -20,7 +20,7 @@ class Chat extends Component {
       round: '',
       score: null,
       chats: [],
-      solution: ['', '', ''],
+      solution: [],
       clueCount: 0
     };
     this.socket = io(socketURL);
@@ -30,6 +30,20 @@ class Chat extends Component {
       this.setState({
         chats: [...this.state.chats, message],
         round: message.roundNum
+      });
+    });
+
+    this.socket.on('newRound', solutionLength => {
+      this.setState({
+        solution: Array(solutionLength).fill(''),
+        clueCount: 0
+      });
+    });
+
+    this.socket.on('hint', hint => {
+      this.state.solution[this.state.clueCount] = hint;
+      this.setState({
+        clueCount: ++this.state.clueCount
       });
     });
 
@@ -94,12 +108,10 @@ class Chat extends Component {
   }
   requestHint (e) {
     e.preventDefault();
-    this.state.solution[this.state.clueCount] = '😃';
-    this.setState({
-      clueCount: ++this.state.clueCount
-    });
+    this.socket.emit('hint', {roomId: this.state.roomId});
     this.props.playSFX('hint');
   }
+
   render () {
     const { users } = this.props;
     const chatList = this.state.chats.map((item, i) => {
