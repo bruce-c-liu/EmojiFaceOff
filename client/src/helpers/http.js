@@ -6,3 +6,16 @@ export function getRoomID () {
           console.log(err);
         });
 }
+
+export function SMSInvite (userName, roomUrl, numbers) {
+	console.log("USERNAME FROM SMS", userName )
+		
+  return axios.post('/api/sendInvite',{
+  	userName: userName,
+  	roomUrl: roomUrl,
+  	numbers: numbers
+  })
+        .catch((err) => {
+          console.log(err);
+        });
+}
