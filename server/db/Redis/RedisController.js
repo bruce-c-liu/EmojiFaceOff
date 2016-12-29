@@ -1,5 +1,6 @@
 
 const redClient = require('../../config/redis.config.js');
+const Promise = require('bluebird');
 
 module.exports = {
 
@@ -12,13 +13,15 @@ module.exports = {
     else return redClient.sunion(`L0P`, `L1P`, `L2P`, `L3P`, `L4P`, `L5P`);
   },
 
+  // Decprecated
   checkAnswer: (prompt, answer) => {
     let tmp = answer;
-    console.log('\u{1F4AA}' === '💪');
+    // console.log('\u{1F4AA}' === '💪');
     console.log('checking answer....', prompt, tmp);
     return redClient.smembers(`PTA:${prompt}`)
       .then(answers => {
         console.log('ANSWERS:', answers);
+
         for (let a of answers) {
           console.log(a, tmp, a === tmp);
           if (a === tmp) {
@@ -30,6 +33,29 @@ module.exports = {
       .catch(err => {
         throw err;
       });
-  }
+  },
 
+  getAnswers: (prompt) => {
+    return redClient.smembers(`PTA:${prompt}`)
+      .catch(err => {
+        throw err;
+      });
+  },
+
+  getAllAnswers: (prompts) => {
+    let redisCalls = [];
+    let solutions = {};
+    for (let prompt of prompts) {
+      solutions[prompt] = {};
+      redisCalls.push(redClient.smembers(`PTA:${prompt}`).then(answers => {
+        for (let answer of answers) {
+          solutions[prompt][answer] = true;
+        }
+      }));
+    }
+    return Promise.all(redisCalls).then(() => {
+      return solutions;
+    });
+  }
 };
+

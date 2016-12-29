@@ -11,7 +11,8 @@ function addToOpenConnections (socket) {
   };
 }
 
-let TESTING_NUM_ROUNDS = 3;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
+const TESTING_NUM_ROUNDS = 3;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
+const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
 function messageHandler (msg, io, socket) {
   friendsVsFriends(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
 }
@@ -25,17 +26,24 @@ function joinRoomHandler (msg, io, socket) {
 
   // Initialize the room's data.
   let rm = io.nsps['/'].adapter.rooms[msg.roomId];
-  rm.level = 1;
+  rm.level = TESTING_DIFFICULTY;
   rm.roundNum = 0;
   rm.prompt = '';
   rm.prompts = [];
+  rm.solutions = {};
+  rm.hints = {};
   rm.host = '';                      // IMPLEMENT LATER
+}
+
+function hintHandler (msg, io, socket) {
+  let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+  socket.emit('hint', rm.hints[rm.prompt].pop());
 }
 
 module.exports = (server) => {
   const io = require('socket.io')(server);
 
-  io.on('connection', (socket) => {
+  io.on('connection', socket => {
     console.log(socket.id, 'has connected!');
     addToOpenConnections(socket);
 
@@ -43,8 +51,12 @@ module.exports = (server) => {
       messageHandler(msg, io, socket);
     });
 
+    socket.on('hint', msg => {
+      hintHandler(msg, io, socket);
+    });
+
     // incoming data should include the "user" who is requesting to create this room
-    socket.on('joinRoom', (msg) => {
+    socket.on('joinRoom', msg => {
       joinRoomHandler(msg, io, socket);
     });
 
