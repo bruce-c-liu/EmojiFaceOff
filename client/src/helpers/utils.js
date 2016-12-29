@@ -22,3 +22,5 @@ if( protocol.indexOf( 'https' ) > -1 ) {
 
 export const socketURL = protocol + "//" + host + ":" + port + path;
 //url = protocol + "//" + host + ":" + port + path;
+
+export const inviteBaseURL = 'http://emojifaceoff.herokuapp.com/chat/'

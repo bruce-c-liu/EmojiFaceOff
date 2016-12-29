@@ -12,14 +12,20 @@ module.exports = {
      *  userName: string,
      *  roomUrl: string
      */
-    let message = `${req.body.userName} has invited you to play EmojiFaceOff! Click to join game, ${req.body.roomUrl} `;
-    let numbers = req.body.numbers.map(num => {
-      return twilClient.sendMessage({
-        to: num,
-        from: process.env.TWILIO_CALLER_ID,
-        body: message
-      });
-    });
+    let message = `👋${req.body.userName} has invited you to play EmojiFaceOff 😀! Click to join game , ${req.body.roomUrl} `;
+    // let numbers = req.body.numbers.map(num => {
+    //   return twilClient.sendMessage({
+    //     to: 'num',
+    //     from: process.env.TWILIO_CALLER_ID,
+    //     body: message
+    //   });
+
+    // });
+    return twilClient.sendMessage({
+            to: req.body.numbers,
+            from: process.env.TWILIO_CALLER_ID,
+            body: message
+          });
 
     Promise.all(numbers)
     .then(result => {

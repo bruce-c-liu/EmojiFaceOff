@@ -88,7 +88,7 @@ export function fetchRoomId() {
                         type: 'FETCH_ROOM',
                         payload: response.data
                     });
-                    browserHistory.push(`/chat/${response.data}`)
+                    browserHistory.push(`/invite`)
                 })
 
       }

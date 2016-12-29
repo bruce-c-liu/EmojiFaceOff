@@ -1,9 +1,15 @@
 
+.invite-wrap{
+	background-color: rgba($white, 0.7);
+	padding: 2rem;
+}
 
 
 .count-selector{
 	display: flex;
 	align-items: center;
+	height: 150px;
+	overflow: hidden;
 	i{
 		font-size: 1.5rem;
 		color: $orange;
@@ -11,8 +17,15 @@
 }
 
 .count-digit{
+	position: relative;
 	font-size: 7rem;
-	margin: 0 2rem;
+	margin: 0 1rem;
+	min-width: 100px;
+	min-height:  150px;
+	span{
+		position: absolute;
+		top: 0%; left: 27%;
+	}
 }
 
 .form-sms{
@@ -23,19 +36,30 @@
 	display: flex;
 	align-items: center;
 	margin: 1rem auto;
-	padding: .5rem;
-	width: 70%;
+	padding: 1rem;
+	height: 60px;
+	width: 100%;
 	background-color: $white;
+	border: 1px solid $orange;
 	border-radius: 4px;
-	input[type="phone"]{
-		padding: 0 1rem;
+	input[type="tel"]{
+		//padding: 0 1rem;
 		flex-grow: 1;
+		max-width: 68%;
 		border: none;
 		outline: none;
 		background-color: transparent;
+		color: $gray-dk;
+		font-weight: 300;
 		font-size: 1.5rem;
+		letter-spacing: 1px;
+		&::placeholder{
+			font-size: 1rem;
+		}
 	}
 	i{
-		font-size: 1.5rem;
+		font-size: 1.25rem;
+		margin-right: .5rem;
+		color: $gray;
 	}
 }
