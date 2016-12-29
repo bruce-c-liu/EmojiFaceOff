@@ -64,7 +64,7 @@ inviteBySms(e){
       		<form className="form-sms" onSubmit={this.inviteBySms.bind(this)} >
       			<div className="input-inline">
       				<i className="ion-android-call"></i>
-      				<input type="phone"  ref="toSMS" placeholder="Invite by text message"/>
+      				<input type="tel"  ref="toSMS" placeholder="Invite by text message"/>
       				<button className="btn-input">Send</button>
       			</div>
       		</form>
