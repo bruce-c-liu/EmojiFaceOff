@@ -75,6 +75,16 @@ class Chat extends Component {
   }
   sendMessage (e) {
     e.preventDefault();
+
+    // let decimalNum;
+    // for (let codePoint of this.state.message) {
+    //   decimalNum = codePoint.codePointAt(0);
+
+    //   if (!skinTones[decimalNum]) {     // check to see if it's a skin tone modifier
+    //     messageCodePoints.push(codePoint.codePointAt(0));
+    //   }
+    // }
+
     const userMessage = { user: this.state.user, text: this.state.message, roomId: this.state.roomId };
     this.socket.emit('message', userMessage);
     this.props.playSFX('message');

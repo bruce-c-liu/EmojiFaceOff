@@ -1,3 +1,5 @@
+const skinTones = require('./skinTones.js');
+
 module.exports = function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
     // Populate all info from this socket room.
   let rm = io.nsps['/'].adapter.rooms[msg.roomId];
@@ -15,31 +17,51 @@ module.exports = function (io, msg, TESTING_NUM_ROUNDS, RedisController, openCon
       io.sockets.in(msg.roomId).emit('message', botResponse);
     }
   } else if (rm.roundNum <= TESTING_NUM_ROUNDS) {
-    RedisController.checkAnswer(rm.prompt, msg.text)
-      .then(correct => {
-        if (correct) {                          // A user replied with a correct answer.
-          openConnections[socket.id].score++;   // Increment the user's score.
-          if (rm.roundNum < TESTING_NUM_ROUNDS) {
-            nextRound(botResponse, msg, io, rm, openConnections, socket);
-          } else if (rm.roundNum === TESTING_NUM_ROUNDS) {    // Current game's selected round num has been reached.
-            endGame(botResponse, msg, io, rm, openConnections);
-          }
-        } else if (!correct) {                                       // A user replied with an incorrect answer.
-          wrongAnswer(botResponse, msg, io, rm);
-        }
-      });
+    if (checkAnswer(msg.text, rm.prompt, rm.dictionary)) {          // A user replied with a correct answer.
+      openConnections[socket.id].score++;                           // Increment the user's score.
+      if (rm.roundNum < TESTING_NUM_ROUNDS) {
+        nextRound(botResponse, msg, io, rm, openConnections, socket);
+      } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
+        endGame(botResponse, msg, io, rm, openConnections);
+      }
+    } else {                                       // A user replied with an incorrect answer.
+      wrongAnswer(botResponse, msg, io, rm);
+    }
   }
 };
+
+function checkAnswer (guess, prompt, dictionary) {
+  let msgCodePoints = [...guess];
+  let msgWithoutToneModifiers = '';
+  for (let codePoint of msgCodePoints) {
+    if (!skinTones[codePoint]) {     // check to see if it's a skin tone modifier
+      msgWithoutToneModifiers += codePoint;
+    }
+  }
+  return dictionary[prompt][msgWithoutToneModifiers];
+}
 
 function startGame (botResponse, msg, io, rm, TESTING_NUM_ROUNDS, RedisController) {
   RedisController.getPrompts(rm.level)
     .then(filteredPrompts => {
+      // randomly populate the room's "prompts" object from our library.
       while (rm.prompts.length < TESTING_NUM_ROUNDS) {
         let promptIndex = Math.floor(Math.random() * filteredPrompts.length);
         if (!rm.prompts.includes(filteredPrompts[promptIndex])) {
           rm.prompts.push(filteredPrompts[promptIndex]);
         }
       }
+      // Create a dictionary of prompt to answers. Answers are in an object for O(1) lookup.
+      for (let prompt of rm.prompts) {
+        RedisController.getAnswers(prompt)
+          .then(answers => {
+            rm.dictionary[prompt] = {};
+            for (let answer of answers) {
+              rm.dictionary[prompt][answer] = true;
+            }
+          });
+      }
+
       rm.prompt = rm.prompts.pop();
       botResponse.text = `Welcome to Emoji Face Off!
                           Round 1
@@ -119,6 +141,9 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   rm.roundNum = 0;
   rm.prompt = '';
   rm.prompts = [];
+  rm.dictionary = {};
+
+  // Reset all user's scores to 0.
   for (let id in openConnections) {
     openConnections[id].score = 0;
   }

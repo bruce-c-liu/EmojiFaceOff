@@ -29,6 +29,7 @@ function joinRoomHandler (msg, io, socket) {
   rm.roundNum = 0;
   rm.prompt = '';
   rm.prompts = [];
+  rm.dictionary = {};
   rm.host = '';                      // IMPLEMENT LATER
 }
 
