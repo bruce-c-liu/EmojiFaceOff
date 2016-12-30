@@ -85,7 +85,10 @@ h1, h2, h3, h4, h5, h6 {
 .jumbo {
   font-size: 4rem;
   font-family: 'Fredoka One', cursive;
-  color: #FFFFFF; }
+  color: #FFFFFF;
+  text-align: center; }
+  .jumbo span {
+    display: block; }
 
 .or-split {
   position: relative;
@@ -189,6 +192,19 @@ button {
   font-size: 1rem;
   color: #FFFFFF; }
   .btn-login.is-full {
+    display: block; }
+
+.btn-outline {
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  background-color: #FF6B6B;
+  border-radius: 3px;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #FFFFFF;
+  text-align: center; }
+  .btn-outline.is-full {
     display: block; }
 
 .btn-fbshare {
@@ -446,13 +462,13 @@ button {
 
 .hint {
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   margin: 0 3px;
   border-radius: 50%;
-  background-color: #ff8585;
+  background-color: #ffb8b8;
   border: 1px dashed #ff3838;
-  font-size: 2.6rem; }
+  font-size: 2.2rem; }
   .hint span {
     position: absolute;
     top: 50%;
@@ -559,10 +575,11 @@ button {
     color: #9B9F9F; }
 
 .onboard-wrap {
+  justify-content: space-between;
   background-color: rgba(33, 33, 35, 0.9);
-  padding: 2rem; }
+  padding: 2rem 3rem; }
   .onboard-wrap p {
-    color: #FFFFFF;
+    color: #eceff2;
     font-size: 1.25rem; }
 
 .loader {

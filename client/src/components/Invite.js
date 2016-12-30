@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import * as actionCreators  from  '../actions/actionCreators.js';
 import {inviteBaseURL} from '../helpers/utils.js'
-import { SMSInvite } from '../helpers/http.js';
 import btnIcon  from '../assets/Messenger_Icon.png';
 
 class Invite  extends Component{
@@ -40,13 +39,16 @@ inviteBySms(e){
   e.preventDefault();
   let userName = this.props.users.profile.info.name;
   let roomUrl = this.state.inviteURL;
-  let numbers = ReactDOM.findDOMNode(this.refs.toSMS).value
-  SMSInvite(userName, roomUrl, numbers)
+  let numbers = [ReactDOM.findDOMNode(this.refs.toSMS).value]
+  this.props.sendSMS(userName, roomUrl, numbers)
 
 }
 
   render () {
    const encodedURL = `fb-messenger://share/?link=http%3A%2F%2Femojifaceoff.herokuapp.com%2Fchat%2F${ this.props.session.roomID}`
+   const loaderUI =  this.props.ui.loading 
+                            ? <div className="loader"><p>Sending Invitation</p></div>
+                            :  null
     return (
       <div className="inner-container is-center invite-wrap">
       		<p> How many friends would you like to invite in this game?</p>
@@ -76,9 +78,7 @@ inviteBySms(e){
           <a className="btn-fbshare" href={encodedURL}>
             <img src={btnIcon} alt=""/>INVITE FACEBOOK FRIENDS
           </a>
-     
-
-
+          {loaderUI}
       </div>
     )
   }
