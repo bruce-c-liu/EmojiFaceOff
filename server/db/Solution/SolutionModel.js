@@ -6,6 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     length: {
       type: DataTypes.INTEGER
+    },
+    approved: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }, {
     freezeTableName: true,
