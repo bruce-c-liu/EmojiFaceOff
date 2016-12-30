@@ -67,7 +67,8 @@ class Chat extends Component {
   componentDidMount () {
     this.socket.emit('joinRoom', {
       roomId: this.state.roomId,
-      user: this.state.user
+      user: this.state.user,
+      type: 'RANKED' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
     });
   }
 
