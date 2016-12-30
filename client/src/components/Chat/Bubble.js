@@ -4,34 +4,33 @@ import {Motion, spring} from 'react-motion';
 import classNames from 'classnames';
 import nerd from '../../assets/emoji_nerd.png';
 
-class Bubble  extends Component{
+class Bubble extends Component {
   render () {
-  	const bubbleClass = classNames({
-  		'chat-bubble': true,
-  		'on-left': this.props.deets.user === 'ebot'
-  	})
-    const avatarProp =  this.props.profile 
+    const bubbleClass = classNames({
+      'chat-bubble': true,
+      'on-left': this.props.deets.user === 'ebot'
+    });
+    const avatarProp = this.props.profile
                                     ? this.props.profile.info.avatar
-                                    : null; 
-    const avatarSrc = this.props.deets.user === 'ebot'  && this.props.profile
+                                    : null;
+    const avatarSrc = this.props.deets.user === 'ebot' && this.props.profile
                                     ? nerd
                                     : avatarProp;
     const avatarBG = {
-      backgroundImage:  `url(${avatarSrc})`
-    }
+      backgroundImage: `url(${avatarSrc})`
+    };
     return (
       <div className={bubbleClass}>
-    		{/* {this.props.deets.text} */}
-      		
-      		<Interweave
-      		  tagName="span"
-      		  content={this.props.deets.text}
-      		/>
-      		<div className="bubble-name" style={avatarBG}>
+        {/* {this.props.deets.text} */}
 
-      		</div>
+        <Interweave
+          tagName='span'
+          content={this.props.deets.text}
+        />
+
+        <div className='bubble-name' style={avatarBG} />
       </div>
-    )
+    );
   }
 }
-export default Bubble
+export default Bubble;

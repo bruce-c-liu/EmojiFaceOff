@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route, IndexRoute} from 'react-router';
+import { Router, Route, IndexRoute } from 'react-router';
 import store, { history } from '../store/store.js';
 
 import MainContainer from '../containers/MainContainer';
@@ -8,9 +8,10 @@ import Login from '../components/Login';
 import ModeSelect from '../components/ModeSelect';
 import Invite from '../components/Invite';
 import OnBoard from '../components/OnBoard';
-import NoWhere from '../components/ModeSelect';
+import NoWhere from '../components/NoWhere';
 import AuthContainer from '../containers/AuthContainer';
 import RequestPrompt from '../components/RequestPrompt';
+
 export default function getRoutes (checkAuth) {
   return (
     <Router history={history}>
@@ -27,4 +28,3 @@ export default function getRoutes (checkAuth) {
     </Router>
   );
 }
-

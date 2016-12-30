@@ -16,5 +16,4 @@ export const soundsData = {
   //   - the start time of the sound, in milliseconds
   //   - the duration of the sound, in milliseconds
 
-  }
-}
+};

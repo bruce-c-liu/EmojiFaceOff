@@ -8,6 +8,7 @@ import io from 'socket.io-client';
 import {socketURL} from '../../helpers/utils.js';
 import ChatHead from './ChatHead';
 import Bubble from './Bubble';
+import { getUserELO, getUser } from '../../helpers/http.js';
 
 class Chat extends Component {
 
@@ -65,10 +66,17 @@ class Chat extends Component {
   }
 
   componentDidMount () {
-    this.socket.emit('joinRoom', {
-      roomId: this.state.roomId,
-      user: this.state.user
-    });
+    getUser(this.props.users.profile.info.uid)
+      .then(result => {
+        console.log('CURRENT USER FROM DB:', result.data);
+        this.socket.emit('joinRoom', {
+          roomId: this.state.roomId,
+          user: this.state.user,
+          elo: result.data.ELO,
+          fbId: result.data.auth,
+          type: 'RANKED' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+        });
+      });
   }
 
   // componentDidUpdate () {
@@ -89,15 +97,6 @@ class Chat extends Component {
   }
   sendMessage (e) {
     e.preventDefault();
-
-    // let decimalNum;
-    // for (let codePoint of this.state.message) {
-    //   decimalNum = codePoint.codePointAt(0);
-
-    //   if (!skinTones[decimalNum]) {     // check to see if it's a skin tone modifier
-    //     messageCodePoints.push(codePoint.codePointAt(0));
-    //   }
-    // }
 
     const userMessage = { user: this.state.user, text: this.state.message, roomId: this.state.roomId };
     this.socket.emit('message', userMessage);
@@ -120,8 +119,8 @@ class Chat extends Component {
     const chatHeadElements = this.state.chats.length >= 1
                                 ? <ChatHead deets={this.state} start={this.startGame} />
                                 : <button className='btn-start' onClick={this.startGame.bind(this)}>START</button>;
-      const hintMax = this.state.solution.length && this.state.solution.length >=  this.state.clueCount
-      console.log("SOLUTION LENGTH", this.state.solution.length)
+    const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
+    console.log('SOLUTION LENGTH', this.state.solution.length);
 
     return (
 
@@ -145,7 +144,7 @@ class Chat extends Component {
         </Transition>
 
         <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
-          <button className='btn-hint' onClick={this.requestHint.bind(this)}  > ?</button>
+          <button className='btn-hint' onClick={this.requestHint.bind(this)} > ?</button>
           <input type='text' value={this.state.message}
             onChange={this.handleChange.bind(this)}
             placeholder='Your Message Here' />

@@ -1,5 +1,7 @@
 const RedisController = require('../db/Redis/RedisController.js');
-const friendsVsFriends = require('../game/friendsVsFriends.js');
+const singlePlayer = require('../game/modes/singlePlayer.js');
+const friendsVsFriends = require('../game/modes/friendsVsFriends.js');
+const ranked = require('../game/modes/friendsVsFriends.js');
 
 let openConnections = {};
 
@@ -12,14 +14,25 @@ function addToOpenConnections (socket) {
 }
 
 const TESTING_NUM_ROUNDS = 3;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
-const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
+const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT DIFFICULTY OF PROMPTS
 function messageHandler (msg, io, socket) {
-  friendsVsFriends(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+  if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
+    singlePlayer(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+  } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'FRIENDS_VS_FRIENDS') {
+    friendsVsFriends(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+  } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'RANKED') {
+    ranked(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+  }
 }
 
 function joinRoomHandler (msg, io, socket) {
-  openConnections[socket.id].name = msg.user;   // Set the user's name'
-  socket.join(msg.roomId);                      // Add this socket to the room.
+  // Initialize/store user's info in openConnections
+  openConnections[socket.id].name = msg.user;   // Set the user's name
+  openConnections[socket.id].fbId = msg.fbId;   // Set the user's fbID
+  openConnections[socket.id].elo = msg.elo;     // Set the user's elo
+
+  // Add this socket to the room.
+  socket.join(msg.roomId);
   console.log('Joined room:', msg.roomId);
   socket.emit('roomJoined', msg.roomId);
   console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
@@ -32,6 +45,7 @@ function joinRoomHandler (msg, io, socket) {
   rm.prompts = [];
   rm.solutions = {};
   rm.hints = {};
+  rm.type = msg.type;                // options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
   rm.host = '';                      // IMPLEMENT LATER
 }
 

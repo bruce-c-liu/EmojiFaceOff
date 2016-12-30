@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
   let counter = 0;
   socket.on('message', (data) => {
     console.log('message from client side', data, typeof data);
-   
+
     const prompt = {
       'yo': 'yo',
       'hello': 'hello',
@@ -40,8 +40,8 @@ io.on('connection', (socket) => {
       promptArr.push(keys);
     }
     if (data.text === 'start') {
-      console.log("SOMETHING" )
-        
+      console.log('SOMETHING');
+
       let message = {
         'user': 'ebot',
         'text': `Please say: ${promptArr[counter]}`
@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
         io.emit('message', message);
         counter++;
         message.text = `Please say: ${promptArr[counter]}`;
-       io.emit('message', message);
+        io.emit('message', message);
       } else {
         let message = {
           'user': 'ebot',
@@ -67,11 +67,11 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('create', function(room) {
-    console.log("IN SERVER ON ROOM CREATE" )
-      
-      socket.join(room);
-    });
+  socket.on('create', function (room) {
+    console.log('IN SERVER ON ROOM CREATE');
+
+    socket.join(room);
+  });
 });
 server.listen(port, () => {
   console.log('Listening on ' + server.address().port);

@@ -4,10 +4,10 @@ const redClient = require('../../config/redis.config.js');
 module.exports = {
 
   getUser: (req, res, next) => {
-    if (req.query.fbId) {
+    if (req.params.fbID) {
       models.User.findOne({
         where: {
-          auth: req.query.fbId
+          auth: req.params.fbID
         }
       })
       .then(result => {
@@ -23,20 +23,21 @@ module.exports = {
     }
   },
 
-  getUserELO: (req, res, next) => {
-    if (req.query.fbId) {
+  updateUserELO: (req, res, next) => {
+    if (req.params.fbID) {
       models.User.findOne({
         where: {
-          auth: req.query.fbId
+          auth: req.params.fbID
         }
       })
       .then(result => {
         if (result) {
-          let data = {
-            displayName: result.displayName,
-            ELO: result.ELO
-          };
-          res.json(data);
+          result.update({
+            ELO: req.body.elo
+          })
+          .then(() => {
+            res.json('User\'s ELO has been successfully updated');
+          });
         } else res.json('No user found');
       })
       .catch(err => {

@@ -3,21 +3,21 @@ import { saveNewUser } from '../helpers/http.js';
 import firebase from 'firebase';
 
 export default function auth () {
-  return firebaseAuth().signInWithPopup(new firebase.auth.FacebookAuthProvider())
+  return firebaseAuth().signInWithPopup(new firebase.auth.FacebookAuthProvider());
 }
 
 export function checkIfAuthed (store) {
-  return store.getState().isAuthed === true
+  return store.getState().isAuthed === true;
 }
 
 export function logout () {
-  return firebaseAuth().signOut()
+  return firebaseAuth().signOut();
 }
 
 export function saveUser (user) {
   return ref.child(`users/${user.uid}`)
     .set(user)
     .then(() => user)
-    .then( (newUser)=> saveNewUser(newUser) )
-    .then ( console.log("New User Saved to DB") )
+    .then((newUser) => saveNewUser(newUser))
+    .then(console.log('New User Saved to DB'));
 }
