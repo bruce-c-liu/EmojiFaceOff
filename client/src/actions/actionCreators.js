@@ -1,6 +1,6 @@
 import auth, { logout, saveUser } from '../helpers/auth';
 import { CALL_API } from 'redux-api-middleware';
-import { getRoomID, saveNewUser } from '../helpers/http.js';
+import { getRoomID, saveNewUser, SMSInvite } from '../helpers/http.js';
 import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 
@@ -92,6 +92,24 @@ export function fetchRoomId() {
                 })
 
       }
+}
+
+export function sendSMS(userName, roomUrl, numbers){
+  return function (dispatch) {
+     dispatch({
+      type: 'IS_LOADING'
+    });
+     SMSInvite(userName, roomUrl, numbers)
+     .then( (resp)=>{
+      console.log("SMS RESP", resp )       
+       dispatch({
+        type: 'IS_LOADED'
+      })
+      browserHistory.push('/onboard')
+     })
+
+  }
+
 }
 
 export function counterInc(){
