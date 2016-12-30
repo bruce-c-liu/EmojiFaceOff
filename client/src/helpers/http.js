@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // deprecated
 export function getRoomID () {
-  return axios.get('/api/getRoom')
+  return axios.get('/api/room')
         .catch((err) => {
           console.log(err);
         });

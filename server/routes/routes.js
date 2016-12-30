@@ -5,7 +5,7 @@ const LibraryController = require('../db/Library/LibraryController.js');
 const UserController = require('../db/User/UserController.js');
 
 module.exports = (app, express) => {
-  app.get('/api/getRoom', RoomController.getRoom);
+  app.get('/api/getRoom', RoomController.getRoom); // deprecated
 
   app.post('/api/sendInvite', TwilioController.textMessage);
 
