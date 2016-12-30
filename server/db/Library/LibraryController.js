@@ -12,6 +12,28 @@ module.exports = {
     });
   },
 
+  pendPrompts: (req, res, next) => {
+    console.log('in pending prompts');
+    models.Library.findAll({
+      where: {
+        approved: true
+      },
+      include: {
+        model: models.Solution,
+        where: {
+          approved: true
+        }
+      }
+    })
+    .then(result => {
+      console.log(result);
+      res.json(result);
+    })
+    .catch(err => {
+      throw err;
+    });
+  },
+
   addPrompt: (req, res, next) => {
     console.log('request to add prompt', req.body, req.body.answer, [...req.body.answer].length);
     let prompt = req.body.prompt;
