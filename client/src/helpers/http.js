@@ -19,3 +19,14 @@ export function SMSInvite (userName, roomUrl, numbers) {
           console.log(err);
         });
 }
+
+export function saveNewUser(newUser){
+    return axios.post('/api/addUser',{
+      displayName: newUser.name,
+      imgUrl: newUser.avatar,
+      auth: newUser.uid
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+}

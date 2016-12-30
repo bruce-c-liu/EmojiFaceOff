@@ -8,8 +8,9 @@ class OnBoard  extends Component{
   render () {
     return (
       <div className="inner-container is-center onboard-wrap">
+      <h1 className="jumbo">😎</h1>
       		<h1 className="jumbo">Sweet!</h1>
-      		<p>Invites went out to your friends to join the challenge. While you wait for them to arrive, you may warm-up those skills in practive mode.</p> <p> Once 1 other player has joined the challenge, you may offically start the game by tapping the "START" button.</p>
+      		<p>Invites went out to your friends to join the challenge. While you wait for them to arrive,  warm-up those skills in practive mode.</p> <p> Once 1 other player has entered, you may offically start the game by tapping the "START" button.</p>
       </div>
     )
   }

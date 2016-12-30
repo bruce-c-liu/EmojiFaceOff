@@ -1,6 +1,6 @@
 import auth, { logout, saveUser } from '../helpers/auth';
 import { CALL_API } from 'redux-api-middleware';
-import { getRoomID } from '../helpers/http.js';
+import { getRoomID, saveNewUser } from '../helpers/http.js';
 import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 
