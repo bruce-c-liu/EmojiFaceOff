@@ -11,12 +11,6 @@ module.exports = (sequelize, DataTypes) => {
     approved: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
-    },
-    spareTxt: {
-      type: DataTypes.TEXT
-    },
-    spareInt: {
-      type: DataTypes.INTEGER
     }
   }, {
     freezeTableName: true,

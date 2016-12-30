@@ -19,18 +19,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     mmr: {
       type: DataTypes.INTEGER
-    },
-    spareTxt: {
-      type: DataTypes.TEXT
-    },
-    spareInt: {
-      type: DataTypes.INTEGER
     }
   }, {
     freezeTableName: true,
     classMethods: {
       associate: (models) => {
-        User.belongsTo(models.Room);
         User.hasMany(models.Library);
       }
     }

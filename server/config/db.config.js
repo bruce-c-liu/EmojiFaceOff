@@ -6,7 +6,6 @@ const path = require('path');
 const modelPaths = [
   path.join(__dirname, '/../db/Library/LibraryModel.js'),
   path.join(__dirname, '/../db/User/UserModel.js'),
-  path.join(__dirname, '/../db/Room/RoomModel.js'),
   path.join(__dirname, '/../db/Commend/CommendModel.js'),
   path.join(__dirname, '/../db/Solution/SolutionModel.js')
 ];
