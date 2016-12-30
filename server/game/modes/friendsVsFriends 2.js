@@ -1,5 +1,4 @@
 const ignoredCodePoints = require('../helpers/ignoredCodePoints.js');
-const elo = require('../helpers/elo.js');
 
 module.exports = function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
     // Populate all info from this socket room.

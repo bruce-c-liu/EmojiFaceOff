@@ -8,6 +8,7 @@ import io from 'socket.io-client';
 import {socketURL} from '../../helpers/utils.js';
 import ChatHead from './ChatHead';
 import Bubble from './Bubble';
+import { getUserELO, getUser } from '../../helpers/http.js';
 
 class Chat extends Component {
 
@@ -65,9 +66,12 @@ class Chat extends Component {
   }
 
   componentDidMount () {
+    console.log('session', this.props.session);
+    // getUserELO()
     this.socket.emit('joinRoom', {
       roomId: this.state.roomId,
       user: this.state.user,
+      // elo: elo,
       type: 'RANKED' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
     });
   }
@@ -90,15 +94,6 @@ class Chat extends Component {
   }
   sendMessage (e) {
     e.preventDefault();
-
-    // let decimalNum;
-    // for (let codePoint of this.state.message) {
-    //   decimalNum = codePoint.codePointAt(0);
-
-    //   if (!skinTones[decimalNum]) {     // check to see if it's a skin tone modifier
-    //     messageCodePoints.push(codePoint.codePointAt(0));
-    //   }
-    // }
 
     const userMessage = { user: this.state.user, text: this.state.message, roomId: this.state.roomId };
     this.socket.emit('message', userMessage);
