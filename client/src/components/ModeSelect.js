@@ -54,24 +54,24 @@ class ModeSelect extends Component {
         <div className='mode-select_wrap'>
           <div>
             <div className='mode-select_vs'>
-                  <div className='avatar is-md' style={avatarBG} />
-                  <span>vs.</span>
-                  <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png')`}} />
-                </div>
+              <div className='avatar is-md' style={avatarBG} />
+              <span>vs.</span>
+              <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png')`}} />
+            </div>
 
             <button className='btn-login is-full' onClick={this.initGameSolo.bind(this)} >
                 Single Player Mode
-                </button>
+            </button>
           </div>
           <div>
             <div className='mode-select_vs'>
-                  <div className='avatar is-md' style={avatarBG} />
-                  <span>vs.</span>
-                  <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/4b/93/4b932980a0fe8f7ad711a8c2fcc68ce4.png')`}} />
-                </div>
+              <div className='avatar is-md' style={avatarBG} />
+              <span>vs.</span>
+              <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/4b/93/4b932980a0fe8f7ad711a8c2fcc68ce4.png')`}} />
+            </div>
             <button className='btn-login is-full' onClick={this.initGameFriends.bind(this)}>
-                  Challenge Your Friends!
-                </button>
+              Challenge Your Friends!
+            </button>
           </div>
 
         </div>

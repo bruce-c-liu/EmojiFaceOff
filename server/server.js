@@ -19,4 +19,3 @@ models.sequelize.sync().then(() => {
     console.log('Server/Socket listening on port ' + port);
   });
 });
-

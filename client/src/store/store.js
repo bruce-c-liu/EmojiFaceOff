@@ -12,10 +12,10 @@ const soundsData = {
   chime: `${process.env.PUBLIC_URL}/sounds/Selection_Chime.mp3`,
   tap: `${process.env.PUBLIC_URL}/sounds/Button_Click.mp3`,
   tick: `${process.env.PUBLIC_URL}/sounds/Button_Tick.mp3`
-}
+};
 
 // Import our Sound Data Object
-//import soundsData from '../helpers/soundData.js';
+// import soundsData from '../helpers/soundData.js';
 
 // Pre-load our middleware with our sounds data.
 const loadedSoundsMiddleware = soundsMiddleware(soundsData);
@@ -24,9 +24,9 @@ const loadedSoundsMiddleware = soundsMiddleware(soundsData);
 import rootReducer from '../reducers/index';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
- 
- const store = createStore(rootReducer, composeEnhancers(
-    applyMiddleware(thunk, loadedSoundsMiddleware , apiMiddleware)
+
+const store = createStore(rootReducer, composeEnhancers(
+    applyMiddleware(thunk, loadedSoundsMiddleware, apiMiddleware)
   ));
 
 export const history = syncHistoryWithStore(browserHistory, store);
