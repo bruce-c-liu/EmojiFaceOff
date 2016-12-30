@@ -38,38 +38,38 @@ INSERT INTO "Library" ("prompt", "level", "approved", "createdAt", "updatedAt", 
 Values ('happy', 1, true, NOW(), NOW(), (Select "id" from "User" WHERE "displayName"='Khoa'));
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('😃',1,NOW(),NOW(),(Select "id" from "Library" WHERE "prompt"='happy'));
+VALUES('😃',1,NOW(),NOW(),(Select "id" from "Library" WHERE "prompt"='happy'), true);
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('😀',1,NOW(),NOW(),(Select "id" from "Library" WHERE "prompt"='happy'));
+VALUES('😀',1,NOW(),NOW(),(Select "id" from "Library" WHERE "prompt"='happy'), true);
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('😂',1,NOW(),NOW(),(Select "id" from "Library" WHERE "prompt"='happy'));
+VALUES('😂',1,NOW(),NOW(),(Select "id" from "Library" WHERE "prompt"='happy'), true);
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('😁',1,NOW(),NOW(),(Select "id" from "Library" WHERE "prompt"='happy'));
+VALUES('😁',1,NOW(),NOW(),(Select "id" from "Library" WHERE "prompt"='happy'), true);
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('😄',1,NOW(),NOW(),(Select "id" from "Library" WHERE "prompt"='happy'));
+VALUES('😄',1,NOW(),NOW(),(Select "id" from "Library" WHERE "prompt"='happy'), true);
 
 -- sad
 -- INSERT INTO "Library" ("prompt", "level", "approved", "createdAt", "updatedAt", "UserId")
--- Values ('sad', 1, true, NOW(), NOW(), (Select "id" from "User" WHERE "displayName"='Bruce'));
+-- Values ('sad', 1, true, NOW(), NOW(), (Select "id" from "User" WHERE "displayName"='Bruce'), true);
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('🙁',1, NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='sad'));
+VALUES('🙁',1, NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='sad'), true);
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('☹️',1, NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='sad'));
+VALUES('☹️',1, NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='sad'), true);
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('😟',1, NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='sad'));
+VALUES('😟',1, NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='sad'), true);
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('😢',1, NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='sad'));
+VALUES('😢',1, NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='sad'), true);
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('😭',1, NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='sad'));
+VALUES('😭',1, NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='sad'), true);
 
 
 -- top gun
@@ -77,8 +77,8 @@ INSERT INTO "Library" ("prompt", "level", "approved", "createdAt", "updatedAt", 
 Values ('top gun', 1, true, NOW(), NOW(), (Select "id" from "User" WHERE "displayName"='Patrick'));
 
 
-INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId") 
-VALUES('☝🔫',1,NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='top gun'));
+INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
+VALUES('☝🔫',1,NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='top gun'), true);
 
 
 -- buff
@@ -86,7 +86,7 @@ INSERT INTO "Library" ("prompt", "level", "approved", "createdAt", "updatedAt", 
 Values ('buff', 1, true, NOW(), NOW(), (Select "id" from "User" WHERE "displayName"='Patrick'));
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('💪',1,NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='buff'));
+VALUES('💪',1,NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='buff'), true);
 
 
 
@@ -95,4 +95,4 @@ INSERT INTO "Library" ("prompt", "level", "approved", "createdAt", "updatedAt", 
 Values ('unexepected gasm', 3, true, NOW(), NOW(), (Select "id" from "User" WHERE "displayName"='Bruce'));
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
-VALUES('😮',1,NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='unexepected gasm'));
+VALUES('😮',1,NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='unexepected gasm'), true);

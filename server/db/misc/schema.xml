@@ -37,7 +37,7 @@
 		<type label="SET" length="1" sql="SET" quote=""/>
 		<type label="Bit" length="0" sql="bit" quote=""/>
 	</group>
-</datatypes><table x="278" y="214" name="User">
+</datatypes><table x="239" y="215" name="User">
 <row name="id" null="0" autoincrement="1">
 <datatype>INTEGER</datatype>
 </row>
@@ -59,21 +59,17 @@
 <row name="mmr" null="0" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>0</default></row>
-<row name="RoomId" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="Room" row="id" />
-</row>
-<row name="spareTxt" null="1" autoincrement="0">
-<datatype>MEDIUMTEXT</datatype>
+<row name="createdAt" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
 <default>NULL</default></row>
-<row name="spareInt" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
+<row name="updatedAt" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
 </table>
-<table x="456" y="7" name="Library">
+<table x="424" y="51" name="Library">
 <row name="id" null="0" autoincrement="1">
 <datatype>INTEGER</datatype>
 </row>
@@ -89,39 +85,22 @@
 <row name="approved" null="0" autoincrement="0">
 <datatype>BINARY</datatype>
 <default>'0'</default></row>
+<row name="createdAt" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
+<default>NULL</default></row>
+<row name="updatedAt" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
+<default>NULL</default></row>
 <row name="UserId" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="User" row="id" />
 <comment>Owner Id: who created this prompt</comment>
 </row>
-<row name="spareTxt" null="1" autoincrement="0">
-<datatype>MEDIUMTEXT</datatype>
-<default>NULL</default></row>
-<row name="spareInt" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
 </table>
-<table x="633" y="300" name="Room">
-<row name="id" null="0" autoincrement="1">
-<datatype>INTEGER</datatype>
-</row>
-<row name="name" null="0" autoincrement="0">
-<datatype>MEDIUMTEXT</datatype>
-</row>
-<row name="round" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<row name="spareTxt" null="1" autoincrement="0">
-<datatype>MEDIUMTEXT</datatype>
-<default>NULL</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="643" y="40" name="Commend">
+<table x="649" y="289" name="Commend">
 <row name="id" null="0" autoincrement="1">
 <datatype>INTEGER</datatype>
 </row>
@@ -131,6 +110,36 @@
 <row name="insultFlag" null="0" autoincrement="0">
 <datatype>BINARY</datatype>
 <default>'0'</default><comment>flag to determine if this is for an insult or props</comment>
+</row>
+<row name="createdAt" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
+<default>NULL</default></row>
+<row name="updatedAt" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="649" y="86" name="Solution">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="name" null="0" autoincrement="0">
+<datatype>MEDIUMTEXT</datatype>
+</row>
+<row name="length" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="createdAt" null="0" autoincrement="0">
+<datatype>DATETIME</datatype>
+</row>
+<row name="updatedAt" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
+<default>NULL</default></row>
+<row name="LibraryId" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<relation table="Library" row="id" />
 </row>
 <key type="PRIMARY" name="">
 <part>id</part>
