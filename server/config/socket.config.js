@@ -69,7 +69,16 @@ module.exports = (server) => {
       hintHandler(msg, io, socket);
     });
 
-    // incoming data should include the "user" who is requesting to create this room
+    /*
+     incoming msg format:
+      {
+        user (string): displayname of who is requesting to join this room,
+        fbId (string): user's facebook id,
+        elo (number): user's ELO,
+        roomId (string): which room user is requesting to join,
+        type (string): type of room ('SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED')
+      }
+    */
     socket.on('joinRoom', msg => {
       joinRoomHandler(msg, io, socket);
     });
