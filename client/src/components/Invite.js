@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/actionCreators.js';
-import {inviteBaseURL} from '../helpers/utils.js';
+import * as actionCreators from '../actions/actionCreators';
+import {inviteBaseURL} from '../helpers/utils';
+import {shortenLink} from '../helpers/http';
 import btnIcon from '../assets/Messenger_Icon.png';
 
 class Invite extends Component {
@@ -43,7 +44,9 @@ class Invite extends Component {
     let userName = this.props.users.profile.info.name;
     let roomUrl = this.state.inviteURL;
     let numbers = [ReactDOM.findDOMNode(this.refs.toSMS).value];
-    this.props.sendSMS(userName, roomUrl, numbers);
+    //this.props.sendSMS(userName, roomUrl, numbers);
+    shortenLink(roomUrl)
+
   }
 
   render () {
