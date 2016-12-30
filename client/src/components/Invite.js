@@ -24,12 +24,16 @@ componentDidMount(){
 }	
 
 InviteCountInc(){
-	this.props.counterInc()
+  if(this.props.session.inviteCount < 6){
+	this.props.counterInc();
+      this.props.playSFX('tick');
+  }
 }
 InviteCountDec(){
 	console.log("INC INVITE" )	
 	if(this.props.session.inviteCount >= 2){
 		this.props.counterDec()	
+            this.props.playSFX('tick');
 	}	
 }
 inviteBySms(e){

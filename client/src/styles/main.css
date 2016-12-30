@@ -82,6 +82,11 @@ h1, h2, h3, h4, h5, h6 {
   font-style: normal;
   -webkit-font-smoothing: antialiased; }
 
+.jumbo {
+  font-size: 4rem;
+  font-family: 'Fredoka One', cursive;
+  color: #FFFFFF; }
+
 .or-split {
   position: relative;
   width: 95%;
@@ -552,6 +557,13 @@ button {
     font-size: 1.25rem;
     margin-right: .5rem;
     color: #9B9F9F; }
+
+.onboard-wrap {
+  background-color: rgba(33, 33, 35, 0.9);
+  padding: 2rem; }
+  .onboard-wrap p {
+    color: #FFFFFF;
+    font-size: 1.25rem; }
 
 .loader {
   width: 100%;
