@@ -26,10 +26,13 @@ function messageHandler (msg, io, socket) {
 }
 
 function joinRoomHandler (msg, io, socket) {
-  openConnections[socket.id].name = msg.user;   // Set the user's name'
-  openConnections[socket.id].fbId = msg.user;   // Set the user's name'
-  openConnections[socket.id].elo = msg.elo;     // Set the user's name'
-  socket.join(msg.roomId);                      // Add this socket to the room.
+  // Initialize/store user's info in openConnections
+  openConnections[socket.id].name = msg.user;   // Set the user's name
+  openConnections[socket.id].fbId = msg.fbId;   // Set the user's fbID
+  openConnections[socket.id].elo = msg.elo;     // Set the user's elo
+
+  // Add this socket to the room.
+  socket.join(msg.roomId);
   console.log('Joined room:', msg.roomId);
   socket.emit('roomJoined', msg.roomId);
   console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
@@ -44,6 +47,7 @@ function joinRoomHandler (msg, io, socket) {
   rm.hints = {};
   rm.type = msg.type;                // options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
   rm.host = '';                      // IMPLEMENT LATER
+  console.log('msg.fbid:', msg.elo);
 }
 
 function hintHandler (msg, io, socket) {

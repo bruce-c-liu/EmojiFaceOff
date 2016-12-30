@@ -66,14 +66,17 @@ class Chat extends Component {
   }
 
   componentDidMount () {
-    console.log('session', this.props.session);
-    // getUserELO()
-    this.socket.emit('joinRoom', {
-      roomId: this.state.roomId,
-      user: this.state.user,
-      // elo: elo,
-      type: 'RANKED' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
-    });
+    getUser(this.props.users.profile.info.uid)
+      .then(result => {
+        console.log('CURRENT USER FROM DB:', result.data);
+        this.socket.emit('joinRoom', {
+          roomId: this.state.roomId,
+          user: this.state.user,
+          elo: result.data.ELO,
+          fbId: result.data.auth,
+          type: 'RANKED' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+        });
+      });
   }
 
   // componentDidUpdate () {

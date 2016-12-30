@@ -9,7 +9,7 @@ export function getRoomID () {
 }
 
 export function getUser (fbID) {
-  return axios.get(`/api/getUser?fbid=${fbID}`)
+  return axios.get(`/api/getUser?fbId=${fbID}`)
               .catch((err) => {
                 console.log(err);
               });
@@ -17,7 +17,7 @@ export function getUser (fbID) {
 
 // deprecated
 export function getUserELO (fbID) {
-  return axios.get(`/api/getUser?fbid=${fbID}`)
+  return axios.get(`/api/getUser?fbId=${fbID}`)
               .catch((err) => {
                 console.log(err);
               });
