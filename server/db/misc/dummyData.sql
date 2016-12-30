@@ -17,20 +17,20 @@ DELETE FROM "User";
 DELETE FROM "Library";
 DELETE FROM "Solution";
 
-INSERT INTO "User" ("displayName", "imgUrl", "role", "banned", "createdAt", "updatedAt") 
-Values ('Khoa', 'http://doge2048.com/meta/doge-600.png', 'admin', false, NOW(), NOW());
+INSERT INTO "User" ("displayName", "auth", "imgUrl", "role", "banned", "createdAt", "updatedAt") 
+Values ('Khoa','8008135', 'http://doge2048.com/meta/doge-600.png', 'admin', false, NOW(), NOW());
 
-INSERT INTO "User" ("displayName", "imgUrl", "role", "banned", "createdAt", "updatedAt") 
-Values ('Patrick', 'http://doge2048.com/meta/doge-600.png', 'admin', false, NOW(), NOW());
+INSERT INTO "User" ("displayName", "auth", "imgUrl", "role", "banned", "createdAt", "updatedAt") 
+Values ('Patrick','8==D', 'http://doge2048.com/meta/doge-600.png', 'admin', false, NOW(), NOW());
 
-INSERT INTO "User" ("displayName", "imgUrl", "role", "banned", "createdAt", "updatedAt") 
-Values ('Bruce', 'http://doge2048.com/meta/doge-600.png', 'admin', false, NOW(), NOW());
+INSERT INTO "User" ("displayName", "auth", "imgUrl", "role", "banned", "createdAt", "updatedAt") 
+Values ('Bruce','({})','http://doge2048.com/meta/doge-600.png', 'admin', false, NOW(), NOW());
 
-INSERT INTO "User" ("displayName", "imgUrl", "role", "banned", "createdAt", "updatedAt") 
-Values ('Stella', 'http://doge2048.com/meta/doge-600.png', 'user', false, NOW(), NOW());
+INSERT INTO "User" ("displayName", "auth", "imgUrl", "role", "banned", "createdAt", "updatedAt") 
+Values ('Stella','8008', 'http://doge2048.com/meta/doge-600.png', 'user', false, NOW(), NOW());
 
-INSERT INTO "User" ("displayName", "imgUrl", "role", "banned", "createdAt", "updatedAt") 
-Values ('Donald', 'http://static.boredpanda.com/blog/wp-content/uploads/2016/11/unflattering-donald-trump-chin-photo-ps-battle-35.jpg', 'user', true, NOW(), NOW());
+INSERT INTO "User" ("displayName", "auth","imgUrl", "role", "banned", "createdAt", "updatedAt") 
+Values ('Donald','696969', 'http://static.boredpanda.com/blog/wp-content/uploads/2016/11/unflattering-donald-trump-chin-photo-ps-battle-35.jpg', 'user', true, NOW(), NOW());
 
 
 -- happy 
