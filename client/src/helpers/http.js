@@ -30,15 +30,9 @@ export function saveNewUser (newUser) {
       console.log(err);
     });
 }
-export function shortenLink(longURL) {
-    return axios.get(`https://api-ssl.bitly.com/v3/shorten`, {
-            params: {
-                access_token: '867257fcbc3e958bdbd25b2e00a4e07aa1d562b',
-                long_url: longURL
-            }
-        })
-        .then( (response) =>{
-          console.log("BITLY RESP",response);
+export function shortenLink(longURL) {   
+    return axios.post('/api/shortenURL', {
+            fullURL: longURL
         })
         .catch((err) => {
             console.log(err);

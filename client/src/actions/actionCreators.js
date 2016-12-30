@@ -1,6 +1,6 @@
 import auth, { logout, saveUser } from '../helpers/auth';
 import { CALL_API } from 'redux-api-middleware';
-import { SMSInvite, saveNewUser } from '../helpers/http.js';
+import { SMSInvite, saveNewUser, shortenLink } from '../helpers/http.js';
 import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 import * as shortid from 'shortid';
@@ -105,6 +105,20 @@ export function sendSMS (userName, roomUrl, numbers) {
      });
   };
 }
+
+export function fetchBitlyLink(longURL) {
+    return function(dispatch) {
+        shortenLink(longURL)
+            .then((resp) => {
+                console.log('BITLY LINK', resp);
+                dispatch({
+                    type: 'FETCH_BITLY',
+                    payload: resp
+                });
+            });
+    }
+}
+
 
 export function counterInc () {
   return {
