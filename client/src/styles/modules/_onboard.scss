@@ -1,8 +1,9 @@
 .onboard-wrap{
+	justify-content: space-between;
 	background-color: rgba($black, 0.9);
-	padding: 2rem;
+	padding: 2rem 3rem;
 	p{
-		color: $white;
+		color: $gray-lt;
 		font-size: 1.25rem;
 	}
 }
