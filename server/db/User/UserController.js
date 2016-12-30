@@ -3,19 +3,60 @@ const models = require('../../config/db.config.js');
 const redClient = require('../../config/redis.config.js');
 module.exports = {
 
-  /**
-   * get a user(s) from postgres
-   */
-  getUser: (name) => {
-    if (name) {
-      return models.User.findOne({
+  getUser: (req, res, next) => {
+    if (req.query.fbId) {
+      models.User.findOne({
         where: {
-          displayName: name
+          auth: req.query.fbId
         }
+      })
+      .then(result => {
+        if (result) res.json(result);
+        else res.json('No user found');
+      })
+      .catch(err => {
+        res.json(err);
+        throw err;
       });
     } else {
-      return models.User.findAll({});
+      res.json('Please provide a unique fbId');
     }
+  },
+
+  getUserELO: (req, res, next) => {
+    if (req.query.fbId) {
+      models.User.findOne({
+        where: {
+          auth: req.query.fbId
+        }
+      })
+      .then(result => {
+        if (result) {
+          let data = {
+            displayName: result.displayName,
+            ELO: result.ELO
+          };
+          res.json(data);
+        } else res.json('No user found');
+      })
+      .catch(err => {
+        res.json(err);
+        throw err;
+      });
+    } else {
+      res.json('Please provide a unique fbId');
+    }
+  },
+
+  getAllUsers: (req, res, next) => {
+    models.User.findAll({})
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.json(err);
+      throw err;
+    });
   },
 
   /**
@@ -56,26 +97,6 @@ module.exports = {
       .catch(err => {
         throw err;
       });
-
-      // models.User.findOrCreate({
-      //   where: {displayName: displayName},
-      //   default: {
-      //     displayName: displayName,
-      //     imgUrl: imgUrl,
-      //     role: role,
-      //     auth: auth
-      //   }
-      // })
-      // .then(result => {
-      //   let message = {
-      //     created: result[1],
-      //     userInst: result[0]
-      //   };
-      //   res.json(message);
-      // })
-      // .catch(err => {
-      //   throw err;
-      // });
     } else {
       res.json('Invalid input, please provide user displayName');
     }
