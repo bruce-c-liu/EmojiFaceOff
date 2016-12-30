@@ -74,7 +74,7 @@ module.exports = {
       .then(result => {
         if (result) res.json('User already exists');
         else {
-          redClient.saddd('allUsers', displayName)
+          redClient.sadd('allUsers', displayName)
           .then(result => {
             if (result) console.log(`${displayName} has been added to the redis cache`);
             res.json(`${displayName} has been added to the redis cache`);

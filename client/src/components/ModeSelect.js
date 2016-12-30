@@ -27,12 +27,19 @@ componentWillMount(){
         tempUser: JSON.parse(aValue)
       })
   }
+  initGameSolo (e) {
+    e.preventDefault();
+    // socket.emit('create', {});
+
+    this.props.playSFX('tap');
+  }
 
   initGameFriends (e) {
     e.preventDefault();
     // socket.emit('create', {});
     console.log('Create Room');
     this.props.fetchRoomId();
+    this.props.playSFX('tap');
   }
 
   render () {
@@ -52,7 +59,7 @@ componentWillMount(){
                 <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png')`}} />
               </div>
 
-              <button className="btn-login is-full" >
+              <button className="btn-login is-full" onClick={this.initGameSolo.bind(this)} >
                 Single Player Mode
               </button>
             </div>

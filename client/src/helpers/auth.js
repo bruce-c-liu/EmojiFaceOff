@@ -1,4 +1,5 @@
 import { ref, firebaseAuth } from '../config/constants.js';
+import { saveNewUser } from '../helpers/http.js';
 import firebase from 'firebase';
 
 export default function auth () {
@@ -17,4 +18,6 @@ export function saveUser (user) {
   return ref.child(`users/${user.uid}`)
     .set(user)
     .then(() => user)
+    .then( (newUser)=> saveNewUser(newUser) )
+    .then ( console.log("New User Saved to DB") )
 }

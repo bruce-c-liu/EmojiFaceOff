@@ -24,12 +24,16 @@ componentDidMount(){
 }	
 
 InviteCountInc(){
-	this.props.counterInc()
+  if(this.props.session.inviteCount < 6){
+	this.props.counterInc();
+      this.props.playSFX('tick');
+  }
 }
 InviteCountDec(){
 	console.log("INC INVITE" )	
 	if(this.props.session.inviteCount >= 2){
 		this.props.counterDec()	
+            this.props.playSFX('tick');
 	}	
 }
 inviteBySms(e){
@@ -42,8 +46,7 @@ inviteBySms(e){
 }
 
   render () {
-    //const encodedURL = `http%3A%2F%2Femojifaceoff.herokuapp.com%2Fchat%2F${ this.props.session.roomID}`
-    const encodedURL = `fb-messenger://share/?link=http%3A%2F%2Femojifaceoff.herokuapp.com%2Fchat%2F${ this.props.session.roomID}`
+   const encodedURL = `fb-messenger://share/?link=http%3A%2F%2Femojifaceoff.herokuapp.com%2Fchat%2F${ this.props.session.roomID}`
     return (
       <div className="inner-container is-center invite-wrap">
       		<p> How many friends would you like to invite in this game?</p>
@@ -70,7 +73,7 @@ inviteBySms(e){
       		</form>
             <h6 className="or-split">OR</h6>
 
-          <a className="btn-fbshare" href="fb-messenger://share/?link=http%3A%2F%2Femojifaceoff.herokuapp.com%2Fchat%2F1234">
+          <a className="btn-fbshare" href={encodedURL}>
             <img src={btnIcon} alt=""/>INVITE FACEBOOK FRIENDS
           </a>
      
