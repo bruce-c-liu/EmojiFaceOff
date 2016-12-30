@@ -1,5 +1,6 @@
 
 const LibraryCtrl = require('../db/Library/LibraryController.js');
+const UserCtrl = require('../db/User/UserController.js');
 const redClient = require('./redis.config.js');
 
 module.exports = {
@@ -73,6 +74,20 @@ module.exports = {
     });
   },
 
+  initAllUsers: () => {
+    UserCtrl.getAllUsers()
+    .then(result => {
+      return Promise.all(
+        result.map(user => {
+          return redClient.sadd(`allUsers`, user.displayName);
+        })
+      );
+    })
+    .catch(err => {
+      throw err;
+    });
+  },
+
   /**
    * Redis initialize all
    */
@@ -80,6 +95,9 @@ module.exports = {
     return module.exports.initPTA()
     .then(result => {
       if (result) return module.exports.initLTP();
+    })
+    .then(result => {
+      if (result) return module.exports.initAllUsers();
     })
     .catch(err => {
       throw err;

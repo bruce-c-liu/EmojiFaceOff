@@ -49,14 +49,18 @@ module.exports = {
   },
 
   getAllUsers: (req, res, next) => {
-    models.User.findAll({})
-    .then(result => {
-      res.json(result);
-    })
-    .catch(err => {
-      res.json(err);
-      throw err;
-    });
+    if (req) {
+      models.User.findAll({})
+      .then(result => {
+        res.json(result);
+      })
+      .catch(err => {
+        res.json(err);
+        throw err;
+      });
+    } else {
+      return models.User.findAll({});
+    }
   },
 
   /**
