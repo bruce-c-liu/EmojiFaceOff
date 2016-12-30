@@ -47,7 +47,6 @@ function joinRoomHandler (msg, io, socket) {
   rm.hints = {};
   rm.type = msg.type;                // options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
   rm.host = '';                      // IMPLEMENT LATER
-  console.log('msg.fbid:', msg.elo);
 }
 
 function hintHandler (msg, io, socket) {

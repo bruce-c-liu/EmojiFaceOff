@@ -1,23 +1,7 @@
 import axios from 'axios';
 
-// deprecated
-export function getRoomID () {
-  return axios.get('/api/room')
-        .catch((err) => {
-          console.log(err);
-        });
-}
-
 export function getUser (fbID) {
-  return axios.get(`/api/getUser?fbId=${fbID}`)
-              .catch((err) => {
-                console.log(err);
-              });
-}
-
-// deprecated
-export function getUserELO (fbID) {
-  return axios.get(`/api/getUser?fbId=${fbID}`)
+  return axios.get(`/api/users/${fbID}`)
               .catch((err) => {
                 console.log(err);
               });
@@ -37,7 +21,7 @@ export function SMSInvite (userName, roomUrl, numbers) {
 }
 
 export function saveNewUser (newUser) {
-  return axios.post('/api/addUser', {
+  return axios.post('/api/users', {
     displayName: newUser.name,
     imgUrl: newUser.avatar,
     auth: newUser.uid

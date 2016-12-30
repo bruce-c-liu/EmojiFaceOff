@@ -93,8 +93,8 @@ export function fetchRoomId () {
 export function sendSMS (userName, roomUrl, numbers) {
   return function (dispatch) {
     dispatch({
-       type: 'IS_LOADING'
-     });
+      type: 'IS_LOADING'
+    });
     SMSInvite(userName, roomUrl, numbers)
      .then((resp) => {
        console.log('SMS RESP', resp);
@@ -120,18 +120,6 @@ export function counterDec () {
 export function playSFX (sound) {
   return {
     type: 'SOUND_FX',
-    meta: {sound: sound }
+    meta: { sound: sound }
   };
 }
-
-// export function fetchRoomId(id) {
-//   console.log("INSIDE FETCHROOMID ACTION" )
-
-//   return {
-//     [CALL_API]: {
-//       endpoint: 'https://jsonplaceholder.typicode.com/posts/1',
-//       method: 'GET',
-//       types: [REQUEST, 'ROOM.SUCCESS', FAILURE]
-//     }
-//   }
-// }
