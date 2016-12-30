@@ -7,18 +7,27 @@ module.exports = {
   /**
    * Redis
    * Initialize Prompts with Answers with a prefix "PRA:" in redis
+   * and only add the prompts and answers that are approved
    */
   initPTA: () => {
     return LibraryCtrl.allSolutionByLibrary()
     .then(result => {
-      return result.map(libEntry => {
-        return {
-          prompt: libEntry.prompt,
-          solutions: libEntry.Solutions.map(answer => {
-            return answer.name;
-          })
-        };
-      });
+      return result
+             .filter(libEntry => {
+               if (libEntry.approved) return libEntry;
+             })
+             .map(libEntry => {
+               return {
+                 prompt: libEntry.prompt,
+                 solutions: libEntry.Solutions
+                            .filter(answer => {
+                              if (answer.approved) return answer;
+                            })
+                            .map(answer => {
+                              return answer.name;
+                            })
+               };
+             });
     })
     .then(result => {
       return Promise.all(result.map(entry => {
@@ -47,7 +56,11 @@ module.exports = {
         []    // level 5 prompts
       ];
 
-      result.map(libEntry => {
+      result
+      .filter(libEntry => {
+        if (libEntry.approved) return libEntry;
+      })
+      .map(libEntry => {
         LTPkeys[libEntry.level].push(libEntry.prompt);
       });
 
