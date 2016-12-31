@@ -34,7 +34,7 @@ class PendRequest extends Component {
         let data = result.data;
 
         data.map((item, index) => {
-          storage[index].push(item.User.imgUrl, item.prompt, item.Solutions);
+          storage[index].push(item.User.imgUrl, item.prompt, item.Solutions.join(' + '));
         });
         console.log('Storage', storage);
         this.setState({
