@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
 import {Table, Column, Cell} from 'fixed-data-table';
+import axios from 'axios';
 
 class PendRequest extends Component {
   constructor () {
@@ -12,14 +13,56 @@ class PendRequest extends Component {
               ['a1', 'b1', 'c1'],
               ['a2', 'b2', 'c2'],
               ['a3', 'b3', 'c3']
-      ]
-
+      ],
+      data: []
     };
+    this._onFilterChange = this._onFilterChange.bind(this);
   }
 
   componentWillMount () {
-    // console.log(this.props);
-    // sz8FV6TDAuYSAWEy4zl3PvrnVju2
+    axios.get('/api/pendPrompts')
+    .then(result => {
+      console.log('pending Prompts', result.data);
+      if (result) {
+        let storage = [
+          [],   // col0 user image
+          [],   // col1 prompt
+          [],   // col2 possible answers
+          [],   // col1
+          []    // col1
+        ];
+        let data = result.data;
+
+        data.map((item, index) => {
+          storage[index].push(item.User.imgUrl, item.prompt, item.Solutions);
+        });
+        console.log('Storage', storage);
+        this.setState({
+          rows: storage
+        });
+      }
+    })
+    .catch(err => {
+      throw err;
+    });
+  }
+
+  _onFilterChange (e) {
+    if (!e.target.value) {
+      this.setState({
+        filteredDataList: this._dataList
+      });
+    }
+
+    var filterBy = e.target.value.toLowerCase();
+    var size = this._dataList.getSize();
+    var filteredIndexes = [];
+    for (var index = 0; index < size; index++) {
+      var {firstName} = this._dataList.getObjectAt(index);
+      if (firstName.toLowerCase().indexOf(filterBy) !== -1) {
+        filteredIndexes.push(index);
+      }
+    }
   }
 
   render () {
@@ -34,21 +77,30 @@ class PendRequest extends Component {
           headerHeight={50}
         >
           <Column
-            header={<Cell>Col 1</Cell>}
-            cell={<Cell>Column 1 static content</Cell>}
-            width={200}
+            header={<Cell>User</Cell>}
+            cell={({rowIndex, ...props}) => (
+              <Cell {...props}>
+                {this.state.rows[rowIndex][0]}
+              </Cell>
+            )}
+            width={50}
             fixed
           />
           <Column
-            header={<Cell>Col 2</Cell>}
+            header={<Cell>Prompt</Cell>}
+            cell={({rowIndex, ...props}) => (
+              <Cell {...props}>
+                {this.state.rows[rowIndex][1]}
+              </Cell>
+            )}
             width={100}
             flexGrow={2}
           />
           <Column
-            header={<Cell>Col 3</Cell>}
+            header={<Cell>Answers</Cell>}
             cell={({rowIndex, ...props}) => (
               <Cell {...props}>
-                Data for column 3: {this.state.rows[rowIndex][2]}
+                {this.state.rows[rowIndex][2]}
               </Cell>
             )}
             width={200}
@@ -71,3 +123,4 @@ function mapDispachToProps (dispatch) {
   return bindActionCreators(actionCreators, dispatch);
 }
 export default connect(mapStateToProps, mapDispachToProps)(PendRequest);
+
