@@ -1,6 +1,6 @@
 
 const models = require('../../config/db.config.js');
-
+const Promise = require('bluebird');
 module.exports = {
 
   allSolutionByLibrary: () => {
@@ -12,44 +12,102 @@ module.exports = {
     });
   },
 
+  pendPrompts: (req, res, next) => {
+    console.log('in pending prompts');
+    models.Library.findAll({
+      include: {
+        model: models.Solution,
+        where: {
+          approved: false
+        }
+      }
+    })
+    .then(result => {
+      return Promise.all(result.map(pendItem => {
+        return Promise.props({
+          prompt: pendItem.prompt,
+          createdAt: pendItem.createdAt,
+          Solutions: pendItem.Solutions.map(pendAnswer => {
+            return pendAnswer.name;
+          }),
+          User: models.User.findById(pendItem.UserId)
+        });
+      }));
+    })
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.json(err);
+      throw err;
+    });
+  },
+
   addPrompt: (req, res, next) => {
-    console.log('request to add prompt', req.body, req.body.answer, [...req.body.answer].length);
+    // console.log('request to add prompt', req.body, req.body.answers);
     let prompt = req.body.prompt;
-    let answer = req.body.answer;
-    let elength = [...answer].length;
+    let answers = req.body.answers;
+    let elength = answers.length;
     let LibId = null;
-    let user = req.body.user;
+    let UserId = null;
 
     /**
      * Need to add a check if user is banned
      * and check if he's been spamming
      */
-    models.Library.findOrCreate({
-      where: {prompt: prompt},
-      defaults: {
-        prompt: prompt
-      }
-    })
-    .then(result => {
-      LibId = result[0].id;
-      if (LibId) {
-        return models.Solution.findOrCreate({
-          where: {name: answer},
-          defaults: {
-            name: answer,
-            length: elength,
-            LibraryId: LibId
-          }
-        });
-      }
-    })
-    .then(result => {
-      if (result[1]) console.log(`New answer( ${answer} ) for prompt( ${prompt} )`);
-      else console.log(`Answer ( ${answer} ) already exists for prompt( ${prompt} )`);
-    })
-    .catch(err => {
-      throw err;
-    });
+    if (elength > 0 && prompt.length > 0 && req.body.userFbId) {
+      res.send(204);
+      models.User.findOne({
+        where: {auth: req.body.userFbId}
+      })
+      .then(result => {
+        if (result.id) {
+          UserId = result.id;
+          models.Library.findOrCreate({
+            where: {prompt: prompt},
+            defaults: {
+              prompt: prompt,
+              UserId: UserId
+            }
+          })
+          .then(result => {
+            LibId = result[0].id;
+            if (LibId) {
+              return Promise.all(
+                answers.map(oneAnswer => {
+                  return models.Solution.findOrCreate({
+                    where: {
+                      name: oneAnswer,
+                      LibraryId: LibId
+                    },
+                    defaults: {
+                      name: oneAnswer,
+                      length: [...oneAnswer].length,
+                      LibraryId: LibId
+                    }
+                  });
+                })
+              );
+            }
+          })
+          .then(result => {
+            if (result[1]) console.log(`New answers( ${answers} ) for prompt( ${prompt} )`);
+            else console.log(`Answer ( ${answers} ) already exists for prompt( ${prompt} )`);
+          })
+          .catch(err => {
+            throw err;
+          });
+        } else {
+          res.send(501);
+        }
+      })
+      .catch(err => {
+        res.json(err);
+        throw err;
+      });
+    } else {
+      res.send(501);
+    }
   }
 
 };

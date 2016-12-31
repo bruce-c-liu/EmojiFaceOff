@@ -53,8 +53,8 @@ INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","app
 VALUES('😄',1,NOW(),NOW(),(Select "id" from "Library" WHERE "prompt"='happy'), true);
 
 -- sad
--- INSERT INTO "Library" ("prompt", "level", "approved", "createdAt", "updatedAt", "UserId")
--- Values ('sad', 1, true, NOW(), NOW(), (Select "id" from "User" WHERE "displayName"='Bruce'), true);
+INSERT INTO "Library" ("prompt", "level", "approved", "createdAt", "updatedAt", "UserId")
+Values ('sad', 1, true, NOW(), NOW(), (Select "id" from "User" WHERE "displayName"='Bruce'));
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
 VALUES('🙁',1, NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='sad'), true);

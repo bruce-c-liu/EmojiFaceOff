@@ -14,9 +14,10 @@ module.exports = (app, express) => {
   app.get('/api/users/:fbID', UserController.getUser);
   app.put('/api/users/:fbID', UserController.updateUserELO);
 
+  app.get('/api/pendPrompts', LibraryController.pendPrompts);
+  app.post('/api/requestPrompt', LibraryController.addPrompt);
+
   app.get('*', (req, res) => {
     res.sendfile('./client/build/index.html');
   });
-
-  app.post('/api/requestPrompt', LibraryController.addPrompt);
 };

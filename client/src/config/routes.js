@@ -11,6 +11,7 @@ import OnBoard from '../components/OnBoard';
 import NoWhere from '../components/NoWhere';
 import AuthContainer from '../containers/AuthContainer';
 import RequestPrompt from '../components/RequestPrompt';
+import PendRequest from '../components/PendRequest';
 
 export default function getRoutes (checkAuth) {
   return (
@@ -19,6 +20,7 @@ export default function getRoutes (checkAuth) {
         <Route path='login' component={AuthContainer} onEnter={checkAuth} />
         <Route path='mode' component={ModeSelect} onEnter={checkAuth} />
         <Route path='request' component={RequestPrompt} onEnter={checkAuth} />
+        <Route path='pendrequest' component={PendRequest} />
         <Route path='invite' component={Invite} onEnter={checkAuth} />
         <Route path='onboard' component={OnBoard} onEnter={checkAuth} />
         <Route path='chat/:roomID' component={Chat} onEnter={checkAuth} />

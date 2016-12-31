@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import main from '../styles/main.css';
+import datatable from '../../node_modules/fixed-data-table/dist/fixed-data-table.css';
 import auth from '../helpers/auth.js';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
