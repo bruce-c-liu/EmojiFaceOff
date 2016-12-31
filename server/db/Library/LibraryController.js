@@ -64,7 +64,10 @@ module.exports = {
               return Promise.all(
                 answers.map(oneAnswer => {
                   return models.Solution.findOrCreate({
-                    where: {name: oneAnswer},
+                    where: {
+                      name: oneAnswer,
+                      LibraryId: LibId
+                    },
                     defaults: {
                       name: oneAnswer,
                       length: [...oneAnswer].length,
@@ -80,7 +83,6 @@ module.exports = {
             else console.log(`Answer ( ${answers} ) already exists for prompt( ${prompt} )`);
           })
           .catch(err => {
-            res.json(err);
             throw err;
           });
         } else {

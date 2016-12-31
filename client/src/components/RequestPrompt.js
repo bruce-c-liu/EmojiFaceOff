@@ -42,25 +42,27 @@ class RequestPrompt extends Component {
                             return answer;
                           }
                         });
-    console.log(`Sending to the server => prompt: ${this.state.reqPrompt} ; answers: `, answerOptions);
-    /**
-     * USER NEEDS TO BE CHANGED
-     */
-    axios.post('/api/requestPrompt', {
-      userFbId: '8008135',
-      prompt: this.state.reqPrompt,
-      answers: answerOptions
-    })
-    .then(result => {
-      console.log('response from server', result.status);
-      this.setState({
-        reqPrompt: '',
-        reqAnswer: ''
+    if (answerOptions.length > 0) {
+      console.log(`Sending to the server => prompt: ${this.state.reqPrompt} ; answers: `, answerOptions);
+      /**
+       * USER NEEDS TO BE CHANGED
+       */
+      axios.post('/api/requestPrompt', {
+        userFbId: '8008135',
+        prompt: this.state.reqPrompt,
+        answers: answerOptions
+      })
+      .then(result => {
+        console.log('response from server', result.status);
+        this.setState({
+          reqPrompt: '',
+          reqAnswer: ''
+        });
+      })
+      .catch(err => {
+        throw err;
       });
-    })
-    .catch(err => {
-      throw err;
-    });
+    }
   }
 
   render () {
