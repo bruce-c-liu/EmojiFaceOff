@@ -42,14 +42,14 @@ class RequestPrompt extends Component {
                             return answer;
                           }
                         });
-    if (answerOptions.length > 0) {
+    if (answerOptions.length > 0 && this.state.reqPrompt.length > 0) {
       console.log(`Sending to the server => prompt: ${this.state.reqPrompt} ; answers: `, answerOptions);
       /**
        * USER NEEDS TO BE CHANGED
        */
       axios.post('/api/requestPrompt', {
         userFbId: '8008135',
-        prompt: this.state.reqPrompt,
+        prompt: this.state.reqPrompt.toLowerCase(),
         answers: answerOptions
       })
       .then(result => {

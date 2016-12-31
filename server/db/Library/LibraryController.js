@@ -1,6 +1,6 @@
 
 const models = require('../../config/db.config.js');
-
+const Promise = require('bluebird');
 module.exports = {
 
   allSolutionByLibrary: () => {
@@ -23,10 +23,22 @@ module.exports = {
       }
     })
     .then(result => {
-      console.log(result);
+      return Promise.all(result.map(pendItem => {
+        return Promise.props({
+          prompt: pendItem.prompt,
+          createdAt: pendItem.createdAt,
+          Solutions: pendItem.Solutions.map(pendAnswer => {
+            return pendAnswer.name;
+          }),
+          User: models.User.findById(pendItem.UserId)
+        });
+      }));
+    })
+    .then(result => {
       res.json(result);
     })
     .catch(err => {
+      res.json(err);
       throw err;
     });
   },
