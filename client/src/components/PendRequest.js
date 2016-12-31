@@ -47,6 +47,10 @@ class PendRequest extends Component {
     });
   }
 
+  handleClick (e) {
+    console.log('was clicked', e.target, e.target.value, e.target.className);
+  }
+
   _onFilterChange (e) {
     if (!e.target.value) {
       this.setState({
@@ -79,7 +83,7 @@ class PendRequest extends Component {
           <Column
             header={<Cell>User</Cell>}
             cell={({rowIndex, ...props}) => (
-              <Cell {...props}>
+              <Cell className='userImg' onClick={this.handleClick.bind(this)}>
                 {this.state.rows[rowIndex][0]}
               </Cell>
             )}
@@ -89,7 +93,7 @@ class PendRequest extends Component {
           <Column
             header={<Cell>Prompt</Cell>}
             cell={({rowIndex, ...props}) => (
-              <Cell {...props}>
+              <Cell className='pendPrompt' {...props} onClick={this.handleClick.bind(this)}>
                 {this.state.rows[rowIndex][1]}
               </Cell>
             )}
@@ -99,7 +103,7 @@ class PendRequest extends Component {
           <Column
             header={<Cell>Answers</Cell>}
             cell={({rowIndex, ...props}) => (
-              <Cell {...props}>
+              <Cell className='pendAnswer' {...props} onClick={this.handleClick.bind(this)}>
                 {this.state.rows[rowIndex][2]}
               </Cell>
             )}
