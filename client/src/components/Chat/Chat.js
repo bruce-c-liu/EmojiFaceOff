@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
-import Transition from 'react-motion-ui-pack';
+import {Motion, spring} from 'react-motion';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../../actions/actionCreators.js';
@@ -79,10 +79,10 @@ class Chat extends Component {
       });
   }
 
-  // componentDidUpdate () {
-  //   const node = this.refs.chatScroll;
-  //   node.scrollTop = node.scrollHeight + 200;
-  // }
+  componentDidUpdate () {
+    const node = this.refs.chatScroll;
+    node.scrollTop = node.scrollHeight + 200;
+  }
 
   handleChange (e) {
     this.setState({
@@ -98,7 +98,7 @@ class Chat extends Component {
   sendMessage (e) {
     e.preventDefault();
 
-    const userMessage = { user: this.state.user, text: this.state.message, roomId: this.state.roomId };
+const userMessage = { user: this.state.user, text: this.state.message, roomId: this.state.roomId };
     this.socket.emit('message', userMessage);
     this.props.playSFX('message');
     this.setState({
@@ -114,13 +114,13 @@ class Chat extends Component {
   render () {
     const { users } = this.props;
     const chatList = this.state.chats.map((item, i) => {
-      return <Bubble deets={item} profile={users.profile} key={i} />;
+      return <Bubble deets={item} profile={users.profile} key={i}  />
     });
     const chatHeadElements = this.state.chats.length >= 1
                                 ? <ChatHead deets={this.state} start={this.startGame} />
                                 : <button className='btn-start' onClick={this.startGame.bind(this)}>START</button>;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
-    console.log('SOLUTION LENGTH', this.state.solution.length);
+
 
     return (
 
@@ -128,21 +128,9 @@ class Chat extends Component {
         <div className='chat-head'>
           {chatHeadElements}
         </div>
-
-        <Transition
-          component='div'
-          className='chat-messages'
-          ref=''
-          enter={{
-            transform: 'scale(1)'
-          }}
-          leave={{
-            opacity: 0
-          }}
-          >
+        <div className="chat-messages" ref="chatScroll">
           {chatList}
-        </Transition>
-
+        </div>
         <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
           <button className='btn-hint' onClick={this.requestHint.bind(this)} > ?</button>
           <input type='text' value={this.state.message}

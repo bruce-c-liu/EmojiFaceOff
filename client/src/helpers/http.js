@@ -30,3 +30,11 @@ export function saveNewUser (newUser) {
       console.log(err);
     });
 }
+export function shortenLink(longURL) {   
+    return axios.post('/api/shortenURL', {
+            fullURL: longURL
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}

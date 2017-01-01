@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
+import { TransitionMotion, spring, presets } from 'react-motion';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/actionCreators.js';
-import {inviteBaseURL} from '../helpers/utils.js';
+import * as actionCreators from '../actions/actionCreators';
+import { inviteBaseURL } from '../helpers/utils';
 import btnIcon from '../assets/Messenger_Icon.png';
 
 class Invite extends Component {
@@ -12,15 +13,18 @@ class Invite extends Component {
     super();
     this.state = {
       inviteCount: 1,
-      inviteURL: null
+      longRoomURL: null,
+      shortRoomURL: null
     };
   }
 
-  componentDidMount () {
-    // this.props.fetchRoomId();
+  componentWillMount () {
     this.setState({
-      inviteURL: inviteBaseURL + this.props.session.roomID
+      longRoomURL: inviteBaseURL + this.props.session.roomID
     });
+  }
+  componentDidMount(){
+    this.props.fetchBitlyLink(this.state.longRoomURL)
   }
 
   InviteCountInc () {
@@ -41,9 +45,10 @@ class Invite extends Component {
   inviteBySms (e) {
     e.preventDefault();
     let userName = this.props.users.profile.info.name;
-    let roomUrl = this.state.inviteURL;
+    let roomUrl = this.props.session.inviteURL;
     let numbers = [ReactDOM.findDOMNode(this.refs.toSMS).value];
     this.props.sendSMS(userName, roomUrl, numbers);
+
   }
 
   render () {
@@ -53,6 +58,7 @@ class Invite extends Component {
                             : null;
     return (
       <div className='inner-container is-center invite-wrap'>
+      {this.state.longRoomURL}
         <p> How many friends would you like to invite in this game?</p>
         <div className='count-selector'>
           <i className='ion-chevron-down' onClick={this.InviteCountDec.bind(this)} />
