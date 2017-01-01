@@ -131,7 +131,7 @@ class Chat extends Component {
       return <Bubble deets={item} profile={users.profile} key={i} />;
     });
     const chatHeadElements = this.state.gameStarted
-                                ? <ChatHead deets={this.state} start={this.startGame} />
+                                ? <ChatHead deets={this.state} />
                                 : <button className='btn-start' onClick={this.startGame.bind(this)}>START</button>;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
 
