@@ -1,5 +1,5 @@
 const RedisController = require('../db/Redis/RedisController.js');
-const singlePlayer = require('../game/modes/singlePlayer.js');
+const singlePlayer = require('../game/modes/singleplayer.js');
 const friendsVsFriends = require('../game/modes/friendsVsFriends.js');
 const ranked = require('../game/modes/ranked.js');
 
@@ -17,9 +17,9 @@ const TESTING_NUM_ROUNDS = 3;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
 const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT DIFFICULTY OF PROMPTS
 function messageHandler (msg, io, socket) {
   if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
-    singlePlayer(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+    singlePlayer.play(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
   } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'FRIENDS_VS_FRIENDS') {
-    friendsVsFriends(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+    friendsVsFriends.play(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
   } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'RANKED') {
     ranked.play(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
   }

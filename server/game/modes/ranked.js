@@ -11,15 +11,20 @@ module.exports = {
 
     let botResponse = {user: 'ebot'};
 
-    if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
-      openConnections[socket.id].score++;                           // Increment the user's score.
-      if (rm.roundNum < TESTING_NUM_ROUNDS) {
-        nextRound(botResponse, msg, io, rm, openConnections, socket);
-      } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
-        endGame(botResponse, msg, io, rm, openConnections);
+    if (rm.roundNum === 0) {
+      botResponse.text = `Please wait for opponent to join room.`;
+      socket.emit('message', botResponse);
+    } else {
+      if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
+        openConnections[socket.id].score++;                           // Increment the user's score.
+        if (rm.roundNum < TESTING_NUM_ROUNDS) {
+          nextRound(botResponse, msg, io, rm, openConnections, socket);
+        } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
+          endGame(botResponse, msg, io, rm, openConnections);
+        }
+      } else {                                       // A user replied with an incorrect answer.
+        wrongAnswer(botResponse, msg, io, rm);
       }
-    } else {                                       // A user replied with an incorrect answer.
-      wrongAnswer(botResponse, msg, io, rm);
     }
   },
 
@@ -38,7 +43,8 @@ module.exports = {
       socket.emit('message', {
         user: 'ebot',
         text: `There are already 2 players in this RANKED room.
-               You have not been added to this room.`});
+               You have not been added to this room.`
+      });
       return;
     } else if (numPlayers < 2) {
       // Add this socket to the room.
@@ -126,19 +132,12 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   io.sockets.in(msg.roomId).emit('message', botResponse);
 }
 
-function findWinner (clientsArray, openConnections) {
-  // Grab the winning socketID
-  let socketID = clientsArray.reduce((winner, currUser) => {
-    console.log(openConnections[currUser].score);
-    console.log(openConnections[winner].score);
-    if (openConnections[currUser].score > openConnections[winner].score) {
-      return currUser;
-    } else {
-      return winner;
-    }
-  });
+function findWinner (p1, p2) {
+  return p1.score > p2.score ? p1 : p2;
+}
 
-  return openConnections[socketID];
+function findLoser (p1, p2) {
+  return p1.score > p2.score ? p2 : p1;
 }
 
 function calcFinalRankings (clientsArray, openConnections) {
@@ -154,8 +153,15 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   let clientsArray = Object.keys(clients);
   console.log('CLIENTS:', clientsArray);
 
-  let winner = findWinner(clientsArray, openConnections);
+  let p1 = openConnections[clientsArray[0]];
+  let p2 = openConnections[clientsArray[1]];
+  let winner = findWinner(p1, p2);
+  let loser = findLoser(p1, p2);
   let finalRankings = calcFinalRankings(clientsArray, openConnections);
+  let expectedScoreP1 = elo.expectedScoreP1(winner.elo, loser.elo);
+  let changeInELO = elo.changeInELO(winner.elo, expectedScoreP1, 1);
+
+  elo.updateELOs(winner.fbId, winner.elo + changeInELO, loser.fbId, loser.elo - changeInELO);
 
   // First, notify everyone the final answer was correct.
   botResponse.text = `Good job, ${msg.user}!`;
