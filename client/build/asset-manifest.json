@@ -1,8 +1,13 @@
 {
   "main.css": "static/css/main.f834d9d5.css",
   "main.css.map": "static/css/main.f834d9d5.css.map",
+<<<<<<< HEAD
   "main.js": "static/js/main.bd2ff126.js",
   "main.js.map": "static/js/main.bd2ff126.js.map",
+=======
+  "main.js": "static/js/main.c8e595cc.js",
+  "main.js.map": "static/js/main.c8e595cc.js.map",
+>>>>>>> 542df918ccdb457803614810b5bc77df23a3dad0
   "static/media/emoji_nerd.png": "static/media/emoji_nerd.dda118f4.png",
   "static/media/wallpaper.png": "static/media/wallpaper.063f4ab6.png"
 }
