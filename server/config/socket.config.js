@@ -1,5 +1,5 @@
 const RedisController = require('../db/Redis/RedisController.js');
-const singlePlayer = require('../game/modes/singlePlayer.js');
+const singlePlayer = require('../game/modes/singleplayer.js');
 const friendsVsFriends = require('../game/modes/friendsVsFriends.js');
 const ranked = require('../game/modes/friendsVsFriends.js');
 
