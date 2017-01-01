@@ -8,7 +8,7 @@ import io from 'socket.io-client';
 import {socketURL} from '../../helpers/utils.js';
 import ChatHead from './ChatHead';
 import Bubble from './Bubble';
-import { getUserELO, getUser } from '../../helpers/http.js';
+import { getUser } from '../../helpers/http.js';
 
 class Chat extends Component {
 
@@ -16,14 +16,16 @@ class Chat extends Component {
     super();
     this.state = {
       message: '',
-      user: 'Patty-Pat-Pat',
+      user: '',
       roomId: null,
       round: '',
       score: null,
       chats: [],
       solution: [],
       clueCount: 0,
-      joined: null
+      joined: null,
+      gameStarted: false
+
     };
     this.socket = io(socketURL);
 
@@ -55,6 +57,12 @@ class Chat extends Component {
       });
     });
 
+    this.socket.on('gameStarted', () => {
+      this.setState({
+        gameStarted: true
+      });
+    });
+
     this.socket.on('roomJoined', (room) => {
       console.log('Server confirms this socket joined room:', room);
       this.setState({
@@ -65,7 +73,8 @@ class Chat extends Component {
 
   componentWillMount () {
     this.setState({
-      roomId: this.props.params.roomID
+      roomId: this.props.params.roomID,
+      user: this.props.users.profile.info.name
     });
   }
 
@@ -78,7 +87,7 @@ class Chat extends Component {
           user: this.state.user,
           elo: result.data.ELO,
           fbId: result.data.auth,
-          type: 'RANKED' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+          type: 'FRIENDS_VS_FRIENDS' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
         });
       });
   }
@@ -97,12 +106,18 @@ class Chat extends Component {
   startGame (e) {
     e.preventDefault();
     this.props.playSFX('chime');
-    this.socket.emit('message', { user: this.state.user, text: 'start', roomId: this.state.roomId });
+    this.socket.emit('message', { user: this.state.user, text: 'start', imgUrl: this.props.users.profile.info.avatar, roomId: this.state.roomId });
   }
   sendMessage (e) {
     e.preventDefault();
 
-const userMessage = { user: this.state.user, text: this.state.message, roomId: this.state.roomId };
+    const userMessage = {
+      user: this.state.user,
+      text: this.state.message,
+      imgUrl: this.props.users.profile.info.avatar,
+      roomId: this.state.roomId
+    };
+
     this.socket.emit('message', userMessage);
     this.props.playSFX('message');
     this.setState({
@@ -111,20 +126,19 @@ const userMessage = { user: this.state.user, text: this.state.message, roomId: t
   }
   requestHint (e) {
     e.preventDefault();
-    this.socket.emit('hint', {roomId: this.state.roomId});
+    this.socket.emit('hint', {roomId: this.state.roomId, index: this.state.clueCount});
     this.props.playSFX('hint');
   }
 
   render () {
     const { users } = this.props;
     const chatList = this.state.chats.map((item, i) => {
-      return <Bubble deets={item} profile={users.profile} key={i}  />
+      return <Bubble deets={item} profile={users.profile} key={i} />;
     });
-    const chatHeadElements = this.state.chats.length >= 1
-                                ? <ChatHead deets={this.state} start={this.startGame} />
+    const chatHeadElements = this.state.gameStarted
+                                ? <ChatHead deets={this.state} />
                                 : <button className='btn-start' onClick={this.startGame.bind(this)}>START</button>;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
-
 
     return (
 
@@ -132,7 +146,7 @@ const userMessage = { user: this.state.user, text: this.state.message, roomId: t
         <div className='chat-head'>
           {chatHeadElements}
         </div>
-        <div className="chat-messages" ref="chatScroll">
+        <div className='chat-messages' ref='chatScroll'>
           {chatList}
         </div>
         <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>

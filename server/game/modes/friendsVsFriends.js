@@ -1,32 +1,45 @@
 const ignoredCodePoints = require('../helpers/ignoredCodePoints.js');
 
-module.exports = function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
-    // Populate all info from this socket room.
-  let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+module.exports = {
+  play: function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
+      // Populate all info from this socket room.
+    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
 
-  // Emit user's message to all sockets connected to this room.
-  io.sockets.in(msg.roomId).emit('message', msg);
+    // Emit user's message to all sockets connected to this room.
+    io.sockets.in(msg.roomId).emit('message', msg);
 
-  let botResponse = {user: 'ebot'};
+    let botResponse = {user: 'ebot'};
 
-  if (rm.roundNum === 0) {
-    if (msg.text === 'start') {
-      startGame(botResponse, msg, io, rm, TESTING_NUM_ROUNDS, RedisController);
-    } else {
-      botResponse.text = `Send 'start' to begin the game, dumbass.`;
-      io.sockets.in(msg.roomId).emit('message', botResponse);
-    }
-  } else if (rm.roundNum <= TESTING_NUM_ROUNDS) {
-    if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
-      openConnections[socket.id].score++;                           // Increment the user's score.
-      if (rm.roundNum < TESTING_NUM_ROUNDS) {
-        nextRound(botResponse, msg, io, rm, openConnections, socket);
-      } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
-        endGame(botResponse, msg, io, rm, openConnections);
+    if (rm.roundNum === 0) {
+      if (msg.text === 'start') {
+        startGame(botResponse, msg, io, rm, TESTING_NUM_ROUNDS, RedisController);
+      } else {
+        botResponse.text = `Send 'start' to begin the game, dumbass.`;
+        io.sockets.in(msg.roomId).emit('message', botResponse);
       }
-    } else {                                       // A user replied with an incorrect answer.
-      wrongAnswer(botResponse, msg, io, rm);
+    } else if (rm.roundNum <= TESTING_NUM_ROUNDS) {
+      if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
+        openConnections[socket.id].score++;                           // Increment the user's score.
+        if (rm.roundNum < TESTING_NUM_ROUNDS) {
+          nextRound(botResponse, msg, io, rm, openConnections, socket);
+        } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
+          endGame(botResponse, msg, io, rm, openConnections);
+        }
+      } else {                                       // A user replied with an incorrect answer.
+        wrongAnswer(botResponse, msg, io, rm);
+      }
     }
+  },
+
+  joinRoomHandler: function (msg, io, socket) {
+    socket.join(msg.roomId);
+    console.log('Joined room:', msg.roomId);
+    socket.emit('roomJoined', msg.roomId);
+    console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
+    socket.broadcast.to(msg.roomId).emit('message', {
+      user: 'ebot',
+      text: `${msg.user} has joined the room!`
+    });
   }
 };
 
@@ -57,7 +70,7 @@ function startGame (botResponse, msg, io, rm, TESTING_NUM_ROUNDS, RedisControlle
           rm.solutions = solutions;
           console.log('SOLUTIONS:', solutions);
           for (let prompt in solutions) {
-            rm.hints[prompt] = [...Object.keys(solutions[prompt])[0]].reverse();
+            rm.hints[prompt] = [...Object.keys(solutions[prompt])[0]];
           }
 
           console.log(rm.hints);
@@ -67,6 +80,8 @@ function startGame (botResponse, msg, io, rm, TESTING_NUM_ROUNDS, RedisControlle
                               Please translate [${rm.prompt}] into emoji form~`;
           rm.roundNum = 1;
           botResponse.roundNum = rm.roundNum;
+
+          io.sockets.in(msg.roomId).emit('gameStarted', rm.hints[rm.prompt].length);
           io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
           io.sockets.in(msg.roomId).emit('score', 0);
           io.sockets.in(msg.roomId).emit('message', botResponse);

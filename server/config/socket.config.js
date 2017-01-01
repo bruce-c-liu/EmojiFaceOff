@@ -1,7 +1,7 @@
 const RedisController = require('../db/Redis/RedisController.js');
 const singlePlayer = require('../game/modes/singleplayer.js');
 const friendsVsFriends = require('../game/modes/friendsVsFriends.js');
-const ranked = require('../game/modes/friendsVsFriends.js');
+const ranked = require('../game/modes/ranked.js');
 
 let openConnections = {};
 
@@ -17,11 +17,11 @@ const TESTING_NUM_ROUNDS = 3;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
 const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT DIFFICULTY OF PROMPTS
 function messageHandler (msg, io, socket) {
   if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
-    singlePlayer(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+    singlePlayer.play(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
   } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'FRIENDS_VS_FRIENDS') {
-    friendsVsFriends(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+    friendsVsFriends.play(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
   } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'RANKED') {
-    ranked(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+    ranked.play(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
   }
 }
 
@@ -31,11 +31,13 @@ function joinRoomHandler (msg, io, socket) {
   openConnections[socket.id].fbId = msg.fbId;   // Set the user's fbID
   openConnections[socket.id].elo = msg.elo;     // Set the user's elo
 
-  // Add this socket to the room.
-  socket.join(msg.roomId);
-  console.log('Joined room:', msg.roomId);
-  socket.emit('roomJoined', msg.roomId);
-  console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
+  if (msg.type === 'SINGLE_PLAYER') {
+    singlePlayer.joinRoomHandler(msg, io, socket); // TO-DO: INCOMPLETE
+  } else if (msg.type === 'FRIENDS_VS_FRIENDS') {
+    friendsVsFriends.joinRoomHandler(msg, io, socket);
+  } else if (msg.type === 'RANKED') {
+    ranked.joinRoomHandler(msg, io, socket, TESTING_NUM_ROUNDS, RedisController);
+  }
 
   // Initialize the room's data.
   let rm = io.nsps['/'].adapter.rooms[msg.roomId];
@@ -51,7 +53,7 @@ function joinRoomHandler (msg, io, socket) {
 
 function hintHandler (msg, io, socket) {
   let rm = io.nsps['/'].adapter.rooms[msg.roomId];
-  socket.emit('hint', rm.hints[rm.prompt].pop());
+  socket.emit('hint', rm.hints[rm.prompt][msg.index]);
 }
 
 module.exports = (server) => {
@@ -69,7 +71,16 @@ module.exports = (server) => {
       hintHandler(msg, io, socket);
     });
 
-    // incoming data should include the "user" who is requesting to create this room
+    /*
+     incoming msg format:
+      {
+        user (string): displayname of who is requesting to join this room,
+        fbId (string): user's facebook id,
+        elo (number): user's ELO,
+        roomId (string): which room user is requesting to join,
+        type (string): type of room ('SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED')
+      }
+    */
     socket.on('joinRoom', msg => {
       joinRoomHandler(msg, io, socket);
     });
