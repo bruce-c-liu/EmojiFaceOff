@@ -22,7 +22,8 @@ class Chat extends Component {
       score: null,
       chats: [],
       solution: [],
-      clueCount: 0
+      clueCount: 0,
+      joined: null
     };
     this.socket = io(socketURL);
 
@@ -56,6 +57,9 @@ class Chat extends Component {
 
     this.socket.on('roomJoined', (room) => {
       console.log('Server confirms this socket joined room:', room);
+      this.setState({
+        joined: room
+      })
     });
   }
 
