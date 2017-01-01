@@ -10,12 +10,12 @@ class Bubble extends Component {
       'chat-bubble': true,
       'on-left': this.props.deets.user === 'ebot'
     });
-    const avatarProp = this.props.profile
-                                    ? this.props.profile.info.avatar
-                                    : null;
-    const avatarSrc = this.props.deets.user === 'ebot' && this.props.profile
+    // const avatarProp = this.props.deets
+    //                                 ? this.props.profile.info.avatar
+    //                                 : null;
+    const avatarSrc = this.props.deets.user === 'ebot'
                                     ? nerd
-                                    : avatarProp;
+                                    : this.props.deets.imgUrl;
     const avatarBG = {
       backgroundImage: `url(${avatarSrc})`
     };
