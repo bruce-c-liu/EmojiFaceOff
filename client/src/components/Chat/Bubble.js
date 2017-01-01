@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Interweave from 'interweave';
-import {Motion, spring} from 'react-motion';
+import {Motion, spring, presets} from 'react-motion';
 import classNames from 'classnames';
 import nerd from '../../assets/emoji_nerd.png';
 
@@ -20,16 +20,18 @@ class Bubble extends Component {
       backgroundImage: `url(${avatarSrc})`
     };
     return (
-      <div className={bubbleClass}>
-        {/* {this.props.deets.text} */}
+      <Motion defaultStyle={{x: 0}} style={{x: spring(1,  presets.stiff)}}>
+        {value => <div className={bubbleClass} style={{transform: `scale(${value.x})` , opacity: value.x}}>
+          <Interweave
+            tagName='span'
+            content={this.props.deets.text}
+          />
+            <div className='bubble-name' style={avatarBG} />
+        </div>
+      }
+      
+        </Motion>
 
-        <Interweave
-          tagName='span'
-          content={this.props.deets.text}
-        />
-
-        <div className='bubble-name' style={avatarBG} />
-      </div>
     );
   }
 }

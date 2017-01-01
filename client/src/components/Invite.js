@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
+import { TransitionMotion, spring, presets } from 'react-motion';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators';
@@ -57,6 +58,7 @@ class Invite extends Component {
                             : null;
     return (
       <div className='inner-container is-center invite-wrap'>
+      {this.state.longRoomURL}
         <p> How many friends would you like to invite in this game?</p>
         <div className='count-selector'>
           <i className='ion-chevron-down' onClick={this.InviteCountDec.bind(this)} />
