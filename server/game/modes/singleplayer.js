@@ -80,6 +80,8 @@ function startGame (botResponse, msg, io, rm, TESTING_NUM_ROUNDS, RedisControlle
                               Please translate [${rm.prompt}] into emoji form~`;
           rm.roundNum = 1;
           botResponse.roundNum = rm.roundNum;
+
+          io.sockets.in(msg.roomId).emit('gameStarted', rm.hints[rm.prompt].length);
           io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
           io.sockets.in(msg.roomId).emit('score', 0);
           io.sockets.in(msg.roomId).emit('message', botResponse);

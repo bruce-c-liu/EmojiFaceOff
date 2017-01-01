@@ -22,7 +22,8 @@ class Chat extends Component {
       score: null,
       chats: [],
       solution: [],
-      clueCount: 0
+      clueCount: 0,
+      gameStarted: false
     };
     this.socket = io(socketURL);
 
@@ -51,6 +52,12 @@ class Chat extends Component {
     this.socket.on('score', score => {
       this.setState({
         score: score
+      });
+    });
+
+    this.socket.on('gameStarted', () => {
+      this.setState({
+        gameStarted: true
       });
     });
 
@@ -123,7 +130,7 @@ class Chat extends Component {
     const chatList = this.state.chats.map((item, i) => {
       return <Bubble deets={item} profile={users.profile} key={i} />;
     });
-    const chatHeadElements = this.state.chats.length >= 1
+    const chatHeadElements = this.state.gameStarted
                                 ? <ChatHead deets={this.state} start={this.startGame} />
                                 : <button className='btn-start' onClick={this.startGame.bind(this)}>START</button>;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
