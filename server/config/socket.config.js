@@ -1,5 +1,5 @@
 const RedisController = require('../db/Redis/RedisController.js');
-const singlePlayer = require('../game/modes/singleplayer.js');
+const singlePlayer = require('../game/modes/singlePlayer.js');
 const friendsVsFriends = require('../game/modes/friendsVsFriends.js');
 const ranked = require('../game/modes/ranked.js');
 
@@ -53,7 +53,7 @@ function joinRoomHandler (msg, io, socket) {
 
 function hintHandler (msg, io, socket) {
   let rm = io.nsps['/'].adapter.rooms[msg.roomId];
-  socket.emit('hint', rm.hints[rm.prompt].pop());
+  socket.emit('hint', rm.hints[rm.prompt][msg.index]);
 }
 
 module.exports = (server) => {

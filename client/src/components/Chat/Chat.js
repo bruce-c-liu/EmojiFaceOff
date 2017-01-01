@@ -75,7 +75,7 @@ class Chat extends Component {
           user: this.state.user,
           elo: result.data.ELO,
           fbId: result.data.auth,
-          type: 'RANKED' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+          type: 'FRIENDS_VS_FRIENDS' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
         });
       });
   }
@@ -114,7 +114,7 @@ class Chat extends Component {
   }
   requestHint (e) {
     e.preventDefault();
-    this.socket.emit('hint', {roomId: this.state.roomId});
+    this.socket.emit('hint', {roomId: this.state.roomId, index: this.state.clueCount});
     this.props.playSFX('hint');
   }
 

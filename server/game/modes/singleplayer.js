@@ -70,7 +70,7 @@ function startGame (botResponse, msg, io, rm, TESTING_NUM_ROUNDS, RedisControlle
           rm.solutions = solutions;
           console.log('SOLUTIONS:', solutions);
           for (let prompt in solutions) {
-            rm.hints[prompt] = [...Object.keys(solutions[prompt])[0]].reverse();
+            rm.hints[prompt] = [...Object.keys(solutions[prompt])[0]];
           }
 
           console.log(rm.hints);
