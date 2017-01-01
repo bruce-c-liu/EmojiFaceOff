@@ -25,6 +25,7 @@
     "react-redux": "^4.4.5",
     "react-router": "^2.4.0",
     "react-router-redux": "^4.0.7",
+    "react-router-transition": "0.0.6",
     "redux": "^3.6.0",
     "redux-api-middleware": "^1.0.2",
     "redux-sounds": "^1.1.1",

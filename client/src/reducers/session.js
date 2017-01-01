@@ -9,6 +9,10 @@ function session (state = initialState, action) {
       return Object.assign({}, state, {
         roomID: action.payload
       });
+      case 'FETCH_BITLY':
+        return Object.assign({}, state, {
+          inviteURL: action.payload.data.data.url
+        });
     case 'INVITE_INC':
       return Object.assign({}, state, {
         inviteCount: ++state.inviteCount
