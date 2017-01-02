@@ -29,6 +29,9 @@ button{
   font-size: 1.65rem;
   font-family: 'Fredoka One', cursive;
   color: $orange;
+  &:disabled{
+    color: darken($gray-lt, 5%);
+  }
 }
 
 .btn-input{
