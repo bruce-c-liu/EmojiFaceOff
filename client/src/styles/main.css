@@ -182,6 +182,8 @@ button {
   font-size: 1.65rem;
   font-family: 'Fredoka One', cursive;
   color: #FF6B6B; }
+  .btn-hint:disabled {
+    color: #dde2e8; }
 
 .btn-input {
   padding: .5rem 1rem;
@@ -420,7 +422,7 @@ button {
   padding: 1rem 0;
   overflow-y: auto; }
 
-.chat-form {
+.chat-form_wrap {
   width: 100%;
   min-height: 47px;
   display: flex;
@@ -428,8 +430,12 @@ button {
   padding: .5rem;
   border-top: 1px solid #d1ddee;
   background-color: #FFFFFF; }
+
+.chat-form {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1; }
   .chat-form > input[type="text"] {
-    flex-grow: 1;
     border: none;
     padding: 0 2rem;
     font-size: 1.25rem; }
