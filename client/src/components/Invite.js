@@ -52,6 +52,9 @@ class Invite extends Component {
 
   redirToRoom (e) {
     browserHistory.push(this.state.longRoomURL);
+    console.log('afefaew');
+    var uagent = navigator.userAgent.toLowerCase();
+    console.log('uagent', uagent);
   }
 
   render () {
@@ -86,8 +89,12 @@ class Invite extends Component {
         </form>
         <h6 className='or-split'>OR</h6>
 
-        <a className='btn-fbshare' >
-          <img onClick={this.redirToRoom.bind(this)} src={btnIcon} alt='' />INVITE FACEBOOK FRIENDS
+        <a className='btn-fbshare' href={encodedURL}>
+          <img src={btnIcon} alt='' />INVITE FACEBOOK FRIENDS
+        </a>
+
+        <a onClick={this.redirToRoom.bind(this)}>
+          <h6 className='or-split'>Let's Get This Party Started! 🎉</h6>
         </a>
         {loaderUI}
       </div>
