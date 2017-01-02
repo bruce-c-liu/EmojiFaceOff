@@ -149,13 +149,18 @@ class Chat extends Component {
         <div className='chat-messages' ref='chatScroll'>
           {chatList}
         </div>
-        <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
-          <button className='btn-hint' onClick={this.requestHint.bind(this)} > ?</button>
-          <input type='text' value={this.state.message}
-            onChange={this.handleChange.bind(this)}
-            placeholder='Your Message Here' />
-          <input className='btn-input' type='submit' value='Submit' disabled={this.state.message.length <= 0} />
-        </form>
+        <div className="chat-form_wrap">
+            <button className='btn-hint' 
+                                    onClick={this.requestHint.bind(this)}
+                                    disabled={this.state.clueCount >= this.state.solution.length} > ?</button>
+            <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
+              <input type='text' value={this.state.message}
+                onChange={this.handleChange.bind(this)}
+                placeholder='Your Message Here' />
+              <input className='btn-input' type='submit' value='Submit' disabled={this.state.message.length <= 0} />
+            </form>
+        </div>
+
       </div>
     );
   }

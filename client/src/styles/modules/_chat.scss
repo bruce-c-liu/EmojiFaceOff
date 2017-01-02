@@ -58,7 +58,7 @@
 	padding: 1rem 0;
 	overflow-y: auto; 
 }
-.chat-form{
+.chat-form_wrap{
 	width: 100%;
 	min-height: 47px;
 	display: flex;
@@ -66,16 +66,23 @@
 	padding: .5rem;
 	border-top: 1px solid darken($blue-pale, 5%);
 	background-color: $white;
+
+	>input[type="submit"]{
+
+	}
+}
+
+.chat-form{
+	display: flex;
+	justify-content: space-between;
+	flex-grow: 1;
 	>input[type="text"]{
-		flex-grow: 1;
+		//flex-grow: 1;
 		border: none;
 		padding: 0 2rem;
 		font-size: 1.25rem;
 		&:focus{
 			outline:none;
 		}
-	}
-	>input[type="submit"]{
-
 	}
 }
