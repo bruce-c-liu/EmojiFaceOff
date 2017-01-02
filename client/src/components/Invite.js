@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators';
 import { inviteBaseURL } from '../helpers/utils';
 import btnIcon from '../assets/Messenger_Icon.png';
-
+import { browserHistory } from 'react-router';
 class Invite extends Component {
   constructor () {
     super();
@@ -23,8 +23,8 @@ class Invite extends Component {
       longRoomURL: inviteBaseURL + this.props.session.roomID
     });
   }
-  componentDidMount(){
-    this.props.fetchBitlyLink(this.state.longRoomURL)
+  componentDidMount () {
+    this.props.fetchBitlyLink(this.state.longRoomURL);
   }
 
   InviteCountInc () {
@@ -46,9 +46,8 @@ class Invite extends Component {
     e.preventDefault();
     let userName = this.props.users.profile.info.name;
     let roomUrl = this.props.session.inviteURL;
-    let numbers = [ReactDOM.findDOMNode(this.refs.toSMS).value];
+    let numbers = ReactDOM.findDOMNode(this.refs.toSMS).value.split(',');
     this.props.sendSMS(userName, roomUrl, numbers);
-
   }
 
   render () {
@@ -58,7 +57,7 @@ class Invite extends Component {
                             : null;
     return (
       <div className='inner-container is-center invite-wrap'>
-      {this.state.longRoomURL}
+        {this.state.longRoomURL}
         <p> How many friends would you like to invite in this game?</p>
         <div className='count-selector'>
           <i className='ion-chevron-down' onClick={this.InviteCountDec.bind(this)} />
