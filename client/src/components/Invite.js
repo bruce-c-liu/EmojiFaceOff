@@ -50,6 +50,10 @@ class Invite extends Component {
     this.props.sendSMS(userName, roomUrl, numbers);
   }
 
+  redirToRoom (e) {
+    browserHistory.push(this.state.longRoomURL);
+  }
+
   render () {
     const encodedURL = `fb-messenger://share/?link=http%3A%2F%2Femojifaceoff.herokuapp.com%2Fchat%2F${this.props.session.roomID}`;
     const loaderUI = this.props.ui.loading
@@ -82,8 +86,8 @@ class Invite extends Component {
         </form>
         <h6 className='or-split'>OR</h6>
 
-        <a className='btn-fbshare' href={encodedURL}>
-          <img src={btnIcon} alt='' />INVITE FACEBOOK FRIENDS
+        <a className='btn-fbshare' >
+          <img onClick={this.redirToRoom.bind(this)} src={btnIcon} alt='' />INVITE FACEBOOK FRIENDS
         </a>
         {loaderUI}
       </div>
