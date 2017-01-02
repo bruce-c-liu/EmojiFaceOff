@@ -35,21 +35,7 @@ class MainContainer extends Component {
         auth: this.props.route.auth // sends auth instance from route to children
       });
     }
-    // return (
 
-    // <RouteTransition
-    //     className="outer-container"
-    //     component="div"
-    //     pathname={this.props.location.pathname}
-    //     atEnter={{ translateX: 100 }}
-    //     atLeave={{ translateX: -100 }}
-    //     atActive={{ translateX: 0 }}
-    //     mapStyles={styles => ({ transform: `translateX(${styles.translateX}%)` })}
-    //   >
-    //    <div className="inner-container">{children}</div>
-    //   </RouteTransition>
-
-    //   )
     return this.props.isFetching === true
                     ? <div className='loader'><p>Loading...</p></div>
                     : <div className='inner-container'> {children}</div>;
