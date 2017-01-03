@@ -3,6 +3,7 @@ const RoomController = require('../db/Room/RoomController.js');
 const TwilioController = require('../services/Twilio/TwilioController.js');
 const LibraryController = require('../db/Library/LibraryController.js');
 const UserController = require('../db/User/UserController.js');
+const RedisController = require('../db/Redis/RedisController.js');
 const BitlyController = require('../services/Bitly/BitlyController.js');
 
 module.exports = (app, express) => {
@@ -19,6 +20,9 @@ module.exports = (app, express) => {
   app.get('/api/pendPrompts', LibraryController.pendPrompts);
   app.post('/api/requestPrompt', LibraryController.addPrompt);
   app.put('/api/pendPrompts', LibraryController.updatePendPrompt);
+
+  app.get('/api/userCache', RedisController.getUsersCache);
+  app.get('/api/adminCache', RedisController.getAdminsCache);
 
   app.get('*', (req, res) => {
     res.sendfile('./client/build/index.html');

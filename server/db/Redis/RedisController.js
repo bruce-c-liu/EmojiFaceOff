@@ -59,16 +59,39 @@ module.exports = {
   },
 
   getCommends: (t) => {
-    return redClient.smembers(`COMMENDS`)
+    return redClient.smembers(`Commends`)
       .catch(err => {
         throw err;
       });
   },
 
   getInsults: () => {
-    return redClient.smembers(`INSULTS`)
+    return redClient.smembers(`Insults`)
       .catch(err => {
         throw err;
       });
+  },
+
+  getAdminsCache: (req, res, next) => {
+    redClient.smembers(`Admins`)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.json(err);
+      throw err;
+    });
+  },
+
+  getUsersCache: (req, res, next) => {
+    redClient.smembers(`allUsers`)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.json(err);
+      throw err;
+    });
   }
+
 };
