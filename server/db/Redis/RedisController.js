@@ -56,5 +56,19 @@ module.exports = {
     return Promise.all(redisCalls).then(() => {
       return solutions;
     });
+  },
+
+  getCommends: (t) => {
+    return redClient.smembers(`COMMENDS`)
+      .catch(err => {
+        throw err;
+      });
+  },
+
+  getInsults: () => {
+    return redClient.smembers(`INSULTS`)
+      .catch(err => {
+        throw err;
+      });
   }
 };
