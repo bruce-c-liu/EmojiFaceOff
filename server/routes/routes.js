@@ -18,6 +18,7 @@ module.exports = (app, express) => {
 
   app.get('/api/pendPrompts', LibraryController.pendPrompts);
   app.post('/api/requestPrompt', LibraryController.addPrompt);
+  app.put('/api/pendPrompts', LibraryController.updatePendPrompt);
 
   app.get('*', (req, res) => {
     res.sendfile('./client/build/index.html');

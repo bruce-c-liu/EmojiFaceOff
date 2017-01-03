@@ -23,7 +23,8 @@ class PendRequest extends Component {
           storage.push([
             item.User.imgUrl,
             item.prompt,
-            item.Solutions.join(' + ')
+            item.Solutions.join(' + '),
+            item.promptId
           ]);
         });
         this.setState({

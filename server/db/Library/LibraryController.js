@@ -44,6 +44,44 @@ module.exports = {
     });
   },
 
+  updatePendPrompt: (req, res, next) => {
+    let promptId = req.body.promptId;
+    let promptLevel = req.body.promptLevel;
+
+    console.log('prompt id and level requested', promptId, promptLevel);
+    models.Solution.update(
+      {
+        approved: true
+      },
+      {
+        where: {
+          LibraryId: promptId
+        }
+      })
+    .then(result => {
+      if (result) {
+        return models.Library.update(
+          {
+            approved: true
+          },
+          {
+            where: {
+              id: promptId
+            }
+          });
+      }
+    })
+    .then(result => {
+      if (result) {
+        res.json(result);
+      }
+    })
+    .catch(err => {
+      res.json(err);
+      throw err;
+    });
+  },
+
   addPrompt: (req, res, next) => {
     // console.log('request to add prompt', req.body, req.body.answers);
     let prompt = req.body.prompt;

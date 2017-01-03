@@ -12,22 +12,40 @@ class PendRow extends Component {
       avatar: '',
       prompt: '',
       answers: [],
-      levelSelect: 1
+      levelSelect: 1,
+      promptId: null,
+      approved: false
     };
   }
 
-  componentDidMount () {
+  componentWillMount () {
     this.setState({
       idx: this.props.key,
       avatar: this.props.deets[0],
       prompt: this.props.deets[1],
-      answers: this.props.deets[2]
+      answers: this.props.deets[2],
+      promptId: this.props.deets[3]
     });
   }
 
-  handleClick (e) {
+  approveRequest (e) {
     e.preventDefault();
-    console.log('was clicked', e.target, this.state);
+    axios.put('/api/pendPrompts', {
+      promptId: this.state.promptId,
+      promptLevel: this.state.levelSelect,
+      answers: this.state.answers
+    })
+    .then(result => {
+      console.log('from server', result);
+      if (result) {
+        this.setState({
+          approved: true
+        });
+      }
+    })
+    .catch(err => {
+      throw err;
+    });
   }
 
   handleSelect (e) {
@@ -42,8 +60,11 @@ class PendRow extends Component {
       maxHeight: '20px',
       maxWidth: '20px'
     };
+    const displayNone = {
+      display: 'none'
+    };
     return (
-      <tr>
+      <tr style={this.state.approved ? displayNone : null}>
         <td>
           <img style={avatarStyle} src={this.state.avatar} />
         </td>
@@ -59,7 +80,7 @@ class PendRow extends Component {
           </select>
         </td>
         <td>
-          <button onClick={this.handleClick.bind(this)}>Click me </button>
+          <button onClick={this.approveRequest.bind(this)}>Approve!</button>
         </td>
       </tr>
     );
