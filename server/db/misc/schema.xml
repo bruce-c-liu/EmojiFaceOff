@@ -59,6 +59,12 @@
 <row name="ELO" null="0" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>0</default></row>
+<row name="email" null="1" autoincrement="0">
+<datatype>MEDIUMTEXT</datatype>
+<default>NULL</default></row>
+<row name="coins" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>1000</default></row>
 <row name="createdAt" null="1" autoincrement="0">
 <datatype>DATETIME</datatype>
 <default>NULL</default></row>
@@ -116,7 +122,7 @@
 <default>NULL</default></row>
 <row name="updatedAt" null="1" autoincrement="0">
 <datatype>DATETIME</datatype>
-</row>
+<default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
