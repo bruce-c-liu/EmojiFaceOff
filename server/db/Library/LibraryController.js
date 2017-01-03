@@ -26,6 +26,7 @@ module.exports = {
       return Promise.all(result.map(pendItem => {
         return Promise.props({
           prompt: pendItem.prompt,
+          promptId: pendItem.id,
           createdAt: pendItem.createdAt,
           Solutions: pendItem.Solutions.map(pendAnswer => {
             return pendAnswer.name;
@@ -36,6 +37,44 @@ module.exports = {
     })
     .then(result => {
       res.json(result);
+    })
+    .catch(err => {
+      res.json(err);
+      throw err;
+    });
+  },
+
+  updatePendPrompt: (req, res, next) => {
+    let promptId = req.body.promptId;
+    let promptLevel = req.body.promptLevel;
+
+    console.log('prompt id and level requested', promptId, promptLevel);
+    models.Solution.update(
+      {
+        approved: true
+      },
+      {
+        where: {
+          LibraryId: promptId
+        }
+      })
+    .then(result => {
+      if (result) {
+        return models.Library.update(
+          {
+            approved: true
+          },
+          {
+            where: {
+              id: promptId
+            }
+          });
+      }
+    })
+    .then(result => {
+      if (result) {
+        res.json(result);
+      }
     })
     .catch(err => {
       res.json(err);
