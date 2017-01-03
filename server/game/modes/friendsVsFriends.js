@@ -164,6 +164,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
                       Send 'start' to begin a new game.`;
   io.sockets.in(msg.roomId).emit('newRound', 0);
   io.sockets.in(msg.roomId).emit('message', botResponse);
+  io.sockets.in(msg.roomId).emit('gameEnded');
 
   // Reset the room's data.
   rm.roundNum = 0;
