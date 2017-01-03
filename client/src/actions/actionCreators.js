@@ -80,13 +80,18 @@ export function removeFetchingUser () {
   };
 }
 
-export function fetchRoomId () {
+export function fetchRoomId (path) {
   return function (dispatch) {
+    let roomId = shortid.generate();
     dispatch({
       type: 'FETCH_ROOM',
-      payload: shortid.generate()
+      payload: roomId
     });
-    browserHistory.push(`/invite`);
+    if (path) {
+      browserHistory.push(`/invite`);
+    } else {
+      browserHistory.push(`/chat/${roomId}`);
+    }
   };
 }
 
@@ -106,19 +111,18 @@ export function sendSMS (userName, roomUrl, numbers) {
   };
 }
 
-export function fetchBitlyLink(longURL) {
-    return function(dispatch) {
-        shortenLink(longURL)
+export function fetchBitlyLink (longURL) {
+  return function (dispatch) {
+      shortenLink(longURL)
             .then((resp) => {
-                console.log('BITLY LINK', resp);
-                dispatch({
-                    type: 'FETCH_BITLY',
-                    payload: resp
+              console.log('BITLY LINK', resp);
+              dispatch({
+                  type: 'FETCH_BITLY',
+                  payload: resp
                 });
             });
-    }
+    };
 }
-
 
 export function counterInc () {
   return {
@@ -136,7 +140,6 @@ export function setHostTrue () {
     type: 'SET_HOST'
   };
 }
-
 
 export function playSFX (sound) {
   return {

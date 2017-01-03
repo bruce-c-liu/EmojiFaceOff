@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
 import { browserHistory } from 'react-router';
+import { inviteBaseURL } from '../helpers/utils';
 import _ from 'lodash';
 
 class ModeSelect extends Component {
@@ -29,16 +30,15 @@ class ModeSelect extends Component {
 
   initGameSolo (e) {
     e.preventDefault();
-    // socket.emit('create', {});
-
+    this.props.fetchRoomId();
+    this.props.setHostTrue();
     this.props.playSFX('tap');
   }
 
   initGameFriends (e) {
     e.preventDefault();
-    // socket.emit('create', {});
     console.log('Create Room');
-    this.props.fetchRoomId();
+    this.props.fetchRoomId('/invite');
     this.props.setHostTrue();
     this.props.playSFX('tap');
   }
