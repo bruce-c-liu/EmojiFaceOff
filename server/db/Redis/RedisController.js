@@ -13,7 +13,7 @@ module.exports = {
     else return redClient.sunion(`L0P`, `L1P`, `L2P`, `L3P`, `L4P`, `L5P`);
   },
 
-  // Decprecated
+  // Deprecated
   checkAnswer: (prompt, answer) => {
     let tmp = answer;
     // console.log('\u{1F4AA}' === '💪');

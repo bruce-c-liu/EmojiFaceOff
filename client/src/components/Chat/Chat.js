@@ -83,7 +83,7 @@ class Chat extends Component {
       console.log('Server confirms this socket joined room:', msg.room);
       this.setState({
         joinedPlayer: msg.playerName,
-        joniedAvatar: msg.playerAvatar,
+        joinedAvatar: msg.playerAvatar,
         announceBar: true
       });
       // this.props.playSFX('enter');
@@ -175,7 +175,7 @@ class Chat extends Component {
                                 : <ChatHeadPractice deets={this.state} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
     const avatarBG = {
-      backgroundImage: `url(${this.state.joniedAvatar})`,
+      backgroundImage: `url(${this.state.joinedAvatar})`,
       position: 'relative',
       right: 0,
       height: '45px',
