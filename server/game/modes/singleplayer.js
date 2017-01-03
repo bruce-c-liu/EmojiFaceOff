@@ -38,7 +38,7 @@ module.exports = {
     socket.emit('message', {
       user: 'ebot',
       text: ` Welcome to Emoji Face Off!
-                  Mode: Single Player.
+              1️⃣ Mode: Single Player. 1️⃣
              Press Start when you're ready.`
     });
   },
@@ -71,10 +71,10 @@ module.exports = {
             rm.roundNum = 1;
             botResponse.roundNum = rm.roundNum;
 
-            io.sockets.in(msg.roomId).emit('gameStarted');
-            io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
-            io.sockets.in(msg.roomId).emit('score', 0);
-            io.sockets.in(msg.roomId).emit('message', botResponse);
+            socket.emit('gameStarted');
+            socket.emit('newRound', rm.hints[rm.prompt].length);
+            socket.emit('score', 0);
+            socket.emit('message', botResponse);
 
             let roundNum = 1;
             setTimeout(() => {
