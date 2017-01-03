@@ -1,5 +1,6 @@
 
 const LibraryCtrl = require('../db/Library/LibraryController.js');
+const CommendCtrl = require('../db/Commend/CommendController.js');
 const UserCtrl = require('../db/User/UserController.js');
 const redClient = require('./redis.config.js');
 
@@ -75,11 +76,26 @@ module.exports = {
   },
 
   initAllUsers: () => {
-    UserCtrl.getAllUsers()
+    return UserCtrl.getAllUsers()
     .then(result => {
       return Promise.all(
         result.map(user => {
           return redClient.sadd(`allUsers`, `${user.displayName}:${user.auth}`);
+        })
+      );
+    })
+    .catch(err => {
+      throw err;
+    });
+  },
+
+  initCommend: () => {
+    return CommendCtrl.getAll()
+    .then(result => {
+      return Promise.all(
+        result.map(commend => {
+          if (commend.insultFlag) return redClient.sadd(`INSULTS`, commend.url);
+          else return redClient.sadd(`COMMENDS`, commend.url);
         })
       );
     })
@@ -98,6 +114,9 @@ module.exports = {
     })
     .then(result => {
       if (result) return module.exports.initAllUsers();
+    })
+    .then(result => {
+      if (result) return module.exports.initCommend();
     })
     .catch(err => {
       throw err;
