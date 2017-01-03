@@ -186,7 +186,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   rm.solutions = {};
 
   // Reset all user's scores to 0.
-  for (let id in openConnections) {
+  for (let id in clientsArray) {
     openConnections[id].score = 0;
   }
 }

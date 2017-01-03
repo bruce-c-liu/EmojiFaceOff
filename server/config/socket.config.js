@@ -56,9 +56,9 @@ function hintHandler (msg, io, socket) {
   socket.emit('hint', rm.hints[rm.prompt][msg.index]);
 }
 
-function startGameHandler (msg, io) {
+function startGameHandler (msg, io, socket) {
   if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
-    singlePlayer.startGame(msg, io, TESTING_NUM_ROUNDS, RedisController);
+    singlePlayer.startGame(msg, io, socket, TESTING_NUM_ROUNDS, RedisController);
   } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'FRIENDS_VS_FRIENDS') {
     friendsVsFriends.startGame(msg, io, TESTING_NUM_ROUNDS, RedisController);
   } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'RANKED') {
@@ -94,7 +94,7 @@ module.exports = (server) => {
     });
 
     socket.on('startGame', msg => {
-      startGameHandler(msg, io);
+      startGameHandler(msg, io, socket);
     });
 
     socket.on('disconnect', () => {

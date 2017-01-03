@@ -7,25 +7,20 @@ module.exports = {
     // Emit user's message back to itself.
     socket.emit('message', msg);
 
-    let botResponse = {user: 'ebot'};
+    let botResponse = { user: 'ebot' };
 
-    if (rm.roundNum === 0) {
-      if (msg.text === 'start') {
-        startGame(botResponse, msg, io, rm, TESTING_NUM_ROUNDS, RedisController);
-      } else {
-        botResponse.text = `Send 'start' to begin the game, dumbass.`;
-        io.sockets.in(msg.roomId).emit('message', botResponse);
-      }
-    } else if (rm.roundNum <= TESTING_NUM_ROUNDS) {
-      if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
-        openConnections[socket.id].score++;                           // Increment the user's score.
-        if (rm.roundNum < TESTING_NUM_ROUNDS) {
-          nextRound(botResponse, msg, io, rm, openConnections, socket);
-        } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
-          endGame(botResponse, msg, io, rm, openConnections);
+    if (rm.gameStarted) {
+      if (rm.roundNum <= TESTING_NUM_ROUNDS) {
+        if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
+          openConnections[socket.id].score++;                           // Increment the user's score.
+          if (rm.roundNum < TESTING_NUM_ROUNDS) {
+            nextRound(botResponse, msg, io, rm, openConnections, socket);
+          } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
+            endGame(botResponse, msg, io, socket, openConnections, rm, TESTING_NUM_ROUNDS);
+          }
+        } else {                                       // A user replied with an incorrect answer.
+          wrongAnswer(botResponse, msg, io, rm);
         }
-      } else {                                       // A user replied with an incorrect answer.
-        wrongAnswer(botResponse, msg, io, rm);
       }
     }
   },
@@ -33,20 +28,25 @@ module.exports = {
   joinRoomHandler: function (msg, io, socket) {
     socket.join(msg.roomId);
     console.log('Joined room:', msg.roomId);
-    socket.emit('roomJoined', msg.roomId);
+    socket.emit('roomJoined', {
+      room: msg.roomId,
+      playerName: msg.user,
+      playerAvatar: msg.avatar
+    });
     console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
     socket.emit('message', {
       user: 'ebot',
-      text: ` Welcome to Emoji Face Off!
-              1️⃣ Mode: Single Player. 1️⃣
-             Press Start when you're ready.`
+      text: ` 🎉\xa0\xa0Welcome to Emoji Face Off!\xa0\xa0 🎉
+             🙏 Mode: Single Player Practice. 🙏
+             \xa0\xa0\xa0\xa0 Press Start when you're ready.`
     });
   },
 
-  startGame: function (msg, io, TESTING_NUM_ROUNDS, RedisController) {
-    let botResponse = {user: 'ebot'};
+  startGame: function (msg, io, socket, TESTING_NUM_ROUNDS, RedisController) {
+    let botResponse = { user: 'ebot' };
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
-    RedisController.getPrompts(rm.level)
+    rm.gameStarted = true;
+    RedisController.getPrompts()      // CHANGE BACK LATER: RedisController.getPrompts(rm.level)
       .then(filteredPrompts => {
         // randomly populate the room's "prompts" object from our library.
         while (rm.prompts.length < TESTING_NUM_ROUNDS) {
@@ -64,7 +64,7 @@ module.exports = {
               rm.hints[prompt] = [...Object.keys(solutions[prompt])[0]];
             }
 
-            console.log(rm.hints);
+            console.log('Hints Object:', rm.hints);
             rm.prompt = rm.prompts.pop();
             botResponse.text = `Round 1
                                 Please translate [${rm.prompt}] into emoji form~`;
@@ -75,6 +75,8 @@ module.exports = {
             socket.emit('newRound', rm.hints[rm.prompt].length);
             socket.emit('score', 0);
             socket.emit('message', botResponse);
+
+            rm.startTime = Date.now();
 
             let roundNum = 1;
             setTimeout(() => {
@@ -107,56 +109,31 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
                       Round ${rm.roundNum}
                       Please translate [${rm.prompt}] into emoji form~`;
   botResponse.roundNum = rm.roundNum;
-  io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
+  socket.emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
-  io.sockets.in(msg.roomId).emit('message', botResponse);
+  socket.emit('message', botResponse);
 }
 
-function findWinner (clientsArray, openConnections) {
-  // Grab the winning socketID
-  let socketID = clientsArray.reduce((winner, currUser) => {
-    console.log(openConnections[currUser].score);
-    console.log(openConnections[winner].score);
-    if (openConnections[currUser].score > openConnections[winner].score) {
-      return currUser;
-    } else {
-      return winner;
-    }
-  });
-
-  return openConnections[socketID];
-}
-
-function calcFinalRankings (clientsArray, openConnections) {
-  let finalRankings = '';
-  clientsArray.forEach(client => {
-    finalRankings += `${openConnections[client].name}: ${openConnections[client].score}\n`;
-  });
-  return finalRankings;
-}
-
-function endGame (botResponse, msg, io, rm, openConnections) {
-  let clients = io.nsps['/'].adapter.rooms[msg.roomId].sockets;
-  let clientsArray = Object.keys(clients);
-  console.log('CLIENTS:', clientsArray);
-
-  let winner = findWinner(clientsArray, openConnections);
-  let finalRankings = calcFinalRankings(clientsArray, openConnections);
+function endGame (botResponse, msg, io, socket, openConnections, rm, TESTING_NUM_ROUNDS) {
+  let timeElapsed = (Date.now() - rm.startTime) / 1000;
+  let secondsPerRnd = timeElapsed / TESTING_NUM_ROUNDS;
 
   // First, notify everyone the final answer was correct.
   botResponse.text = `Good job, ${msg.user}!`;
-  io.sockets.in(msg.roomId).emit('message', botResponse);
+  socket.emit('message', botResponse);
   // Reset all users'' scores
-  io.sockets.in(msg.roomId).emit('score', null);
+  socket.emit('score', null);
   // Emit winner/final scores.
-  botResponse.text = `Game Finished.
-                      The winner is ${winner.name} with ${winner.score} points!
+  botResponse.text = `Game Completed!
+                      
+                      ${timeElapsed} seconds to complete ${TESTING_NUM_ROUNDS} rounds.
+                      ${secondsPerRnd} / round.
 
-                      Final Scores:
-                      ${finalRankings}
-                      Send 'start' to begin a new game.`;
-  io.sockets.in(msg.roomId).emit('newRound', 0);
-  io.sockets.in(msg.roomId).emit('message', botResponse);
+                      You kinda fucking suck...try harder next time. 💩
+
+                      Press 'start' to begin a new game.`;
+  socket.emit('newRound', 0);
+  socket.emit('message', botResponse);
 
   // Reset the room's data.
   rm.roundNum = 0;
@@ -164,11 +141,11 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   rm.prompts = [];
   rm.hints = {};
   rm.solutions = {};
+  rm.gameStarted = false;
+  rm.startTime = null;
 
-  // Reset all user's scores to 0.
-  for (let id in openConnections) {
-    openConnections[id].score = 0;
-  }
+  // Reset user's score to 0.
+  openConnections[socket.id].score = 0;
 }
 
 function wrongAnswer (botResponse, msg, io, rm) {
