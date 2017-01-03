@@ -2,7 +2,6 @@ const ignoredCodePoints = require('../helpers/ignoredCodePoints.js');
 
 module.exports = {
   play: function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
-      // Populate all info from this socket room.
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
 
     // Emit user's message to all sockets connected to this room.
@@ -79,7 +78,7 @@ module.exports = {
             rm.roundNum = 1;
             botResponse.roundNum = rm.roundNum;
 
-            io.sockets.in(msg.roomId).emit('gameStarted', rm.hints[rm.prompt].length);
+            io.sockets.in(msg.roomId).emit('gameStarted');
             io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
             io.sockets.in(msg.roomId).emit('score', 0);
             io.sockets.in(msg.roomId).emit('message', botResponse);

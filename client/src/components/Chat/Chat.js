@@ -108,7 +108,7 @@ class Chat extends Component {
           elo: result.data.ELO,
           fbId: result.data.auth,
           avatar: this.props.users.profile.info.avatar,
-          type: 'FRIENDS_VS_FRIENDS' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+          type: 'SINGLE_PLAYER' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
         });
       });
   }
