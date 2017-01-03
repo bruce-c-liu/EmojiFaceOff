@@ -39,6 +39,7 @@ class ModeSelect extends Component {
     // socket.emit('create', {});
     console.log('Create Room');
     this.props.fetchRoomId();
+    this.props.setHostTrue();
     this.props.playSFX('tap');
   }
 
