@@ -8,13 +8,16 @@ import * as actionCreators from '../actions/actionCreators';
 import { inviteBaseURL } from '../helpers/utils';
 import btnIcon from '../assets/Messenger_Icon.png';
 import { browserHistory } from 'react-router';
+import OnBoard from './OnBoard';
+
 class Invite extends Component {
   constructor () {
     super();
     this.state = {
       inviteCount: 1,
       longRoomURL: null,
-      shortRoomURL: null
+      shortRoomURL: null,
+      onBoard: false
     };
   }
 
@@ -50,11 +53,10 @@ class Invite extends Component {
     this.props.sendSMS(userName, roomUrl, numbers);
   }
 
-  redirToRoom (e) {
-    browserHistory.push(this.state.longRoomURL);
-    console.log('afefaew');
-    var uagent = navigator.userAgent.toLowerCase();
-    console.log('uagent', uagent);
+  popModal(e){
+    this.setState({
+      onBoard: true
+    });
   }
 
   render () {
@@ -89,14 +91,13 @@ class Invite extends Component {
         </form>
         <h6 className='or-split'>OR</h6>
 
-        <a className='btn-fbshare' href={encodedURL}>
+        <a className='btn-fbshare' href={encodedURL} onClick={this.popModal.bind(this)}>
           <img src={btnIcon} alt='' />INVITE FACEBOOK FRIENDS
         </a>
 
-        <a onClick={this.redirToRoom.bind(this)}>
-          <h6 className='or-split'>Let's Get This Party Started! 🎉</h6>
-        </a>
+
         {loaderUI}
+        <OnBoard show={this.state.onBoard} roomLink={this.props.session.roomID}/>
       </div>
     );
   }
