@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import {Motion, spring} from 'react-motion';
 import { connect } from 'react-redux';
@@ -7,6 +8,7 @@ import * as actionCreators from '../../actions/actionCreators.js';
 import io from 'socket.io-client';
 import {socketURL} from '../../helpers/utils.js';
 import ChatHead from './ChatHead';
+import ChatHeadPractice from './ChatHeadPractice';
 import Bubble from './Bubble';
 import { getUser } from '../../helpers/http.js';
 
@@ -24,7 +26,12 @@ class Chat extends Component {
       solution: [],
       clueCount: 0,
       gameStarted: false,
-      host: true                   // TODO: Grab host status from store!
+      isHost:false ,// TODO: Grab host status from store!
+      joinedPlayer: null,
+      joniedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
+      announceBar: false
+
+
     };
     this.socket = io(socketURL);
 
@@ -69,6 +76,18 @@ class Chat extends Component {
                } */
     this.socket.on('roomJoined', (msg) => {
       console.log('Server confirms this socket joined room:', msg.room);
+      this.setState({
+        joinedPlayer: msg.playerName,
+        joniedAvatar: msg.playerAvatar,
+        announceBar: true
+      })
+      //this.props.playSFX('enter');
+      setTimeout(() => {
+                  this.setState({
+                      announceBar: false
+                  });
+      }, 2000);
+
     });
   }
 
@@ -99,6 +118,12 @@ class Chat extends Component {
     node.scrollTop = node.scrollHeight + 200;
   }
 
+  announceNewPlayer(){
+      this.setState({
+        announceBar: true
+      })
+  }
+
   handleChange (e) {
     this.setState({
       message: e.target.value
@@ -106,7 +131,11 @@ class Chat extends Component {
   }
 
   startGame (e) {
+    console.log("startGame" )   
     e.preventDefault();
+    this.setState({
+      gameStarted: true
+    })
     this.props.playSFX('chime');
     this.socket.emit('startGame', { user: this.state.user, roomId: this.state.roomId });
   }
@@ -139,14 +168,29 @@ class Chat extends Component {
     });
     const chatHeadElements = this.state.gameStarted
                                 ? <ChatHead deets={this.state} />
-                                : <button className='btn-start' onClick={this.startGame.bind(this)}>START</button>;
+                                : <ChatHeadPractice deets={this.state} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
+    const avatarBG = {
+      backgroundImage: `url(${this.state.joniedAvatar})`,
+      position: 'relative',
+      right: 0,
+      height: '45px',
+      width: '45px'
+    };
+    const annouceClass = classNames({
+      'player-announce': true,
+      'is-showing' : this.state.announceBar
+    })
 
     return (
 
       <div className='chat-view'>
         <div className='chat-head'>
           {chatHeadElements}
+        </div>
+        <div className={annouceClass}>
+            <div className='bubble-name' style={avatarBG} />
+            <p>{this.state.joinedPlayer} has joined the challenge!</p>
         </div>
         <div className='chat-messages' ref='chatScroll'>
           {chatList}

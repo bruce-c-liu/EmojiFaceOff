@@ -131,6 +131,13 @@ export function counterDec () {
   };
 }
 
+export function setHostTrue () {
+  return {
+    type: 'SET_HOST'
+  };
+}
+
+
 export function playSFX (sound) {
   return {
     type: 'SOUND_FX',

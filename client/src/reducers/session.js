@@ -1,6 +1,7 @@
 const initialState = {
   roomID: 'POOP',
-  inviteCount: 1
+  inviteCount: 1,
+  isHost: false
 };
 
 function session (state = initialState, action) {
@@ -20,6 +21,10 @@ function session (state = initialState, action) {
     case 'INVITE_DEC':
       return Object.assign({}, state, {
         inviteCount: --state.inviteCount
+      });
+    case 'SET_HOST':
+      return Object.assign({}, state, {
+        isHost: true
       });
 
     default:
