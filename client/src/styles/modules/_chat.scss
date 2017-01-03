@@ -44,6 +44,23 @@
 		}
 	}
 }
+.player-announce{
+	height: 0;
+	width: 100%;
+	background-color: $turq;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	transition: height .2s ease;
+	p{
+		color: $white;
+		margin-left: 1rem;
+	}
+	&.is-showing{
+		height: 50px;
+	}
+}
 .btn-start{
 	  padding: .5rem 1rem;
 	  background-color: $orange;
