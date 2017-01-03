@@ -1,5 +1,6 @@
 
 .invite-wrap{
+	position: relative;
 	background-color: rgba($white, 0.7);
 	padding: 2rem;
 }
@@ -33,6 +34,7 @@
 }
 
 .input-inline{
+	position: relative;
 	display: flex;
 	align-items: center;
 	margin: 1rem auto;
@@ -43,23 +45,27 @@
 	border: 1px solid $orange;
 	border-radius: 4px;
 	input[type="tel"]{
-		//padding: 0 1rem;
-		flex-grow: 1;
-		max-width: 68%;
+		box-sizing: border-box;
+		height: 60px;
+		flex-shrink: 1;
 		border: none;
 		outline: none;
 		background-color: transparent;
 		color: $gray-dk;
 		font-weight: 300;
-		font-size: 1.5rem;
-		letter-spacing: 1px;
+		font-size: 1.5em;
+		//letter-spacing: 1px;
 		&::placeholder{
-			font-size: 1rem;
+			font-size: 1.25rem;
 		}
 	}
 	i{
 		font-size: 1.25rem;
 		margin-right: .5rem;
 		color: $gray;
+	}
+	.btn-input{
+		position: absolute;
+		right: 10px;
 	}
 }

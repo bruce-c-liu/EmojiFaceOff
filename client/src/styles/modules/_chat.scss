@@ -31,7 +31,8 @@
 }//chat-head
 .flip-stat{
 	position: relative;
-	color: darken($orange, 20%);
+	color: darken($orange, 22%);
+	color: #B23939;
 	span{
 		position: absolute;
 		top: -7px;
@@ -43,7 +44,8 @@
 	p{
 		font-size: .8rem;
 		margin: 0 .5rem;
-		color: lighten($orange, 20%);;
+		color: lighten($orange, 20%);
+		font-weight: 600;
 	}
 	&:last-child{
 		span{
@@ -96,7 +98,7 @@
 }
 .chat-form_wrap{
 	width: 100%;
-	min-height: 47px;
+	min-height: 60px;
 	display: flex;
 	justify-content: space-between;
 	padding: .5rem;
@@ -112,10 +114,11 @@
 	display: flex;
 	justify-content: space-between;
 	flex-grow: 1;
+	margin-left: .5rem;
 	>input[type="text"]{
 		//flex-grow: 1;
 		border: none;
-		padding: 0 2rem;
+		padding: 0 .25rem;
 		font-size: 1.25rem;
 		&:focus{
 			outline:none;

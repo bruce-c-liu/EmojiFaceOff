@@ -1,9 +1,18 @@
 .onboard-wrap{
-	justify-content: space-between;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0; left: 0;
+	//ustify-content: space-between;
 	background-color: rgba($black, 0.9);
 	padding: 2rem 3rem;
+	transform: translateY(200%);
+	transition: transform .3s ease;
 	p{
 		color: $gray-lt;
 		font-size: 1.25rem;
+	}
+	&.is-visible{
+		transform: translateY(0);
 	}
 }
