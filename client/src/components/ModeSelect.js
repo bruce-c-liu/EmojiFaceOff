@@ -53,6 +53,17 @@ class ModeSelect extends Component {
     return (
       <div className='inner-container is-center'>
         <div className='mode-select_wrap'>
+        <h1> Select Game Mode</h1>
+        <div>
+          <div className='mode-select_vs'>
+            <div className='avatar is-md' style={avatarBG} />
+            <span>vs.</span>
+            <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/4b/93/4b932980a0fe8f7ad711a8c2fcc68ce4.png')`}} />
+          </div>
+          <button className='btn-login is-full' onClick={this.initGameFriends.bind(this)}>
+            Challenge Your Friends!
+          </button>
+        </div>
           <div>
             <div className='mode-select_vs'>
               <div className='avatar is-md' style={avatarBG} />
@@ -64,16 +75,7 @@ class ModeSelect extends Component {
                 Single Player Mode
             </button>
           </div>
-          <div>
-            <div className='mode-select_vs'>
-              <div className='avatar is-md' style={avatarBG} />
-              <span>vs.</span>
-              <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/4b/93/4b932980a0fe8f7ad711a8c2fcc68ce4.png')`}} />
-            </div>
-            <button className='btn-login is-full' onClick={this.initGameFriends.bind(this)}>
-              Challenge Your Friends!
-            </button>
-          </div>
+
 
         </div>
 

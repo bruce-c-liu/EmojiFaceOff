@@ -1,15 +1,21 @@
 
 
 .mode-select_wrap{
-	width: 90%;
-	height: 80%;
+	width: 95%;
+	height: 95%;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
 	padding: 2rem;
 	border-radius: 4px;
+	border: 1px solid $turq;
 	background-color: rgba($white, 0.6);
 	text-align: center;
+	h1{
+		font-family: $font-display;
+		color: $turq;
+		line-height: 1;
+	}
 }
 
 .mode-select_vs{
