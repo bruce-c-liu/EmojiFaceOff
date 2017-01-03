@@ -17,9 +17,16 @@ module.exports = (sequelize, DataTypes) => {
     auth: {
       type: DataTypes.STRING
     },
+    email: {
+      type: DataTypes.STRING
+    },
     ELO: {
       type: DataTypes.INTEGER,
       defaultValue: 0
+    },
+    coins: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1000
     }
   }, {
     freezeTableName: true,

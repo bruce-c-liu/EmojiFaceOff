@@ -71,6 +71,7 @@ module.exports = {
   addUser: (req, res, next) => {
     if (req.body.displayName) {
       let displayName = req.body.displayName;
+      let email = req.body.email || '';
       let imgUrl = req.body.imgUrl || '';
       let role = req.body.role || 'user';
       let auth = req.body.auth || '';
@@ -90,6 +91,7 @@ module.exports = {
 
           models.User.create({
             displayName: displayName,
+            email: email,
             imgUrl: imgUrl,
             role: role,
             auth: auth
