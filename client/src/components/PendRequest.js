@@ -2,41 +2,29 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
-import {Table, Column, Cell} from 'fixed-data-table';
 import axios from 'axios';
+import PendRow from './PendRow';
 
 class PendRequest extends Component {
   constructor () {
     super();
     this.state = {
-      rows: [
-              ['a1', 'b1', 'c1'],
-              ['a2', 'b2', 'c2'],
-              ['a3', 'b3', 'c3']
-      ],
+      rows: [],
       data: []
     };
-    this._onFilterChange = this._onFilterChange.bind(this);
   }
 
-  componentWillMount () {
+  componentDidMount () {
     axios.get('/api/pendPrompts')
     .then(result => {
       console.log('pending Prompts', result.data);
       if (result) {
-        let storage = [
-          [],   // col0 user image
-          [],   // col1 prompt
-          [],   // col2 possible answers
-          [],   // col1
-          []    // col1
-        ];
+        let storage = [];
         let data = result.data;
-
-        data.map((item, index) => {
-          storage[index].push(item.User.imgUrl, item.prompt, item.Solutions.join(' + '));
+        console.log('storage', storage);
+        data.map((item) => {
+          storage.push([item.User.imgUrl, item.prompt, item.Solutions.join(' + ')]);
         });
-        console.log('Storage', storage);
         this.setState({
           rows: storage
         });
@@ -47,70 +35,27 @@ class PendRequest extends Component {
     });
   }
 
-  handleClick (e) {
-    console.log('was clicked', e.target, e.target.value, e.target.className);
-  }
-
-  _onFilterChange (e) {
-    if (!e.target.value) {
-      this.setState({
-        filteredDataList: this._dataList
-      });
-    }
-
-    var filterBy = e.target.value.toLowerCase();
-    var size = this._dataList.getSize();
-    var filteredIndexes = [];
-    for (var index = 0; index < size; index++) {
-      var {firstName} = this._dataList.getObjectAt(index);
-      if (firstName.toLowerCase().indexOf(filterBy) !== -1) {
-        filteredIndexes.push(index);
-      }
-    }
+  handleClick (idx) {
+    // e.preventDefault();
+    console.log('was clicked', this, this.state.rows[idx]);
   }
 
   render () {
+    const tableRows = this.state.rows.map((item, idx) => {
+      return (
+        <PendRow deets={item} key={idx} />
+      );
+    });
+
     return (
       <div>
         <p>In pending requests</p>
-        <Table
-          rowHeight={50}
-          rowsCount={this.state.rows.length}
-          width={500}
-          height={500}
-          headerHeight={50}
-        >
-          <Column
-            header={<Cell>User</Cell>}
-            cell={({rowIndex, ...props}) => (
-              <Cell className='userImg' onClick={this.handleClick.bind(this)}>
-                {this.state.rows[rowIndex][0]}
-              </Cell>
-            )}
-            width={50}
-            fixed
-          />
-          <Column
-            header={<Cell>Prompt</Cell>}
-            cell={({rowIndex, ...props}) => (
-              <Cell className='pendPrompt' {...props} onClick={this.handleClick.bind(this)}>
-                {this.state.rows[rowIndex][1]}
-              </Cell>
-            )}
-            width={100}
-            flexGrow={2}
-          />
-          <Column
-            header={<Cell>Answers</Cell>}
-            cell={({rowIndex, ...props}) => (
-              <Cell className='pendAnswer' {...props} onClick={this.handleClick.bind(this)}>
-                {this.state.rows[rowIndex][2]}
-              </Cell>
-            )}
-            width={200}
-            flexGrow={1}
-          />
-        </Table>
+        <table>
+          <thead />
+          <tbody>
+            {tableRows}
+          </tbody>
+        </table>
       </div>
     );
   }
