@@ -111,6 +111,7 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
   botResponse.text = `Good job, ${msg.user}! 
+  
                       Round ${rm.roundNum}
                       Please translate [${rm.prompt}] into emoji form~`;
   botResponse.roundNum = rm.roundNum;
@@ -156,12 +157,12 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   // Reset all users'' scores
   io.sockets.in(msg.roomId).emit('score', null);
   // Emit winner/final scores.
-  botResponse.text = `Game Finished.
+  botResponse.text = `Game Completed.
                       The winner is ${winner.name} with ${winner.score} points!
 
                       Final Scores:
                       ${finalRankings}
-                      Send 'start' to begin a new game.`;
+                      Press 'start' to begin a new game.`;
   io.sockets.in(msg.roomId).emit('newRound', 0);
   io.sockets.in(msg.roomId).emit('message', botResponse);
   io.sockets.in(msg.roomId).emit('gameEnded');
@@ -175,7 +176,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   rm.gameStarted = false;
 
   // Reset all user's scores to 0.
-  for (let id in clientsArray) {
+  for (let id of clientsArray) {
     openConnections[id].score = 0;
   }
 }
