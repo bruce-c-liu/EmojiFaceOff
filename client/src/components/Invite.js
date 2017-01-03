@@ -10,6 +10,7 @@ import btnIcon from '../assets/Messenger_Icon.png';
 import { browserHistory } from 'react-router';
 import OnBoard from './OnBoard';
 
+
 class Invite extends Component {
   constructor () {
     super();
@@ -53,10 +54,12 @@ class Invite extends Component {
     this.props.sendSMS(userName, roomUrl, numbers);
   }
 
+
   popModal(e){
     this.setState({
       onBoard: true
     });
+
   }
 
   render () {
@@ -94,7 +97,6 @@ class Invite extends Component {
         <a className='btn-fbshare' href={encodedURL} onClick={this.popModal.bind(this)}>
           <img src={btnIcon} alt='' />INVITE FACEBOOK FRIENDS
         </a>
-
 
         {loaderUI}
         <OnBoard show={this.state.onBoard} roomLink={this.props.session.roomID}/>
