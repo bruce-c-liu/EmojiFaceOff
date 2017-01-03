@@ -68,6 +68,12 @@ class Chat extends Component {
       });
     });
 
+    this.socket.on('gameEnded', () => {
+      this.setState({
+        gameStarted: false
+      });
+    });
+
       /* msg = {
                  room: (string) roomId joined
                  playerAvatar: (string) avatar URL
@@ -106,7 +112,7 @@ class Chat extends Component {
           elo: result.data.ELO,
           fbId: result.data.auth,
           avatar: this.props.users.profile.info.avatar,
-          type: 'SINGLE_PLAYER' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+          type: 'FRIENDS_VS_FRIENDS' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
         });
       });
   }

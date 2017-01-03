@@ -134,6 +134,7 @@ function endGame (botResponse, msg, io, socket, openConnections, rm, TESTING_NUM
                       Press 'start' to begin a new game.`;
   socket.emit('newRound', 0);
   socket.emit('message', botResponse);
+  socket.emit('gameEnded');
 
   // Reset the room's data.
   rm.roundNum = 0;

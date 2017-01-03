@@ -49,7 +49,7 @@ module.exports = {
     let botResponse = {user: 'ebot'};
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
     rm.gameStarted = true;
-    RedisController.getPrompts(rm.level)
+    RedisController.getPrompts() // ADD BACK rm.level LATER
       .then(filteredPrompts => {
         // randomly populate the room's "prompts" object (based on room's difficulty) from our library.
         while (rm.prompts.length < TESTING_NUM_ROUNDS) {
