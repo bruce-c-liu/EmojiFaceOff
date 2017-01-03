@@ -8,6 +8,7 @@ import * as actionCreators from '../../actions/actionCreators.js';
 import io from 'socket.io-client';
 import {socketURL} from '../../helpers/utils.js';
 import ChatHead from './ChatHead';
+import ChatHeadPractice from './ChatHeadPractice';
 import Bubble from './Bubble';
 import { getUser } from '../../helpers/http.js';
 
@@ -25,7 +26,7 @@ class Chat extends Component {
       solution: [],
       clueCount: 0,
       gameStarted: false,
-      host: true ,// TODO: Grab host status from store!
+      isHost:false ,// TODO: Grab host status from store!
       joinedPlayer: null,
       joniedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
       announceBar: false
@@ -80,7 +81,7 @@ class Chat extends Component {
         joniedAvatar: msg.playerAvatar,
         announceBar: true
       })
-      this.props.playSFX('enter');
+      //this.props.playSFX('enter');
       setTimeout(() => {
                   this.setState({
                       announceBar: false
@@ -130,7 +131,11 @@ class Chat extends Component {
   }
 
   startGame (e) {
+    console.log("startGame" )   
     e.preventDefault();
+    this.setState({
+      gameStarted: true
+    })
     this.props.playSFX('chime');
     this.socket.emit('startGame', { user: this.state.user, roomId: this.state.roomId });
   }
@@ -163,7 +168,7 @@ class Chat extends Component {
     });
     const chatHeadElements = this.state.gameStarted
                                 ? <ChatHead deets={this.state} />
-                                : <button className='btn-start' onClick={this.startGame.bind(this)}>START</button>;
+                                : <ChatHeadPractice deets={this.state} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
     const avatarBG = {
       backgroundImage: `url(${this.state.joniedAvatar})`,
