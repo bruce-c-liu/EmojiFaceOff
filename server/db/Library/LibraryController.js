@@ -26,6 +26,7 @@ module.exports = {
       return Promise.all(result.map(pendItem => {
         return Promise.props({
           prompt: pendItem.prompt,
+          promptId: pendItem.id,
           createdAt: pendItem.createdAt,
           Solutions: pendItem.Solutions.map(pendAnswer => {
             return pendAnswer.name;

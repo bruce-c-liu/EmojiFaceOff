@@ -9,8 +9,7 @@ class PendRequest extends Component {
   constructor () {
     super();
     this.state = {
-      rows: [],
-      data: []
+      rows: []
     };
   }
 
@@ -20,10 +19,12 @@ class PendRequest extends Component {
       console.log('pending Prompts', result.data);
       if (result) {
         let storage = [];
-        let data = result.data;
-        console.log('storage', storage);
-        data.map((item) => {
-          storage.push([item.User.imgUrl, item.prompt, item.Solutions.join(' + ')]);
+        result.data.map((item) => {
+          storage.push([
+            item.User.imgUrl,
+            item.prompt,
+            item.Solutions.join(' + ')
+          ]);
         });
         this.setState({
           rows: storage
@@ -33,11 +34,6 @@ class PendRequest extends Component {
     .catch(err => {
       throw err;
     });
-  }
-
-  handleClick (idx) {
-    // e.preventDefault();
-    console.log('was clicked', this, this.state.rows[idx]);
   }
 
   render () {

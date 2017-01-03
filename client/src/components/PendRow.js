@@ -11,7 +11,8 @@ class PendRow extends Component {
       idx: '',
       avatar: '',
       prompt: '',
-      answers: []
+      answers: [],
+      levelSelect: 1
     };
   }
 
@@ -29,14 +30,34 @@ class PendRow extends Component {
     console.log('was clicked', e.target, this.state);
   }
 
+  handleSelect (e) {
+    e.preventDefault();
+    this.setState({
+      levelSelect: e.target.value
+    });
+  }
+
   render () {
+    const avatarStyle = {
+      maxHeight: '20px',
+      maxWidth: '20px'
+    };
     return (
       <tr>
         <td>
-          <img src={this.state.avatar} />
+          <img style={avatarStyle} src={this.state.avatar} />
         </td>
         <td>{this.state.prompt}</td>
         <td>{this.state.answers}</td>
+        <td>
+          <select onChange={this.handleSelect.bind(this)}>
+            <option value='1'>1</option>
+            <option value='2'>2</option>
+            <option value='3'>3</option>
+            <option value='4'>4</option>
+            <option value='5'>5</option>
+          </select>
+        </td>
         <td>
           <button onClick={this.handleClick.bind(this)}>Click me </button>
         </td>
