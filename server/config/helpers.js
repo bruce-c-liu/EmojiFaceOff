@@ -79,7 +79,7 @@ module.exports = {
     .then(result => {
       return Promise.all(
         result.map(user => {
-          return redClient.sadd(`allUsers`, user.displayName);
+          return redClient.sadd(`allUsers`, `${user.displayName}:${user.auth}`);
         })
       );
     })

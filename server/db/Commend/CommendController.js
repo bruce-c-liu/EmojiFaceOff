@@ -2,6 +2,7 @@
 const models = require('../../config/db.config.js');
 
 module.exports = {
+
   addCommend: (imgUrl, insultFlag) => {
     if (imgUrl && insultFlag) {
       return models.Commend.findOrCreate({
@@ -12,5 +13,9 @@ module.exports = {
         }
       });
     } else return null;
+  },
+
+  getAll: () => {
+    return models.Commend.findAll({});
   }
 };
