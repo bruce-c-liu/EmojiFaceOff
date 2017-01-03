@@ -56,6 +56,16 @@ function hintHandler (msg, io, socket) {
   socket.emit('hint', rm.hints[rm.prompt][msg.index]);
 }
 
+function startGameHandler (msg, io) {
+  if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
+   // singlePlayer.play(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+  } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'FRIENDS_VS_FRIENDS') {
+    friendsVsFriends.startGame(msg, io, TESTING_NUM_ROUNDS, RedisController);
+  } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'RANKED') {
+   // ranked.play(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+  }
+}
+
 module.exports = (server) => {
   const io = require('socket.io')(server);
 
@@ -71,18 +81,20 @@ module.exports = (server) => {
       hintHandler(msg, io, socket);
     });
 
-    /*
-     incoming msg format:
+    /* incoming msg format:
       {
         user (string): displayname of who is requesting to join this room,
         fbId (string): user's facebook id,
         elo (number): user's ELO,
         roomId (string): which room user is requesting to join,
         type (string): type of room ('SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED')
-      }
-    */
+      } */
     socket.on('joinRoom', msg => {
       joinRoomHandler(msg, io, socket);
+    });
+
+    socket.on('startGame', msg => {
+      startGameHandler(msg, io);
     });
 
     socket.on('disconnect', () => {

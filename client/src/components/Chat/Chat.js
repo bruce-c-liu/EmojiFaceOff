@@ -23,9 +23,8 @@ class Chat extends Component {
       chats: [],
       solution: [],
       clueCount: 0,
-      joined: null,
-      gameStarted: false
-
+      gameStarted: false,
+      host: true                   // TODO: Grab host status from store!
     };
     this.socket = io(socketURL);
 
@@ -63,11 +62,13 @@ class Chat extends Component {
       });
     });
 
-    this.socket.on('roomJoined', (room) => {
-      console.log('Server confirms this socket joined room:', room);
-      this.setState({
-        joined: room
-      })
+      /* msg = {
+                 room: (string) roomId joined
+                 playerAvatar: (string) avatar URL
+                 playerName: (string) player's name who just joined
+               } */
+    this.socket.on('roomJoined', (msg) => {
+      console.log('Server confirms this socket joined room:', msg.room);
     });
   }
 
@@ -87,6 +88,7 @@ class Chat extends Component {
           user: this.state.user,
           elo: result.data.ELO,
           fbId: result.data.auth,
+          avatar: this.props.users.profile.info.avatar,
           type: 'FRIENDS_VS_FRIENDS' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
         });
       });
@@ -106,7 +108,7 @@ class Chat extends Component {
   startGame (e) {
     e.preventDefault();
     this.props.playSFX('chime');
-    this.socket.emit('message', { user: this.state.user, text: 'start', imgUrl: this.props.users.profile.info.avatar, roomId: this.state.roomId });
+    this.socket.emit('startGame', { user: this.state.user, roomId: this.state.roomId });
   }
   sendMessage (e) {
     e.preventDefault();
@@ -149,16 +151,16 @@ class Chat extends Component {
         <div className='chat-messages' ref='chatScroll'>
           {chatList}
         </div>
-        <div className="chat-form_wrap">
-            <button className='btn-hint' 
-                                    onClick={this.requestHint.bind(this)}
-                                    disabled={this.state.clueCount >= this.state.solution.length} > ?</button>
-            <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
-              <input type='text' value={this.state.message}
-                onChange={this.handleChange.bind(this)}
-                placeholder='Your Message Here' />
-              <input className='btn-input' type='submit' value='Submit' disabled={this.state.message.length <= 0} />
-            </form>
+        <div className='chat-form_wrap'>
+          <button className='btn-hint'
+            onClick={this.requestHint.bind(this)}
+            disabled={this.state.clueCount >= this.state.solution.length} > ?</button>
+          <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
+            <input type='text' value={this.state.message}
+              onChange={this.handleChange.bind(this)}
+              placeholder='Your Message Here' />
+            <input className='btn-input' type='submit' value='Submit' disabled={this.state.message.length <= 0} />
+          </form>
         </div>
 
       </div>
