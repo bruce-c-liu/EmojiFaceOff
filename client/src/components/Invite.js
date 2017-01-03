@@ -57,6 +57,8 @@ class Invite extends Component {
     this.setState({
       onBoard: true
     });
+    //console.log("ENCODED URL", encodedURL )
+      
   }
 
   render () {
