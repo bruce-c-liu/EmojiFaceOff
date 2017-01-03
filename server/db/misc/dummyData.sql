@@ -96,3 +96,62 @@ Values ('unexepected gasm', 3, true, NOW(), NOW(), (Select "id" from "User" WHER
 
 INSERT INTO "Solution" ("name","length","createdAt","updatedAt","LibraryId","approved") 
 VALUES('😮',1,NOW(), NOW(),(Select "id" from "Library" WHERE "prompt"='unexepected gasm'), true);
+
+
+-- Commend
+INSERT INTO "Commend" ("url", "insultFlag", "createdAt", "updatedAt")
+Values (
+          'http://s2.quickmeme.com/img/4b/4b30399fd87f9d9c6d34f6b0884ee41bf6822148b09fc40144dd1ad6c00051e0.jpg', 
+          false, NOW(), NOW()
+       );
+
+INSERT INTO "Commend" ("url", "insultFlag", "createdAt", "updatedAt")
+Values (
+          'http://weknowmemes.com/wp-content/uploads/2012/05/boy-that-escalated-quickly.jpg', 
+          false, NOW(), NOW()
+       );
+
+INSERT INTO "Commend" ("url", "insultFlag", "createdAt", "updatedAt")
+Values (
+          'https://s-media-cache-ak0.pinimg.com/236x/2b/99/af/2b99af725995855ce96f30b52d5a4975.jpg', 
+          false, NOW(), NOW()
+       );
+
+INSERT INTO "Commend" ("url", "insultFlag", "createdAt", "updatedAt")
+Values (
+          'https://media.giphy.com/media/dOJt6XZlQw8qQ/giphy.gif', 
+          false, NOW(), NOW()
+       );
+
+INSERT INTO "Commend" ("url", "insultFlag", "createdAt", "updatedAt")
+Values (
+          'http://s2.quickmeme.com/img/2a/2a2660244d760a4368a1f994fdeb68b9bc1744d03007a04aaf6a6dc19ed48e64.jpg', 
+          false, NOW(), NOW()
+       );
+
+-- Insults
+
+INSERT INTO "Commend" ("url", "insultFlag", "createdAt", "updatedAt")
+Values (
+          'https://media.giphy.com/media/xT9DPLBZEnek4zvEQg/giphy.gif', 
+          true, NOW(), NOW()
+       );
+
+INSERT INTO "Commend" ("url", "insultFlag", "createdAt", "updatedAt")
+Values (
+          'https://i.imgflip.com/fv09f.jpg', 
+          true, NOW(), NOW()
+       );
+
+INSERT INTO "Commend" ("url", "insultFlag", "createdAt", "updatedAt")
+Values (
+          'http://s2.quickmeme.com/img/8a/8a202184c338637c55139ba665ce60e1c5ced87cf032df9e1131b7b21b7e31d6.jpg', 
+          true, NOW(), NOW()
+       );
+       
+INSERT INTO "Commend" ("url", "insultFlag", "createdAt", "updatedAt")
+Values (
+          'https://cdn.meme.am/cache/instances/folder26/59617026.jpg', 
+          true, NOW(), NOW()
+       );
+       

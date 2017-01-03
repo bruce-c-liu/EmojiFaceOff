@@ -1,7 +1,9 @@
 
 const LibraryCtrl = require('../db/Library/LibraryController.js');
+const CommendCtrl = require('../db/Commend/CommendController.js');
 const UserCtrl = require('../db/User/UserController.js');
 const redClient = require('./redis.config.js');
+const _ = require('lodash');
 
 module.exports = {
 
@@ -74,12 +76,38 @@ module.exports = {
     });
   },
 
+  /**
+   * Redis
+   * Cache users into allUsers and admin if user's role is admin
+   */
   initAllUsers: () => {
-    UserCtrl.getAllUsers()
+    return UserCtrl.getAllUsers()
     .then(result => {
       return Promise.all(
-        result.map(user => {
-          return redClient.sadd(`allUsers`, user.displayName);
+        _.flatten(
+          result.map(user => {
+            if (user.role === 'admin') {
+              return [
+                redClient.sadd(`Admins`, `${user.displayName}:${user.auth}`),
+                redClient.sadd(`allUsers`, `${user.displayName}:${user.auth}`)
+              ];
+            } else return redClient.sadd(`allUsers`, `${user.displayName}:${user.auth}`);
+          })
+        )
+      );
+    })
+    .catch(err => {
+      throw err;
+    });
+  },
+
+  initCommend: () => {
+    return CommendCtrl.getAll()
+    .then(result => {
+      return Promise.all(
+        result.map(commend => {
+          if (commend.insultFlag) return redClient.sadd(`Insults`, commend.url);
+          else return redClient.sadd(`Commends`, commend.url);
         })
       );
     })
@@ -98,6 +126,9 @@ module.exports = {
     })
     .then(result => {
       if (result) return module.exports.initAllUsers();
+    })
+    .then(result => {
+      if (result) return module.exports.initCommend();
     })
     .catch(err => {
       throw err;

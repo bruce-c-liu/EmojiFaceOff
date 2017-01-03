@@ -56,5 +56,42 @@ module.exports = {
     return Promise.all(redisCalls).then(() => {
       return solutions;
     });
+  },
+
+  getCommends: (t) => {
+    return redClient.smembers(`Commends`)
+      .catch(err => {
+        throw err;
+      });
+  },
+
+  getInsults: () => {
+    return redClient.smembers(`Insults`)
+      .catch(err => {
+        throw err;
+      });
+  },
+
+  getAdminsCache: (req, res, next) => {
+    redClient.smembers(`Admins`)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.json(err);
+      throw err;
+    });
+  },
+
+  getUsersCache: (req, res, next) => {
+    redClient.smembers(`allUsers`)
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.json(err);
+      throw err;
+    });
   }
+
 };

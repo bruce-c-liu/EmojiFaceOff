@@ -67,19 +67,23 @@ module.exports = {
   /**
    * add user to database if it does not exist
    * expects: {name, auth, imgUrl, role}
+   *
+   * redis will cache each to an allUsers set with
+   * the displayName and the auth. Ex: 'John:23EFE343dsthqw'
    */
   addUser: (req, res, next) => {
     if (req.body.displayName) {
       let displayName = req.body.displayName;
+      let email = req.body.email || '';
       let imgUrl = req.body.imgUrl || '';
       let role = req.body.role || 'user';
       let auth = req.body.auth || '';
 
-      redClient.sismember('allUsers', displayName)
+      redClient.sismember('allUsers', `${displayName}:${auth}`)
       .then(result => {
         if (result) res.json('User already exists');
         else {
-          redClient.sadd('allUsers', displayName)
+          redClient.sadd('allUsers', `${displayName}:${auth}`)
           .then(result => {
             if (result) console.log(`${displayName} has been added to the redis cache`);
             res.json(`${displayName} has been added to the redis cache`);
@@ -90,6 +94,7 @@ module.exports = {
 
           models.User.create({
             displayName: displayName,
+            email: email,
             imgUrl: imgUrl,
             role: role,
             auth: auth
