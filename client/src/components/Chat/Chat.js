@@ -27,16 +27,14 @@ class Chat extends Component {
       solution: [],
       clueCount: 0,
       gameStarted: false,
-      isHost: true, // TODO: Grab host status from store!
       joinedPlayer: null,
       joinedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
       announceBar: false
-
     };
     this.socket = io(socketURL);
 
     this.socket.on('message', (message) => {
-      console.log('INCOMING MESSAGE', message);
+      console.log('Message from server:', message);
       this.setState({
         chats: [...this.state.chats, message],
         round: message.roundNum
@@ -76,10 +74,10 @@ class Chat extends Component {
     });
 
       /* msg = {
-                 room: (string) roomId joined
-                 playerAvatar: (string) avatar URL
-                 playerName: (string) player's name who just joined
-               } */
+          room: (string) roomId joined
+          playerAvatar: (string) avatar URL
+          playerName: (string) player's name who just joined
+      } */
     this.socket.on('roomJoined', (msg) => {
       console.log('Server confirms this socket joined room:', msg.room);
       this.setState({
@@ -87,7 +85,7 @@ class Chat extends Component {
         joinedAvatar: msg.playerAvatar,
         announceBar: true
       });
-      // this.props.playSFX('enter');
+      this.props.playSFX('enter');
       setTimeout(() => {
         this.setState({
           announceBar: false
@@ -113,7 +111,8 @@ class Chat extends Component {
           elo: result.data.ELO,
           fbId: result.data.auth,
           avatar: this.props.users.profile.info.avatar,
-          type: 'FRIENDS_VS_FRIENDS' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+          // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+          type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS'
         });
       });
   }
@@ -173,7 +172,7 @@ class Chat extends Component {
     });
     const chatHeadElements = this.state.gameStarted
                                 ? <ChatHead deets={this.state} coins={users.coinBalance} />
-                                : <ChatHeadPractice deets={this.state}  hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
+                                : <ChatHeadPractice deets={this.state} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
     const avatarBG = {
       backgroundImage: `url(${this.state.joinedAvatar})`,
@@ -200,8 +199,8 @@ class Chat extends Component {
         <div className='chat-messages' ref='chatScroll'>
           {chatList}
         </div>
-        <div className="hint-bar">
-            <HintBar hintInfo={this.state} clickHint={this.requestHint.bind(this)}/>
+        <div className='hint-bar'>
+          <HintBar hintInfo={this.state} clickHint={this.requestHint.bind(this)} />
         </div>
         <div className='chat-form_wrap'>
 
@@ -229,4 +228,5 @@ function mapStateToProps (state) {
 function mapDispachToProps (dispatch) {
   return bindActionCreators(actionCreators, dispatch);
 }
+
 export default connect(mapStateToProps, mapDispachToProps)(Chat);

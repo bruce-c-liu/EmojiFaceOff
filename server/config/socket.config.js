@@ -1,5 +1,5 @@
 const RedisController = require('../db/Redis/RedisController.js');
-const singlePlayer = require('../game/modes/singleplayer.js');
+const singlePlayer = require('../game/modes/singlePlayer.js');
 const friendsVsFriends = require('../game/modes/friendsVsFriends.js');
 const ranked = require('../game/modes/ranked.js');
 
@@ -13,7 +13,7 @@ function addToOpenConnections (socket) {
   };
 }
 
-const TESTING_NUM_ROUNDS = 10;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
+const TESTING_NUM_ROUNDS = 3;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
 const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT DIFFICULTY OF PROMPTS
 function messageHandler (msg, io, socket) {
   if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
@@ -32,7 +32,7 @@ function joinRoomHandler (msg, io, socket) {
   openConnections[socket.id].elo = msg.elo;     // Set the user's elo
 
   if (msg.type === 'SINGLE_PLAYER') {
-    singlePlayer.joinRoomHandler(msg, io, socket); // TO-DO: INCOMPLETE
+    singlePlayer.joinRoomHandler(msg, io, socket);
   } else if (msg.type === 'FRIENDS_VS_FRIENDS') {
     friendsVsFriends.joinRoomHandler(msg, io, socket);
   } else if (msg.type === 'RANKED') {

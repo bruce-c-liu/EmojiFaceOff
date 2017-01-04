@@ -23,7 +23,7 @@ module.exports = {
     }
   },
 
-  updateUserELO: (req, res, next) => {
+  updateUser: (req, res, next) => {
     if (req.params.fbID) {
       models.User.findOne({
         where: {
@@ -32,13 +32,24 @@ module.exports = {
       })
       .then(result => {
         if (result) {
-          result.update({
-            ELO: req.body.elo
-          })
-          .then(() => {
-            res.json('User\'s ELO has been successfully updated');
-          });
-        } else res.json('No user found');
+          if (req.body.elo) {
+            result.update({
+              ELO: req.body.elo
+            })
+            .then(() => {
+              res.json('User\'s ELO has been successfully updated');
+            });
+          } else if (req.body.coins) {
+            result.update({
+              coins: req.body.coins
+            })
+            .then(() => {
+              res.json('User\'s coin count has been successfully updated');
+            });
+          }
+        } else {
+          res.json('No user found');
+        }
       })
       .catch(err => {
         res.json(err);
