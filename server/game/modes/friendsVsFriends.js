@@ -14,10 +14,11 @@ module.exports = {
           endGame(botResponse, msg, io, rm, openConnections);
         }
       } else {                                       // A user replied with an incorrect answer.
-        wrongAnswer(botResponse, msg, io, rm);
+        wrongAnswer(msg, io, rm);
       }
     } else {
       // Emit user's message to all sockets connected to this room.
+      msg.type = 'chat';
       msg.roundNum = rm.roundNum;
       io.sockets.in(msg.roomId).emit('message', msg);
     }
@@ -30,7 +31,7 @@ module.exports = {
     socket.emit('message', {
       user: 'ebot',
       text: `Welcome to Emoji Face Off! 
-             Practice while waiting for other friends to join.`
+             💩-talk each other while waiting for other friends to join.`
     });
     console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
     socket.broadcast.to(msg.roomId).emit('message', {
@@ -107,7 +108,7 @@ function checkAnswer (guess, prompt, solutions) {
 }
 
 function nextRound (botResponse, msg, io, rm, openConnections, socket) {
-  msg.correct = true;
+  msg.type = 'correctGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
@@ -152,8 +153,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   let winner = findWinner(clientsArray, openConnections);
   let finalRankings = calcFinalRankings(clientsArray, openConnections);
 
-  // Attach the "correct" property to the msg.
-  msg.correct = true;
+  msg.type = 'correctGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
   // First, notify everyone the final answer was correct.
   botResponse.text = `Good job, ${msg.user}!`;
@@ -185,8 +185,8 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   }
 }
 
-function wrongAnswer (botResponse, msg, io, rm) {
-  msg.correct = false;        // attach a 'correct' property to the msg.
+function wrongAnswer (msg, io, rm) {
+  msg.type = 'incorrectGuess';
   msg.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('message', msg);
 }
