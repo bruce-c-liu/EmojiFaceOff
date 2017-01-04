@@ -31,6 +31,7 @@ module.exports = {
     socket.emit('message', {
       user: 'ebot',
       text: `Welcome to Emoji Face Off! 
+
              💩 - talk each other while waiting for other friends to join.`
     });
     console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);

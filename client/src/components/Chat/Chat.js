@@ -172,7 +172,7 @@ class Chat extends Component {
     });
     const chatHeadElements = this.state.gameStarted
                                 ? <ChatHead deets={this.state} coins={users.coinBalance} />
-                                : <ChatHeadPractice deets={this.state}  hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
+                                : <ChatHeadPractice deets={this.state} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
     const avatarBG = {
       backgroundImage: `url(${this.state.joinedAvatar})`,
