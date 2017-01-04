@@ -9,21 +9,43 @@ class CoinStore extends Component {
   constructor () {
     super();
     this.state = {
-
+      fbId: '',
+      coinPack: ''
     };
-  }
-
-  onToken (token) {
-    axios.post('/api/chargeUser', {
-      token: token,
-      fbId: this.props.users.authedId
-    }).then(token => {
-      console.log(`We are in business, ${token.email}`);
-    });
   }
 
   componentWillMount () {
     console.log(this.props.users.authedId);
+    this.setState({
+      fbId: this.props.users.authedId
+    });
+  }
+
+  onToken (token) {
+    console.log('sending charge', token, this.state);
+    if (token && this.state.coinPack.length > 0) {
+      axios.post('/api/chargeUser', {
+        token: token,
+        fbId: this.state.fbId,
+        coinPack: this.state.coinPack
+      })
+      .then(token => {
+        console.log('response from server', token);
+        this.setState({
+          coinPack: ''
+        });
+      })
+      .catch(err => {
+        throw err;
+      });
+    }
+  }
+
+  handleClick (e, coinPack) {
+    e.preventDefault();
+    this.setState({
+      coinPack: coinPack
+    });
   }
 
   render () {
@@ -45,7 +67,9 @@ class CoinStore extends Component {
               panelLabel='Buy!'
               token={this.onToken.bind(this)}
               stripeKey='pk_test_vHCSYegt2uT5wbb0EoaJeLDL'
-             />
+            >
+              <button onClick={e => { this.handleClick(e, 'corn'); }}>Buy Now!</button>
+            </StripeCheckout>
           </div>
 
           <div>
@@ -61,7 +85,9 @@ class CoinStore extends Component {
               panelLabel='Buy!'
               token={this.onToken.bind(this)}
               stripeKey='pk_test_vHCSYegt2uT5wbb0EoaJeLDL'
-             />
+              >
+              <button onClick={e => { this.handleClick(e, 'hot'); }}>Buy Now!</button>
+            </StripeCheckout>
           </div>
 
           <div>
@@ -77,7 +103,9 @@ class CoinStore extends Component {
               panelLabel='Buy!'
               token={this.onToken.bind(this)}
               stripeKey='pk_test_vHCSYegt2uT5wbb0EoaJeLDL'
-             />
+              >
+              <button onClick={e => { this.handleClick(e, 'space'); }}>Buy Now!</button>
+            </StripeCheckout>
           </div>
         </div>
       </div>
