@@ -95,14 +95,13 @@ class Chat extends Component {
   }
 
   componentWillMount () {
-
+    this.setState({
+      roomId: this.props.params.roomID,
+      user: this.props.users.profile.info.name
+    });
   }
 
   componentDidMount () {
-    this.setState({
-          roomId: this.props.params.roomID,
-          user: this.props.users.profile.info.name
-        });
     getUser(this.props.users.profile.info.uid)
       .then(result => {
         console.log('CURRENT USER FROM DB:', result.data);
