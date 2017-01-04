@@ -5,6 +5,7 @@ const LibraryController = require('../db/Library/LibraryController.js');
 const UserController = require('../db/User/UserController.js');
 const RedisController = require('../db/Redis/RedisController.js');
 const BitlyController = require('../services/Bitly/BitlyController.js');
+const StripeController = require('../services/Stripe/StripeController.js');
 
 module.exports = (app, express) => {
   app.get('/api/getRoom', RoomController.getRoom); // deprecated
@@ -23,6 +24,8 @@ module.exports = (app, express) => {
 
   app.get('/api/userCache', RedisController.getUsersCache);
   app.get('/api/adminCache', RedisController.getAdminsCache);
+
+  app.post('/api/chargeUser', StripeController.chargeUser);
 
   app.get('*', (req, res) => {
     res.sendfile('./client/build/index.html');

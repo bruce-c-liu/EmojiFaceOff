@@ -12,6 +12,7 @@ import NoWhere from '../components/NoWhere';
 import AuthContainer from '../containers/AuthContainer';
 import RequestPrompt from '../components/RequestPrompt';
 import PendRequest from '../components/PendRequest';
+import CoinStore from '../components/CoinStore';
 
 export default function getRoutes (checkAuth) {
   return (
@@ -24,6 +25,7 @@ export default function getRoutes (checkAuth) {
         <Route path='invite' component={Invite} onEnter={checkAuth} />
         <Route path='onboard' component={OnBoard} onEnter={checkAuth} />
         <Route path='chat/:roomID' component={Chat} onEnter={checkAuth} />
+        <Route path='coinstore' component={CoinStore} />
         <Route path='nowhere' component={NoWhere} />
         <IndexRoute component={AuthContainer} onEnter={checkAuth} />
       </Route>
