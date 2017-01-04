@@ -30,7 +30,6 @@ class Chat extends Component {
       joinedPlayer: null,
       joinedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
       announceBar: false
-
     };
     this.socket = io(socketURL);
 
@@ -75,10 +74,10 @@ class Chat extends Component {
     });
 
       /* msg = {
-                 room: (string) roomId joined
-                 playerAvatar: (string) avatar URL
-                 playerName: (string) player's name who just joined
-               } */
+          room: (string) roomId joined
+          playerAvatar: (string) avatar URL
+          playerName: (string) player's name who just joined
+      } */
     this.socket.on('roomJoined', (msg) => {
       console.log('Server confirms this socket joined room:', msg.room);
       this.setState({
@@ -86,7 +85,7 @@ class Chat extends Component {
         joinedAvatar: msg.playerAvatar,
         announceBar: true
       });
-      // this.props.playSFX('enter');
+      this.props.playSFX('enter');
       setTimeout(() => {
         this.setState({
           announceBar: false
@@ -96,13 +95,14 @@ class Chat extends Component {
   }
 
   componentWillMount () {
-    this.setState({
-      roomId: this.props.params.roomID,
-      user: this.props.users.profile.info.name
-    });
+
   }
 
   componentDidMount () {
+    this.setState({
+          roomId: this.props.params.roomID,
+          user: this.props.users.profile.info.name
+        });
     getUser(this.props.users.profile.info.uid)
       .then(result => {
         console.log('CURRENT USER FROM DB:', result.data);
@@ -112,7 +112,8 @@ class Chat extends Component {
           elo: result.data.ELO,
           fbId: result.data.auth,
           avatar: this.props.users.profile.info.avatar,
-          type: 'SINGLE_PLAYER' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+          // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+          type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS'
         });
       });
   }
@@ -228,4 +229,5 @@ function mapStateToProps (state) {
 function mapDispachToProps (dispatch) {
   return bindActionCreators(actionCreators, dispatch);
 }
+
 export default connect(mapStateToProps, mapDispachToProps)(Chat);
