@@ -35,7 +35,7 @@ class Chat extends Component {
     this.socket = io(socketURL);
 
     this.socket.on('message', (message) => {
-      console.log('INCOMING MESSAGE', message);
+      console.log('Message from server:', message);
       this.setState({
         chats: [...this.state.chats, message],
         round: message.roundNum
