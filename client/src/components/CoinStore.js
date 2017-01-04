@@ -23,7 +23,7 @@ class CoinStore extends Component {
 
   onToken (token) {
     console.log('sending charge', token, this.state);
-    if (token && this.state.coinPack) {
+    if (token && this.state.coinPack.length > 0) {
       axios.post('/api/chargeUser', {
         token: token,
         fbId: this.state.fbId,

@@ -5,7 +5,7 @@ const UserController = require('../../db/User/UserController.js');
 module.exports = {
 
   chargeUser: (req, res, next) => {
-    console.log('Receiving charge request', req.body);
+    console.log('Receiving charge request');
     const chargeAmount = {
       'corn': 100,
       'hot': 500,
@@ -17,6 +17,7 @@ module.exports = {
       'space': 16000
     };
     let token = req.body.token.id || null;
+    let email = req.body.token.email || null;
     let fbId = req.body.fbId || null;
     let cashMoola = chargeAmount[req.body.coinPack] || null;
     let coins = coinAmount[req.body.coinPack] || null;
@@ -24,12 +25,14 @@ module.exports = {
     if (token && fbId && cashMoola) {
       stripe.charges.create({
         amount: cashMoola,
+        receipt_email: email,
         currency: 'usd',
         source: token,
-        description: 'charge at 1120'
+        description: `Thank you for playing and buying the ${req.body.coinPack.toUpperCase()} Doge Coin Pack! 
+                      ${coins} coins have been credited to your account!  `
       })
       .then(result => {
-        console.log('Payment success', result.paid && !result.failurecode && coins, coins);
+        console.log('Payment success', result, coins);
         if (result.paid && !result.failurecode && coins) {
           UserController.incrUserCoin(fbId, coins);
         } else {
