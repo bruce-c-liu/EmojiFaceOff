@@ -53,7 +53,7 @@ class ModeSelect extends Component {
 
     return (
       <div className='inner-container is-center'>
-      <Header/>
+      <Header />
         <div className='mode-select_wrap'>
         <h1> Select Game Mode</h1>
         <div>

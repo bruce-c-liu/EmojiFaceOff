@@ -3,5 +3,12 @@
 	top: 0 ; left: 0;
 	height: 60px;
 	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 .5rem;
 	background-color: $turq;
+	h3{
+		font-family: $font-display;
+		color: $white;
+	}
 }
