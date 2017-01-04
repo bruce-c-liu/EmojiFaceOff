@@ -10,6 +10,7 @@ import {socketURL} from '../../helpers/utils.js';
 import ChatHead from './ChatHead';
 import ChatHeadPractice from './ChatHeadPractice';
 import Bubble from './Bubble';
+import HintBar from './HintBar';
 import { getUser } from '../../helpers/http.js';
 
 class Chat extends Component {
@@ -26,7 +27,7 @@ class Chat extends Component {
       solution: [],
       clueCount: 0,
       gameStarted: false,
-      isHost: false, // TODO: Grab host status from store!
+      isHost: true, // TODO: Grab host status from store!
       joinedPlayer: null,
       joinedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
       announceBar: false
@@ -199,10 +200,11 @@ class Chat extends Component {
         <div className='chat-messages' ref='chatScroll'>
           {chatList}
         </div>
+        <div className="hint-bar">
+            <HintBar hintInfo={this.state} clickHint={this.requestHint.bind(this)}/>
+        </div>
         <div className='chat-form_wrap'>
-          <button className='btn-hint'
-            onClick={this.requestHint.bind(this)}
-            disabled={this.state.clueCount >= this.state.solution.length} > ?</button>
+
           <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
             <input type='text' value={this.state.message}
               onChange={this.handleChange.bind(this)}

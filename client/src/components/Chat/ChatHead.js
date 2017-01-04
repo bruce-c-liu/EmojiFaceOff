@@ -6,9 +6,6 @@ class ChatHead extends Component {
   render () {
     const {deets} = this.props;
 
-    const hints = deets.solution.map((item, idx) => {
-      return <Hint key={idx} hint={item} />;
-    });
     return (
       <div className='chat-head_active' >
 
@@ -23,7 +20,6 @@ class ChatHead extends Component {
           </CSSTransitionGroup>
         </div>
         <div className='hint-wrap'>
-          {hints}
         </div>
         <div className='flip-stat'>
 

@@ -30,7 +30,7 @@ button{
   font-family: 'Fredoka One', cursive;
   color: $orange;
   &:disabled{
-    color: darken($gray-lt, 5%);
+    color: darken($blue-pale, 10%);
   }
 }
 
