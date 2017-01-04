@@ -4,9 +4,6 @@ module.exports = {
   play: function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
 
-    // Emit user's message to all sockets connected to this room.
-    io.sockets.in(msg.roomId).emit('message', msg);
-
     let botResponse = {user: 'ebot'};
     if (rm.gameStarted && msg.text.codePointAt(0) > 0x03FF) {
       if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
@@ -20,7 +17,8 @@ module.exports = {
         wrongAnswer(botResponse, msg, io, rm);
       }
     } else {
-      console.log('Game has not started OR character entered is not an emoji.');
+      // Emit user's message to all sockets connected to this room.
+      io.sockets.in(msg.roomId).emit('message', msg);
     }
   },
 
@@ -107,11 +105,12 @@ function checkAnswer (guess, prompt, solutions) {
 }
 
 function nextRound (botResponse, msg, io, rm, openConnections, socket) {
-  console.log(rm.hints);
+  msg.correct = true;
+  io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
   botResponse.text = `Good job, ${msg.user}! 
-  
+
                       Round ${rm.roundNum}
                       Please translate [${rm.prompt}] into emoji form~`;
   botResponse.roundNum = rm.roundNum;
@@ -151,6 +150,9 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   let winner = findWinner(clientsArray, openConnections);
   let finalRankings = calcFinalRankings(clientsArray, openConnections);
 
+  // Attach the "correct" property to the msg.
+  msg.correct = true;
+  io.sockets.in(msg.roomId).emit('message', msg);
   // First, notify everyone the final answer was correct.
   botResponse.text = `Good job, ${msg.user}!`;
   io.sockets.in(msg.roomId).emit('message', botResponse);
@@ -182,7 +184,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
 }
 
 function wrongAnswer (botResponse, msg, io, rm) {
-  botResponse.text = `That is not the correct answer, ${msg.user}!`;
-  botResponse.roundNum = rm.roundNum;
-  io.sockets.in(msg.roomId).emit('message', botResponse);
+  msg.correct = false;        // attach a 'correct' property to the msg.
+  msg.roundNum = rm.roundNum;
+  io.sockets.in(msg.roomId).emit('message', msg);
 }
