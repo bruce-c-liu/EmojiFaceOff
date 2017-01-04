@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
 import { browserHistory } from 'react-router';
 import { inviteBaseURL } from '../helpers/utils';
+import Header from './Header';
 import _ from 'lodash';
 
 class ModeSelect extends Component {
@@ -52,6 +53,7 @@ class ModeSelect extends Component {
 
     return (
       <div className='inner-container is-center'>
+      <Header />
         <div className='mode-select_wrap'>
         <h1> Select Game Mode</h1>
         <div>

@@ -8,6 +8,7 @@ import * as actionCreators from '../actions/actionCreators';
 import { inviteBaseURL } from '../helpers/utils';
 import btnIcon from '../assets/Messenger_Icon.png';
 import { browserHistory } from 'react-router';
+import Header from './Header';
 import OnBoard from './OnBoard';
 
 class Invite extends Component {
@@ -66,6 +67,7 @@ class Invite extends Component {
                             : null;
     return (
       <div className='inner-container is-center invite-wrap'>
+        <Header/>
         {this.state.longRoomURL}
         <p> How many friends would you like to invite in this game?</p>
         <div className='count-selector'>

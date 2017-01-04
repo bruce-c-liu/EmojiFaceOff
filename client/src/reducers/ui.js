@@ -1,5 +1,6 @@
 const initialState = {
-  loading: false
+  loading: false,
+  drawer: false
 };
 
 function ui (state = initialState, action) {
@@ -12,6 +13,10 @@ function ui (state = initialState, action) {
       return Object.assign({}, state, {
         loading: false
       });
+      case 'DRAWER':
+        return Object.assign({}, state, {
+          drawer:!state.drawer
+        });
     default:
       return state;
   }

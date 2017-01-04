@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
 import axios from 'axios';
+import Header from './Header';
 
 class RequestPrompt extends Component {
   constructor () {
@@ -67,17 +68,20 @@ class RequestPrompt extends Component {
 
   render () {
     return (
-      <form className='RequestPrompt-form' onSubmit={this.requestNewPrompt.bind(this)}>
-        <input className='reqPrompt'
-          type='text' value={this.state.reqPrompt}
-          onChange={this.handleChangePrompt.bind(this)}
-          placeholder='Your custom prompt' />
-        <input className='reqAnswer'
-          type='text' value={this.state.reqAnswer}
-          onChange={this.handleChangeAnswer.bind(this)}
-          placeholder='Answer to prompt' />
-        <input className='btn-input' type='submit' value='Submit' disabled={this.state.reqPrompt.length <= 0} />
-      </form>
+      <div className='inner-container is-center '>
+        <Header/>
+        <form className='RequestPrompt-form' onSubmit={this.requestNewPrompt.bind(this)}>
+          <input className='reqPrompt'
+            type='text' value={this.state.reqPrompt}
+            onChange={this.handleChangePrompt.bind(this)}
+            placeholder='Your custom prompt' />
+          <input className='reqAnswer'
+            type='text' value={this.state.reqAnswer}
+            onChange={this.handleChangeAnswer.bind(this)}
+            placeholder='Answer to prompt' />
+          <input className='btn-input' type='submit' value='Submit' disabled={this.state.reqPrompt.length <= 0} />
+        </form>
+      </div>
     );
   }
 }

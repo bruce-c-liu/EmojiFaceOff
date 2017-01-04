@@ -147,3 +147,9 @@ export function playSFX (sound) {
     meta: { sound: sound }
   };
 }
+
+export function toggleDrawer () {
+  return {
+    type: 'DRAWER'
+  };
+}
