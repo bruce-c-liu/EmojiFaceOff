@@ -27,7 +27,6 @@ class Chat extends Component {
       solution: [],
       clueCount: 0,
       gameStarted: false,
-      isHost: true, // TODO: Grab host status from store!
       joinedPlayer: null,
       joinedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
       announceBar: false
@@ -113,7 +112,7 @@ class Chat extends Component {
           elo: result.data.ELO,
           fbId: result.data.auth,
           avatar: this.props.users.profile.info.avatar,
-          type: 'FRIENDS_VS_FRIENDS' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+          type: 'SINGLE_PLAYER' // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
         });
       });
   }
@@ -200,8 +199,8 @@ class Chat extends Component {
         <div className='chat-messages' ref='chatScroll'>
           {chatList}
         </div>
-        <div className="hint-bar">
-            <HintBar hintInfo={this.state} clickHint={this.requestHint.bind(this)}/>
+        <div className='hint-bar'>
+          <HintBar hintInfo={this.state} clickHint={this.requestHint.bind(this)} />
         </div>
         <div className='chat-form_wrap'>
 

@@ -6,7 +6,7 @@ class ChatHeadPractice extends Component {
     return (
       <div className='chat-head_inner'>
         {
-            this.props.hostStatus ? <button className='btn-start' onClick={(e) => this.props.startProp(e)}>START FACEOFF</button>
+            this.props.hostStatus ? <button className='btn-start' onClick={(e) => this.props.startProp(e)}>START</button>
                           : <p>Waiting for host to begin the game.</p>
         }
         <p> Practice Mode</p>
