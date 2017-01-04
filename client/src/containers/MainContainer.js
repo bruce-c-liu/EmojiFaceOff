@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { formatUserInfo } from '../helpers/utils';
 import { firebaseAuth } from '../config/constants.js';
 import wallpaper from '../assets/wallpaper.png';
+import Drawer from '../components/Drawer.js';
 
 class MainContainer extends Component {
   componentWillMount () {
@@ -38,12 +39,25 @@ class MainContainer extends Component {
 
     return this.props.isFetching === true
                     ? <div className='loader'><p>Loading...</p></div>
-                    : <div className='inner-container'> {children}</div>;
+                    : <div className='inner-container'> {children}<Drawer opened={this.props.ui.drawer}/></div>;
   }
 
 }
 
-export default connect(
-  ({users}) => ({isAuthed: users.isAuthed, isFetching: users.isFetching}),
-  (dispatch) => bindActionCreators(actionCreators, dispatch)
-)(MainContainer);
+// export default connect(
+//   ({users}) => ({isAuthed: users.isAuthed, isFetching: users.isFetching}),
+//   (dispatch) => bindActionCreators(actionCreators, dispatch)
+// )(MainContainer);
+
+function mapStateToProps (state) {
+  return {
+    users: state.users,
+    ui: state.ui,
+    session: state.session
+  };
+}
+
+function mapDispachToProps (dispatch) {
+  return bindActionCreators(actionCreators, dispatch);
+}
+export default connect(mapStateToProps, mapDispachToProps)(MainContainer);
