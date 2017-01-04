@@ -29,6 +29,16 @@
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>
+  <script>
+    var isIphone = /(iPhone)/i.test(navigator.userAgent);
+    var isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+
+    if(isIphone && isSafari){
+       console.log("iPHONE DETECTED" )
+       document.querySelector('body').classList.add('safari-mobile');  
+    }
+  </script>
+
     <div id="root"></div>
 
 
