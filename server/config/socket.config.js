@@ -13,7 +13,7 @@ function addToOpenConnections (socket) {
   };
 }
 
-const TESTING_NUM_ROUNDS = 10;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
+const TESTING_NUM_ROUNDS = 1;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
 const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT DIFFICULTY OF PROMPTS
 function messageHandler (msg, io, socket) {
   if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
