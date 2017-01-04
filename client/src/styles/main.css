@@ -411,21 +411,20 @@ nav.menu a {
 .flip-stat {
   position: relative;
   color: #fa0000;
-  color: #B23939; }
+  color: #B23939;
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
   .flip-stat span {
-    position: absolute;
-    top: -7px;
-    right: -9px;
     font-family: 'Fredoka One', cursive;
     font-size: 2.25rem;
-    font-weight: 400; }
+    font-weight: 400;
+    line-height: 1; }
   .flip-stat p {
     font-size: .8rem;
     margin: 0 .5rem;
     color: #ffd1d1;
     font-weight: 600; }
-  .flip-stat:last-child span {
-    left: -9px; }
 
 .player-announce {
   height: 0;

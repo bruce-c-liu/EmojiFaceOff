@@ -9,29 +9,34 @@ class ChatHead extends Component {
     return (
       <div className='chat-head_active' >
 
-        <div className='flip-stat'>
-          <p> ROUND</p>
-          <CSSTransitionGroup
-            transitionName='count'
-            transitionEnterTimeout={250}
-            transitionLeaveTimeout={250}
-            >
-            <span key={deets.round} >{deets.round}</span>
-          </CSSTransitionGroup>
-        </div>
-        <div className='hint-wrap'>
-        </div>
-        <div className='flip-stat'>
+     
+                <div className='flip-stat'>
+                  
+                  <CSSTransitionGroup
+                    transitionName='count'
+                    transitionEnterTimeout={250}
+                    transitionLeaveTimeout={250}
+                    >
+                    <span key={deets.round} >{deets.round}</span>
+                  </CSSTransitionGroup>
+                  <p> ROUND</p>
+                </div>
+                <div className='hint-wrap'>
+                </div>
+                <div className='flip-stat'>
 
-          <CSSTransitionGroup
-            transitionName='count'
-            transitionEnterTimeout={250}
-            transitionLeaveTimeout={250}
-            >
-            <span key={deets.score} >{deets.score}</span>
-          </CSSTransitionGroup>
-          <p> SCORE</p>
-        </div>
+                  <CSSTransitionGroup
+                    transitionName='count'
+                    transitionEnterTimeout={250}
+                    transitionLeaveTimeout={250}
+                    >
+                    <span key={deets.score} >{deets.score}</span>
+                  </CSSTransitionGroup>
+                  <p> SCORE</p>
+                </div>
+
+
+
 
       </div>
     );
