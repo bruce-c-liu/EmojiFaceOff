@@ -18,6 +18,7 @@ module.exports = {
       }
     } else {
       // Emit user's message to all sockets connected to this room.
+      msg.roundNum = rm.roundNum;
       io.sockets.in(msg.roomId).emit('message', msg);
     }
   },
@@ -69,7 +70,8 @@ module.exports = {
             rm.prompt = rm.prompts.pop();
             botResponse.text = `${msg.user} has started the game.
 
-                                Welcome to Emoji Face Off! Are you doge enough?
+                                Welcome to Emoji Face Off! 
+                                Are you doge enough?
 
                                 Round 1
                                 Please translate [${rm.prompt}] into emoji form~`;
