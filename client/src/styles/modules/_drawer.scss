@@ -6,7 +6,7 @@
 	padding:3rem  2rem;
 	background: linear-gradient(to top, rgba(23,114,174,1) 0%, rgba(17,82,125,1) 65%, rgba(13,65,99,1) 100%);
 	transform: translateX(100%);
-	transition: transform .2s ease;
+	transition: transform .3s cubic-bezier(0.645, 0.045, 0.355, 1);
 	&.is-open{
 		transform: translateX(0);
 	}
