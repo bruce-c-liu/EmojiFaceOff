@@ -4,7 +4,7 @@ import Hint from './Hint';
 
 class ChatHead extends Component {
   render () {
-    const {deets} = this.props;
+    const {deets, coins} = this.props;
 
     return (
       <div className='chat-head_active' >
@@ -21,8 +21,7 @@ class ChatHead extends Component {
                   </CSSTransitionGroup>
                   <p> ROUND</p>
                 </div>
-                <div className='hint-wrap'>
-                </div>
+
                 <div className='flip-stat'>
 
                   <CSSTransitionGroup
@@ -33,6 +32,17 @@ class ChatHead extends Component {
                     <span key={deets.score} >{deets.score}</span>
                   </CSSTransitionGroup>
                   <p> SCORE</p>
+                </div>
+                <div className='flip-stat'>
+
+                  <CSSTransitionGroup
+                    transitionName='count'
+                    transitionEnterTimeout={250}
+                    transitionLeaveTimeout={250}
+                    >
+                    <span key={coins} >{coins}</span>
+                  </CSSTransitionGroup>
+                  <p> COINS</p>
                 </div>
 
 

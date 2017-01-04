@@ -11,6 +11,7 @@ const initialUserState = {
     name: '',
     uid: '',
     avatar: ''
+
   }
 };
 
@@ -31,7 +32,8 @@ const initialState = {
   isFetching: true,
   error: '',
   isAuthed: false,
-  authedId: ''
+  authedId: '',
+  coinBalance: 1000
 };
 
 export default function users (state = initialState, action) {
