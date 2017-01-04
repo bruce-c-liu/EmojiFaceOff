@@ -39,25 +39,13 @@ class MainContainer extends Component {
 
     return this.props.isFetching === true
                     ? <div className='loader'><p>Loading...</p></div>
-                    : <div className='inner-container'> {children}<Drawer opened={this.props.ui.drawer} drawerAction={this.props.toggleDrawer}/></div>;
+                    : <div className='inner-container'> {children}<Drawer opened={this.props.drawer} drawerAction={this.props.toggleDrawer}/></div>;
   }
 
 }
 
-// export default connect(
-//   ({users}) => ({isAuthed: users.isAuthed, isFetching: users.isFetching}),
-//   (dispatch) => bindActionCreators(actionCreators, dispatch)
-// )(MainContainer);
+export default connect(
+  ({users, ui}) => ({isAuthed: users.isAuthed, isFetching: users.isFetching, drawer: ui.drawer}),
+  (dispatch) => bindActionCreators(actionCreators, dispatch)
+)(MainContainer);
 
-function mapStateToProps (state) {
-  return {
-    users: state.users,
-    ui: state.ui,
-    session: state.session
-  };
-}
-
-function mapDispachToProps (dispatch) {
-  return bindActionCreators(actionCreators, dispatch);
-}
-export default connect(mapStateToProps, mapDispachToProps)(MainContainer);
