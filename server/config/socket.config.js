@@ -32,7 +32,7 @@ function joinRoomHandler (msg, io, socket) {
   openConnections[socket.id].elo = msg.elo;     // Set the user's elo
 
   if (msg.type === 'SINGLE_PLAYER') {
-    singlePlayer.joinRoomHandler(msg, io, socket); // TO-DO: INCOMPLETE
+    singlePlayer.joinRoomHandler(msg, io, socket);
   } else if (msg.type === 'FRIENDS_VS_FRIENDS') {
     friendsVsFriends.joinRoomHandler(msg, io, socket);
   } else if (msg.type === 'RANKED') {
