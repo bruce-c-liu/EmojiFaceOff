@@ -20,27 +20,27 @@ client.on('error', err => {
 */
 client.on('connect', () => {
   console.log(`Redis connection established to: ${process.env.REDIS_HOST}`);
-  client.flushall()
-  .then(result => {
-    if (result) {
-      console.log('Redis data flushed');
-      return require('./helpers.js').initRedis();
-    }
-  })
-  .then((result) => {
-    if (result) console.log('Redis has finished intializing data.');
-    // if (result) return require('../db/Redis/RedisController.js').checkAnswer('buff', '&#x1F4AA;');
-  })
+  // client.flushall()
   // .then(result => {
-  //   console.log('is a member ', result);
-  //   if (result) return require('../db/Redis/RedisController.js').getPrompts();
+  //   if (result) {
+  //     console.log('Redis data flushed');
+  //     return require('./helpers.js').initRedis();
+  //   }
   // })
-  // .then(prompts => {
-  //   if (prompts) console.log('prompts...', prompts);
+  // .then((result) => {
+  //   if (result) console.log('Redis has finished intializing data.');
+  //   // if (result) return require('../db/Redis/RedisController.js').checkAnswer('buff', '&#x1F4AA;');
   // })
-  .catch(err => {
-    throw err;
-  });
+  // // .then(result => {
+  // //   console.log('is a member ', result);
+  // //   if (result) return require('../db/Redis/RedisController.js').getPrompts();
+  // // })
+  // // .then(prompts => {
+  // //   if (prompts) console.log('prompts...', prompts);
+  // // })
+  // .catch(err => {
+  //   throw err;
+  // });
 });
 
 module.exports = client;

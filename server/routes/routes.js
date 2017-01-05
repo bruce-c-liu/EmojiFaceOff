@@ -14,6 +14,7 @@ module.exports = (app, express) => {
   app.post('/api/shortenURL', BitlyController.shortURL);
 
   app.get('/api/users', UserController.getAllUsers);
+  app.get('/api/leaderBoard/:type', UserController.leaderBoard);
   app.post('/api/users', UserController.addUser);
   app.get('/api/users/:fbID', UserController.getUser);
   app.put('/api/users/:fbID', UserController.updateUser);

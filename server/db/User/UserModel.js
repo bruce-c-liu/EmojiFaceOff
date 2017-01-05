@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
+    SPR: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    },
     coins: {
       type: DataTypes.INTEGER,
       defaultValue: 1000

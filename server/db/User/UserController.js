@@ -89,33 +89,6 @@ module.exports = {
     }
   },
 
-  incrUserCoin: (fbId, amount) => {
-    console.log('Attempting to increase user coinage', fbId, amount);
-    if (fbId && amount) {
-      models.User.findOne({
-        where: {
-          auth: fbId
-        }
-      })
-      .then(result => {
-        if (result) {
-          let displayName = result.displayName;
-          let origAmount = result.coins;
-          let newAmount = origAmount + amount;
-          result.update({
-            coins: newAmount
-          })
-          .then((result) => {
-            if (result) console.log(`${displayName}'s coins updated from ${origAmount} to ${newAmount}`);
-          });
-        } else console.log('No user found to increase coin', result);
-      })
-      .catch(err => {
-        throw err;
-      });
-    }
-  },
-
   getAllUsers: (req, res, next) => {
     if (req) {
       models.User.findAll({})
@@ -129,6 +102,23 @@ module.exports = {
     } else {
       return models.User.findAll({});
     }
+  },
+
+  leaderBoard: (req, res, next) => {
+    let limit = req.body.limit || 10;
+    if (req.params.type === 'ELO' || req.params.type === 'SPR') {
+      models.User.findAll({
+        order: `"${req.params.type}" DESC`,
+        limit: limit
+      })
+      .then(result => {
+        res.json(result);
+      })
+      .catch(err => {
+        res.json(err);
+        throw err;
+      });
+    } else res.json('Invalid parameter for Type. ');
   },
 
   /**
@@ -148,8 +138,20 @@ module.exports = {
 
       redClient.sismember('allUsers', `${displayName}:${auth}`)
       .then(result => {
-        if (result) res.json('User already exists');
-        else {
+        if (result) {
+          models.User.findOne({
+            where: {
+              auth: auth
+            }
+          })
+          .then(result => {
+            res.json(result);
+          })
+          .catch(err => {
+            res.json(err);
+            throw err;
+          });
+        } else {
           redClient.sadd('allUsers', `${displayName}:${auth}`)
           .then(result => {
             if (result) console.log(`${displayName} has been added to the redis cache`);
@@ -167,7 +169,10 @@ module.exports = {
             auth: auth
           })
           .then(result => {
-            if (result) console.log(`${displayName} has been added to the PostGres`);
+            if (result) {
+              console.log(`${displayName} has been added to the PostGres`);
+              res.json(result);
+            }
           });
         }
       })
