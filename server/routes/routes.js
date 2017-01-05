@@ -5,6 +5,7 @@ const LibraryController = require('../db/Library/LibraryController.js');
 const UserController = require('../db/User/UserController.js');
 const RedisController = require('../db/Redis/RedisController.js');
 const BitlyController = require('../services/Bitly/BitlyController.js');
+const QueueController = require('../game/helpers/rankedQueue.js');
 const StripeController = require('../services/Stripe/StripeController.js');
 
 module.exports = (app, express) => {
@@ -22,6 +23,10 @@ module.exports = (app, express) => {
   app.get('/api/pendPrompts', LibraryController.pendPrompts);
   app.post('/api/requestPrompt', LibraryController.addPrompt);
   app.put('/api/pendPrompts', LibraryController.updatePendPrompt);
+
+  app.get('/api/rankedQueue', QueueController.getRoom);
+  app.post('/api/rankedQueue', QueueController.addRoom);
+  app.delete('/api/rankedQueue', QueueController.removeRoom);
 
   app.get('/api/userCache', RedisController.getUsersCache);
   app.get('/api/adminCache', RedisController.getAdminsCache);

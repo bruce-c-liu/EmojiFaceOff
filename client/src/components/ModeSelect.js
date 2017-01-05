@@ -29,18 +29,26 @@ class ModeSelect extends Component {
     });
   }
 
-  initGameSolo (e) {
+  initGameFriends (e) {
     e.preventDefault();
-    this.props.fetchRoomId();
-    this.props.setHostTrue();
+    this.props.fetchRoomId('friends');
+    this.props.setRoomType('FRIENDS_VS_FRIENDS');
+    this.props.setHost(true);
     this.props.playSFX('tap');
   }
 
-  initGameFriends (e) {
+  initGameRanked (e) {
     e.preventDefault();
-    console.log('Create Room');
-    this.props.fetchRoomId('/invite');
-    this.props.setHostTrue();
+    this.props.fetchRoomId('ranked', this.props.users.profile.info.uid);
+    this.props.setRoomType('RANKED');
+    this.props.playSFX('tap');
+  }
+
+  initGameSolo (e) {
+    e.preventDefault();
+    this.props.fetchRoomId('solo');
+    this.props.setRoomType('SINGLE_PLAYER');
+    this.props.setHost(true);
     this.props.playSFX('tap');
   }
 
@@ -53,34 +61,44 @@ class ModeSelect extends Component {
 
     return (
       <div className='inner-container is-center'>
-      <Header />
+        <Header />
         <div className='mode-select_wrap'>
-        <h1> Select Game Mode</h1>
-        <div>
-          <div className='mode-select_vs'>
-            <div className='avatar is-md' style={avatarBG} />
-            <span>vs.</span>
-            <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/4b/93/4b932980a0fe8f7ad711a8c2fcc68ce4.png')`}} />
-          </div>
-          <button className='btn-login is-full' onClick={this.initGameFriends.bind(this)}>
-            Challenge Your Friends!
-          </button>
-        </div>
+          <h1> Select Game Mode</h1>
+
           <div>
             <div className='mode-select_vs'>
               <div className='avatar is-md' style={avatarBG} />
-              <span>vs.</span>
+              <div className='avatar is-md' style={{backgroundImage: `url('http://static1.comicvine.com/uploads/original/11129/111293347/5489718-9865121372-52705.png')`}} />
+              <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/4b/93/4b932980a0fe8f7ad711a8c2fcc68ce4.png')`}} />
+            </div>
+            <button className='btn-login is-full' onClick={this.initGameFriends.bind(this)}>
+              Challenge Your Friends!
+            </button>
+          </div>
+
+          <div>
+            <div className='mode-select_vs'>
+              <div className='avatar is-md' style={avatarBG} />
+              <div className='avatar is-md' style={{backgroundImage: `url('http://static1.comicvine.com/uploads/original/11129/111293347/5489718-9865121372-52705.png')`}} />
+              <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/41/ae/41aeea32dd8af702606e89afe2ac4b5e.png')`}} />
+            </div>
+            <button className='btn-login is-full' onClick={this.initGameRanked.bind(this)} >
+                Ranked Mode
+            </button>
+          </div>
+
+          <div>
+            <div className='mode-select_vs'>
+              <div className='avatar is-md' style={avatarBG} />
+              <div className='avatar is-md' style={{backgroundImage: `url('http://static1.comicvine.com/uploads/original/11129/111293347/5489718-9865121372-52705.png')`}} />
               <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png')`}} />
             </div>
-
             <button className='btn-login is-full' onClick={this.initGameSolo.bind(this)} >
                 Single Player Mode
             </button>
           </div>
 
-
         </div>
-
       </div>
     );
   }

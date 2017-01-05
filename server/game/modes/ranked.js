@@ -57,6 +57,10 @@ module.exports = {
         room: msg.roomId
       });
       console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
+      socket.emit('message', {
+        user: 'ebot',
+        text: 'Please wait while we search for a suitable opponent. 🤔'
+      });
       socket.broadcast.to(msg.roomId).emit('message', {
         user: 'ebot',
         text: `${msg.user} has joined the room!`
