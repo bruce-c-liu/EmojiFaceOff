@@ -4,9 +4,6 @@ module.exports = {
   play: function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
 
-    // Emit user's message to all sockets connected to this room.
-    io.sockets.in(msg.roomId).emit('message', msg);
-
     let botResponse = {user: 'ebot'};
     if (rm.gameStarted && msg.text.codePointAt(0) > 0x03FF) {
       if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
@@ -17,32 +14,45 @@ module.exports = {
           endGame(botResponse, msg, io, rm, openConnections);
         }
       } else {                                       // A user replied with an incorrect answer.
-        wrongAnswer(botResponse, msg, io, rm);
+        wrongAnswer(msg, io, rm);
       }
     } else {
-      console.log('Game has not started OR character entered is not an emoji.');
+      // Emit user's message to all sockets connected to this room.
+      msg.type = 'chat';
+      msg.roundNum = rm.roundNum;
+      io.sockets.in(msg.roomId).emit('message', msg);
     }
   },
 
   joinRoomHandler: function (msg, io, socket) {
-    socket.join(msg.roomId);
-    console.log('Joined room:', msg.roomId);
+    if (io.nsps['/'].adapter.rooms[msg.roomId]) {
+      if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
+        socket.emit('message', {
+          user: 'ebot',
+          text: 'This is a single player room! Get outta here! 😡'
+        });
+      }
+    } else {
+      socket.join(msg.roomId);
+      console.log('Joined room:', msg.roomId);
 
-    socket.emit('message', {
-      user: 'ebot',
-      text: `Welcome to Emoji Face Off! 
-             Practice while waiting for other friends to join.`
-    });
-    console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
-    socket.broadcast.to(msg.roomId).emit('message', {
-      user: 'ebot',
-      text: `${msg.user} has joined the room!`
-    });
-    io.sockets.in(msg.roomId).emit('roomJoined', {
-      playerName: `${msg.user}`,
-      playerAvatar: `${msg.avatar}`,
-      room: msg.roomId
-    });
+      socket.emit('message', {
+        user: 'ebot',
+        text: `Welcome to Emoji Face Off! 
+
+              💩 - talk each other while waiting for other friends to join.`
+      });
+      console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
+      socket.broadcast.to(msg.roomId).emit('message', {
+        user: 'ebot',
+        text: `${msg.user} has joined the room!`
+      });
+      io.sockets.in(msg.roomId).emit('roomJoined', {
+        playerName: `${msg.user}`,
+        playerAvatar: `${msg.avatar}`,
+        room: msg.roomId
+      });
+    }
   },
 
   startGame: function (msg, io, TESTING_NUM_ROUNDS, RedisController) {
@@ -71,7 +81,8 @@ module.exports = {
             rm.prompt = rm.prompts.pop();
             botResponse.text = `${msg.user} has started the game.
 
-                                Welcome to Emoji Face Off! Are you doge enough?
+                                Welcome to Emoji Face Off! 
+                                Are you doge enough?
 
                                 Round 1
                                 Please translate [${rm.prompt}] into emoji form~`;
@@ -107,11 +118,12 @@ function checkAnswer (guess, prompt, solutions) {
 }
 
 function nextRound (botResponse, msg, io, rm, openConnections, socket) {
-  console.log(rm.hints);
+  msg.type = 'correctGuess';
+  io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
   botResponse.text = `Good job, ${msg.user}! 
-  
+
                       Round ${rm.roundNum}
                       Please translate [${rm.prompt}] into emoji form~`;
   botResponse.roundNum = rm.roundNum;
@@ -151,6 +163,8 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   let winner = findWinner(clientsArray, openConnections);
   let finalRankings = calcFinalRankings(clientsArray, openConnections);
 
+  msg.type = 'correctGuess';
+  io.sockets.in(msg.roomId).emit('message', msg);
   // First, notify everyone the final answer was correct.
   botResponse.text = `Good job, ${msg.user}!`;
   io.sockets.in(msg.roomId).emit('message', botResponse);
@@ -181,8 +195,8 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   }
 }
 
-function wrongAnswer (botResponse, msg, io, rm) {
-  botResponse.text = `That is not the correct answer, ${msg.user}!`;
-  botResponse.roundNum = rm.roundNum;
-  io.sockets.in(msg.roomId).emit('message', botResponse);
+function wrongAnswer (msg, io, rm) {
+  msg.type = 'incorrectGuess';
+  msg.roundNum = rm.roundNum;
+  io.sockets.in(msg.roomId).emit('message', msg);
 }

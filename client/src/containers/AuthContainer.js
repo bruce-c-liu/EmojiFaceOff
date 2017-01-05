@@ -1,18 +1,34 @@
 import React, { Component } from 'react';
-import auth from '../helpers/auth.js';
+// import auth from '../helpers/auth.js';
 import { bindActionCreators } from 'redux';
-import { browserHistory, Link } from 'react-router';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions/actionCreators.js';
-import { formatUserInfo } from '../helpers/utils';
-import { firebaseAuth } from '../config/constants.js';
-
+// import { formatUserInfo } from '../helpers/utils';
+// import { firebaseAuth } from '../config/constants.js';
+import { browserHistory } from 'react-router';
 class AuthContainer extends Component {
 
   handleAuth (e) {
+    const nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
     e.preventDefault();
-    this.props.fetchAndHandleAuthedUser()
-    .then(() => browserHistory.push('/mode'));
+    this.props.fetchAndHandleAuthedUser(nextPath);
+  }
+
+  componentDidMount () {
+    const nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
+    if (nextPath && this.checkLocalStorage()) {
+      browserHistory.push(`${nextPath}`);
+    }
+  }
+
+  checkLocalStorage () {
+    for (let key in window.localStorage) {
+      if (key.startsWith('firebase:authUser') && window.localStorage[key]) {
+        return true;
+      }
+      return false;
+    }
   }
 
   render () {
@@ -30,6 +46,6 @@ class AuthContainer extends Component {
 }
 
 export default connect(
-  (state) => ({users: state.users, ui: state.ui}),
+  (state) => ({users: state.users, ui: state.ui, routing: state.routing}),
   (dispatch) => bindActionCreators(actionCreators, dispatch)
 )(AuthContainer);

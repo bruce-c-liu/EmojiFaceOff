@@ -23,7 +23,7 @@ module.exports = {
     }
   },
 
-  updateUserELO: (req, res, next) => {
+  updateUser: (req, res, next) => {
     if (req.params.fbID) {
       models.User.findOne({
         where: {
@@ -32,11 +32,51 @@ module.exports = {
       })
       .then(result => {
         if (result) {
+          if (req.body.elo) {
+            result.update({
+              ELO: req.body.elo
+            })
+            .then(() => {
+              res.json('User\'s ELO has been successfully updated');
+            });
+          } else if (req.body.coins) {
+            result.update({
+              coins: req.body.coins
+            })
+            .then(() => {
+              res.json('User\'s coin count has been successfully updated');
+            });
+          }
+        } else {
+          res.json('No user found');
+        }
+      })
+      .catch(err => {
+        res.json(err);
+        throw err;
+      });
+    } else {
+      res.json('Please provide a unique fbId');
+    }
+  },
+
+  decrUserCoin: (req, res, next) => {
+    if (req.params.fbID) {
+      models.User.findOne({
+        where: {
+          auth: req.params.fbID
+        }
+      })
+      .then(result => {
+        if (result) {
+          let displayName = result.displayName;
+          let origAmount = result.coins;
+          let newAmount = origAmount - 30;
           result.update({
-            ELO: req.body.elo
+            coins: newAmount
           })
-          .then(() => {
-            res.json('User\'s ELO has been successfully updated');
+          .then((result) => {
+            if (result) res.json(`${displayName}'s coins updated from ${origAmount} to ${newAmount}`);
           });
         } else res.json('No user found');
       })
@@ -64,6 +104,23 @@ module.exports = {
     }
   },
 
+  leaderBoard: (req, res, next) => {
+    let limit = req.body.limit || 10;
+    if (req.params.type === 'ELO' || req.params.type === 'SPR') {
+      models.User.findAll({
+        order: `"${req.params.type}" DESC`,
+        limit: limit
+      })
+      .then(result => {
+        res.json(result);
+      })
+      .catch(err => {
+        res.json(err);
+        throw err;
+      });
+    } else res.json('Invalid parameter for Type. ');
+  },
+
   /**
    * add user to database if it does not exist
    * expects: {name, auth, imgUrl, role}
@@ -78,15 +135,28 @@ module.exports = {
       let imgUrl = req.body.imgUrl || '';
       let role = req.body.role || 'user';
       let auth = req.body.auth || '';
-
+      console.log('checking if user exists....')
       redClient.sismember('allUsers', `${displayName}:${auth}`)
       .then(result => {
-        if (result) res.json('User already exists');
-        else {
+        if (result) {
+          console.log('user exists...., searching for user in database', auth)
+          models.User.findOne({
+            where: {
+              auth: auth
+            }
+          })
+          .then(result => {
+            res.json(result);
+          })
+          .catch(err => {
+            res.json(err);
+            throw err;
+          });
+        } else {
           redClient.sadd('allUsers', `${displayName}:${auth}`)
           .then(result => {
             if (result) console.log(`${displayName} has been added to the redis cache`);
-            res.json(`${displayName} has been added to the redis cache`);
+            //res.json(`${displayName} has been added to the redis cache`);
           })
           .catch(err => {
             throw err;
@@ -100,7 +170,10 @@ module.exports = {
             auth: auth
           })
           .then(result => {
-            if (result) console.log(`${displayName} has been added to the PostGres`);
+            if (result) {
+              console.log(`${displayName} has been added to the PostGres`);
+              res.json(result);
+            }
           });
         }
       })

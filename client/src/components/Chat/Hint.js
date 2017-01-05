@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Motion, spring, presets} from 'react-motion';
+// import {Motion, spring, presets} from 'react-motion';
 import classNames from 'classnames';
 class Hint extends Component {
   render () {
@@ -9,7 +9,7 @@ class Hint extends Component {
     });
     return (
       <div className={hintClass}>
-        <span>{this.props.hint}</span> 
+        <span>{this.props.hint}</span>
       </div>
     );
   }

@@ -8,11 +8,11 @@ class Bubble extends Component {
   render () {
     const bubbleClass = classNames({
       'chat-bubble': true,
-      'on-left': this.props.deets.user === 'ebot'
+      'on-left': this.props.deets.user === 'ebot',
+      'on-left is-correct': this.props.deets.type === 'correctGuess',
+      'is-wrong': this.props.deets.type === 'incorrectGuess'
     });
-    // const avatarProp = this.props.deets
-    //                                 ? this.props.profile.info.avatar
-    //                                 : null;
+
     const avatarSrc = this.props.deets.user === 'ebot'
                                     ? nerd
                                     : this.props.deets.imgUrl;
@@ -20,17 +20,17 @@ class Bubble extends Component {
       backgroundImage: `url(${avatarSrc})`
     };
     return (
-      <Motion defaultStyle={{x: 0}} style={{x: spring(1,  presets.stiff)}}>
-        {value => <div className={bubbleClass} style={{transform: `scale(${value.x})` , opacity: value.x}}>
+      <Motion defaultStyle={{x: 0}} style={{x: spring(1, presets.stiff)}}>
+        {value => <div className={bubbleClass} style={{transform: `scale(${value.x})`, opacity: value.x}}>
           <Interweave
             tagName='span'
             content={this.props.deets.text}
           />
-            <div className='bubble-name' style={avatarBG} />
+          <div className='bubble-name' style={avatarBG} />
         </div>
       }
-      
-        </Motion>
+
+      </Motion>
 
     );
   }

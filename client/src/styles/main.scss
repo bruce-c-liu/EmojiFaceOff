@@ -25,10 +25,12 @@ $icon-font-path: '/fonts/';
 @import "modules/buttons";
 @import "modules/forms";
 @import "modules/header";
+@import "modules/drawer";
 @import "modules/transitions";
 @import "modules/loader";
 @import "modules/chat";
 @import "modules/bubble";
+@import "modules/hints";
 @import "modules/login";
 @import "modules/avatar";
 @import "modules/mode-select";
@@ -36,6 +38,7 @@ $icon-font-path: '/fonts/';
 @import "modules/onboard";
 @import "modules/loader";
 @import "modules/transitions";
+@import "modules/hamburger";
 // ----------------------------------------------------------------------
   // Ionicons
 // ----------------------------------------------------------------------

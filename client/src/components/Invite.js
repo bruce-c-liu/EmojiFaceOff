@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
-import { TransitionMotion, spring, presets } from 'react-motion';
+// import { TransitionMotion, spring, presets } from 'react-motion';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators';
 import { inviteBaseURL } from '../helpers/utils';
 import btnIcon from '../assets/Messenger_Icon.png';
-import { browserHistory } from 'react-router';
+// import { browserHistory } from 'react-router';
+import Header from './Header';
 import OnBoard from './OnBoard';
-
 
 class Invite extends Component {
   constructor () {
@@ -48,18 +48,16 @@ class Invite extends Component {
 
   inviteBySms (e) {
     e.preventDefault();
-    let userName = this.props.users.profile.info.name;
+    let userName = this.props.users.profile.displayName;
     let roomUrl = this.props.session.inviteURL;
     let numbers = ReactDOM.findDOMNode(this.refs.toSMS).value.split(',');
     this.props.sendSMS(userName, roomUrl, numbers);
   }
 
-
-  popModal(e){
+  popModal (e) {
     this.setState({
       onBoard: true
     });
-
   }
 
   render () {
@@ -69,6 +67,7 @@ class Invite extends Component {
                             : null;
     return (
       <div className='inner-container is-center invite-wrap'>
+        <Header />
         {this.state.longRoomURL}
         <p> How many friends would you like to invite in this game?</p>
         <div className='count-selector'>
@@ -99,7 +98,7 @@ class Invite extends Component {
         </a>
 
         {loaderUI}
-        <OnBoard show={this.state.onBoard} roomLink={this.props.session.roomID}/>
+        <OnBoard show={this.state.onBoard} roomLink={this.props.session.roomID} />
       </div>
     );
   }

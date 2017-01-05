@@ -4,24 +4,24 @@ module.exports = {
   play: function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
 
-    // Emit user's message back to itself.
-    socket.emit('message', msg);
-
     let botResponse = { user: 'ebot' };
 
-    if (rm.gameStarted) {
-      if (rm.roundNum <= TESTING_NUM_ROUNDS) {
-        if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
-          openConnections[socket.id].score++;                           // Increment the user's score.
-          if (rm.roundNum < TESTING_NUM_ROUNDS) {
-            nextRound(botResponse, msg, io, rm, openConnections, socket);
-          } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
-            endGame(botResponse, msg, io, socket, openConnections, rm, TESTING_NUM_ROUNDS);
-          }
-        } else {                                       // A user replied with an incorrect answer.
-          wrongAnswer(botResponse, msg, io, rm);
+    if (rm.gameStarted && msg.text.codePointAt(0) > 0x03FF) {
+      if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
+        openConnections[socket.id].score++;                           // Increment the user's score.
+        if (rm.roundNum < TESTING_NUM_ROUNDS) {
+          nextRound(botResponse, msg, io, rm, openConnections, socket);
+        } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
+          endGame(botResponse, msg, io, socket, openConnections, rm, TESTING_NUM_ROUNDS);
         }
+      } else {                                       // A user replied with an incorrect answer.
+        wrongAnswer(msg, io, rm);
       }
+    } else {
+      // Emit user's message to all sockets connected to this room.
+      msg.type = 'chat';
+      msg.roundNum = rm.roundNum;
+      socket.emit('message', msg);
     }
   },
 
@@ -82,7 +82,7 @@ module.exports = {
             setTimeout(() => {
               console.log('time out called:', roundNum, rm.roundNum);
               if (roundNum === rm.roundNum) {
-                console.log('TIMED OUT!!!!!!!!!!!!');
+                console.log('Failed to solve prompt within 7 seconds.');
               }
             }, 7000);
           });
@@ -102,7 +102,8 @@ function checkAnswer (guess, prompt, solutions) {
 }
 
 function nextRound (botResponse, msg, io, rm, openConnections, socket) {
-  console.log(rm.hints);
+  msg.type = 'correctGuess';
+  socket.emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
   botResponse.text = `Good job, ${msg.user}! 
@@ -115,9 +116,11 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
 }
 
 function endGame (botResponse, msg, io, socket, openConnections, rm, TESTING_NUM_ROUNDS) {
-  let timeElapsed = (Date.now() - rm.startTime) / 1000;
-  let secondsPerRnd = timeElapsed / TESTING_NUM_ROUNDS;
+  let timeElapsed = ((Date.now() - rm.startTime) / 1000).toFixed(2);
+  let secondsPerRnd = (timeElapsed / TESTING_NUM_ROUNDS).toFixed(2);
 
+  msg.type = 'correctGuess';
+  io.sockets.in(msg.roomId).emit('message', msg);
   // First, notify everyone the final answer was correct.
   botResponse.text = `Good job, ${msg.user}!`;
   socket.emit('message', botResponse);
@@ -127,7 +130,7 @@ function endGame (botResponse, msg, io, socket, openConnections, rm, TESTING_NUM
   botResponse.text = `Game Completed!
                       
                       ${timeElapsed} seconds to complete ${TESTING_NUM_ROUNDS} rounds.
-                      ${secondsPerRnd} / round.
+                      ${secondsPerRnd} seconds / round.
 
                       You kinda fucking suck...try harder next time. 💩
 
@@ -149,8 +152,8 @@ function endGame (botResponse, msg, io, socket, openConnections, rm, TESTING_NUM
   openConnections[socket.id].score = 0;
 }
 
-function wrongAnswer (botResponse, msg, io, rm) {
-  botResponse.text = `That is not the correct answer, ${msg.user}!`;
-  botResponse.roundNum = rm.roundNum;
-  io.sockets.in(msg.roomId).emit('message', botResponse);
+function wrongAnswer (msg, io, rm) {
+  msg.type = 'incorrectGuess';
+  msg.roundNum = rm.roundNum;
+  io.sockets.in(msg.roomId).emit('message', msg);
 }
