@@ -16,7 +16,13 @@ class AuthContainer extends Component {
   }
 
   componentDidMount () {
-    const nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname || null;
+    let nextPath;
+    if(this.props.routing.locationBeforeTransitions.state){
+      nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname
+    } else {
+      nextPath = null;
+    }
+    
     if (nextPath && this.checkLocalStorage()) {
       browserHistory.push(`${nextPath}`);
     }
@@ -38,7 +44,7 @@ class AuthContainer extends Component {
         {this.props.users.isAuthed ? <Link to='/mode'>YOU ARE LOGGED IN</Link> : null}
 
         <button className='btn-login' onClick={this.handleAuth.bind(this)}>
-          Login
+          Login With Facebook to Start!
         </button>
       </div>
     );
