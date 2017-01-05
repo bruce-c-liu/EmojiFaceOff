@@ -1,17 +1,10 @@
 // A higher number = better quality.
 const MATCH_MAKING_QUALITY = 1;
 
-// let queue = [{
-//   elo: 1200,
-//   roomId: 'asd1291'
-// }, {
-//   elo: 2103,
-//   roomId: '09oi2j'
-// }, {
-//   elo: 931,
-//   roomId: 'jif82i'
-// }];
-
+// {
+//  'jif92i': 931,
+//  '0a90x2': 2103
+// }
 let queue = {};
 
 module.exports = {
@@ -20,7 +13,7 @@ module.exports = {
     if (numInQueue < MATCH_MAKING_QUALITY) {
       res.json({matchedRoom: false});
     } else {
-      console.log('QUEUE CONTAINS', queue);
+      console.log('RANKED QUEUE CONTAINS', queue);
       let searcherELO = req.query.elo;
       let smallestDiff = Number.MAX_VALUE;
       let matchedRoom = '';
@@ -33,19 +26,16 @@ module.exports = {
         }
       }
       delete queue[matchedRoom];
-      console.log('THE MATCHED ROOM IS', matchedRoom);
       res.json({matchedRoom: matchedRoom});
     }
   },
 
   addRoom: function (req, res) {
-    console.log('LOOK AT MEEEEEEE:', req.body);
     queue[req.body.roomId] = req.body.elo;
     res.status(201).json('Added roomId: ' + req.body.roomId + ' to queue.');
   },
 
-  removeRoom: function (req, res) {
-    delete queue[req.body.roomId];
-    res.status(204);
+  removeRoom: function (roomId) {
+    delete queue[roomId];
   }
 };
