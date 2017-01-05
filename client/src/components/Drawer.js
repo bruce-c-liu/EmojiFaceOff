@@ -6,6 +6,9 @@ class Drawer  extends Component{
 closeDrawer(){
   this.props.drawerAction()
 }
+logOutUser(){
+
+}
   render () {
   	const drawerClass = classNames({
   		'drawer': true,
@@ -15,7 +18,7 @@ closeDrawer(){
   		{path:'/mode', icon: '🎉', text: 'Start New Game'},
   		{path:'/mode', icon: '🏆', text: 'LeaderBoard'},
   		{path:'/request', icon: '❔', text: 'Suggest a Question '},
-  		{path:'/mode', icon: '✌', text: 'Logout'}
+  		{path:'/logout', icon: '✌', text: 'Logout'}
   	]
   	const menuItems =linkData.map((item, idx)=>{
   		return <Link  to={item.path} key={idx} onClick={this.closeDrawer.bind(this)}> <span>{item.icon}</span> {item.text} </Link>

@@ -9,9 +9,18 @@ import { firebaseAuth } from '../config/constants.js';
 
 class AuthContainer extends Component {
 
-  handleAuth (e) {
-    e.preventDefault();
-    this.props.fetchAndHandleAuthedUser()
+  handleAuth(e) {
+    const nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname
+      e.preventDefault();
+      this.props.fetchAndHandleAuthedUser(nextPath)
+
+  }
+
+
+  componentDidMount(){
+      const nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname
+      console.log("ROUTING", nextPath )
+
   }
 
   render () {
@@ -29,6 +38,6 @@ class AuthContainer extends Component {
 }
 
 export default connect(
-  (state) => ({users: state.users, ui: state.ui}),
+  (state) => ({users: state.users, ui: state.ui, routing: state.routing}),
   (dispatch) => bindActionCreators(actionCreators, dispatch)
 )(AuthContainer);
