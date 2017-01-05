@@ -104,6 +104,23 @@ module.exports = {
     }
   },
 
+  leaderBoard: (req, res, next) => {
+    let limit = req.body.limit || 10;
+    if (req.params.type === 'ELO' || req.params.type === 'SPR') {
+      models.User.findAll({
+        order: `"${req.params.type}" DESC`,
+        limit: limit
+      })
+      .then(result => {
+        res.json(result);
+      })
+      .catch(err => {
+        res.json(err);
+        throw err;
+      });
+    } else res.json('Invalid parameter for Type. ');
+  },
+
   /**
    * add user to database if it does not exist
    * expects: {name, auth, imgUrl, role}
