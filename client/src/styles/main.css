@@ -200,12 +200,13 @@ button {
   outline: none; }
 
 .btn-login {
-  width: 100%;
-  height: 50px;
-  line-height: 50px;
+  width: 95%;
+  height: 60px;
+  line-height: 60px;
   background-color: #FF6B6B;
+  margin-bottom: 1rem;
   border-radius: 3px;
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: #FFFFFF; }
   .btn-login.is-full {
@@ -594,7 +595,8 @@ nav.menu a {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; }
+  justify-content: space-between;
+  align-items: center; }
 
 .brand-title {
   font-family: 'Fredoka One', cursive;

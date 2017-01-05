@@ -5,7 +5,7 @@ const FETCHING_USER_DB = 'FETCHING_USER_DB';
 const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE';
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS';
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER';
-
+const SET_USER_DATA = 'SET_USER_DATA';
 
 
 const initialState = {
@@ -54,6 +54,13 @@ export default function users (state = initialState, action) {
         isFetching: false,
         profile: action.payload
       };
+      case SET_USER_DATA:
+      console.log("case SET_USER_DATA", action.payload )    
+        return {
+          ...state,
+          isFetching: false,
+          profile: action.payload
+        };
     case FETCHING_USER_FAILURE:
       return {
         ...state,
