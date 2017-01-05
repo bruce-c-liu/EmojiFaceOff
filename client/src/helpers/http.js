@@ -32,11 +32,31 @@ export function saveNewUser (newUser) {
       console.log(err);
     });
 }
-export function shortenLink(longURL) {   
-    return axios.post('/api/shortenURL', {
-            fullURL: longURL
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+
+export function shortenLink (longURL) {
+  return axios.post('/api/shortenURL', {
+    fullURL: longURL
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+}
+
+export function getRankedRoom (elo) {
+  return axios.get(`/api/rankedQueue?elo=${elo}`)
+    .then(result => {
+      return result.data;
+    })
+  .catch((err) => {
+    console.log(err);
+  });
+}
+
+export function enqueueRankedRoom (roomId, elo) {
+  return axios.post(`/api/rankedQueue`, {
+    roomId: roomId,
+    elo: elo
+  }).then(() => {
+    console.log('Enqueued new ranked room.');
+  });
 }

@@ -25,25 +25,32 @@ module.exports = {
   },
 
   joinRoomHandler: function (msg, io, socket) {
-    socket.join(msg.roomId);
-    console.log('Joined room:', msg.roomId);
+    if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
+      socket.emit('message', {
+        user: 'ebot',
+        text: 'This is a single player room! Get outta here! 😡'
+      });
+    } else {
+      socket.join(msg.roomId);
+      console.log('Joined room:', msg.roomId);
 
-    socket.emit('message', {
-      user: 'ebot',
-      text: `Welcome to Emoji Face Off! 
+      socket.emit('message', {
+        user: 'ebot',
+        text: `Welcome to Emoji Face Off! 
 
-             💩 - talk each other while waiting for other friends to join.`
-    });
-    console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
-    socket.broadcast.to(msg.roomId).emit('message', {
-      user: 'ebot',
-      text: `${msg.user} has joined the room!`
-    });
-    io.sockets.in(msg.roomId).emit('roomJoined', {
-      playerName: `${msg.user}`,
-      playerAvatar: `${msg.avatar}`,
-      room: msg.roomId
-    });
+              💩 - talk each other while waiting for other friends to join.`
+      });
+      console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
+      socket.broadcast.to(msg.roomId).emit('message', {
+        user: 'ebot',
+        text: `${msg.user} has joined the room!`
+      });
+      io.sockets.in(msg.roomId).emit('roomJoined', {
+        playerName: `${msg.user}`,
+        playerAvatar: `${msg.avatar}`,
+        room: msg.roomId
+      });
+    }
   },
 
   startGame: function (msg, io, TESTING_NUM_ROUNDS, RedisController) {

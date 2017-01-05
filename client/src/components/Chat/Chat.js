@@ -102,18 +102,21 @@ class Chat extends Component {
     });
   }
 
-  componentDidMount() {
-      this.socket.emit('joinRoom', {
+  componentDidMount () {
+    getUser(this.props.users.profile.info.uid)
+      .then(result => {
+        console.log('CURRENT USER FROM DB:', result.data);
+        console.log('CURRENT ROOM TYPE:', this.props.session.roomType);
+        this.socket.emit('joinRoom', {
           roomId: this.state.roomId,
           user: this.state.user,
           elo: this.props.users.profile.ELO,
           fbId: this.props.users.profile.auth,
           avatar: this.props.users.profile.imgUrl,
-              // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
-          type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS'
+          type: this.props.session.roomType ? this.props.session.roomType : 'FRIEND_LINK'
+        });
       });
   }
-
 
   componentDidUpdate () {
     const node = this.refs.chatScroll;
@@ -162,8 +165,8 @@ class Chat extends Component {
     this.socket.emit('hint', {roomId: this.state.roomId, index: this.state.clueCount});
     this.props.playSFX('hint');
     this.setState({
-      coinBalance: this.state.coinBalance-=30
-    })
+      coinBalance: this.state.coinBalance -= 30
+    });
   }
 
   render () {
@@ -172,7 +175,7 @@ class Chat extends Component {
       return <Bubble deets={item} profile={users.profile} key={i} />;
     });
     const chatHeadElements = this.state.gameStarted
-                                ? <ChatHead deets={this.state}  />
+                                ? <ChatHead deets={this.state} />
                                 : <ChatHeadPractice deets={this.state} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
     const avatarBG = {
