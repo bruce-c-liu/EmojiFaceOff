@@ -4,7 +4,7 @@ import Hint from './Hint';
 
 class ChatHead extends Component {
   render () {
-    const {deets, coins} = this.props;
+    const {deets} = this.props;
 
     return (
       <div className='chat-head_active' >
@@ -40,7 +40,7 @@ class ChatHead extends Component {
                     transitionEnterTimeout={250}
                     transitionLeaveTimeout={250}
                     >
-                    <span key={coins} >{coins}</span>
+                    <span key={deets.coinBalance} >{deets.coinBalance}</span>
                   </CSSTransitionGroup>
                   <p> COINS</p>
                 </div>

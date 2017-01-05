@@ -8,7 +8,9 @@ class Bubble extends Component {
   render () {
     const bubbleClass = classNames({
       'chat-bubble': true,
-      'on-left': this.props.deets.user === 'ebot'
+      'on-left': this.props.deets.user === 'ebot',
+      'on-left is-correct':  this.props.deets.type === 'correctGuess',
+      'is-wrong': this.props.deets.type === 'incorrectGuess'
     });
     // const avatarProp = this.props.deets
     //                                 ? this.props.profile.info.avatar

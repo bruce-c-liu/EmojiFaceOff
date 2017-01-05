@@ -29,7 +29,8 @@ class Chat extends Component {
       gameStarted: false,
       joinedPlayer: null,
       joinedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
-      announceBar: false
+      announceBar: false,
+      coinBalance: 1000
     };
     this.socket = io(socketURL);
 
@@ -97,25 +98,22 @@ class Chat extends Component {
   componentWillMount () {
     this.setState({
       roomId: this.props.params.roomID,
-      user: this.props.users.profile.info.name
+      user: this.props.users.profile.displayName
     });
   }
 
-  componentDidMount () {
-    getUser(this.props.users.profile.info.uid)
-      .then(result => {
-        console.log('CURRENT USER FROM DB:', result.data);
-        this.socket.emit('joinRoom', {
+  componentDidMount() {
+      this.socket.emit('joinRoom', {
           roomId: this.state.roomId,
           user: this.state.user,
-          elo: result.data.ELO,
-          fbId: result.data.auth,
-          avatar: this.props.users.profile.info.avatar,
-          // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+          elo: this.props.users.profile.ELO,
+          fbId: this.props.users.profile.auth,
+          avatar: this.props.users.profile.imgUrl,
+              // CHANGE THIS TO BE DYNAMIC LATER. Options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
           type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS'
-        });
       });
   }
+
 
   componentDidUpdate () {
     const node = this.refs.chatScroll;
@@ -149,7 +147,7 @@ class Chat extends Component {
     const userMessage = {
       user: this.state.user,
       text: this.state.message,
-      imgUrl: this.props.users.profile.info.avatar,
+      imgUrl: this.props.users.profile.imgUrl,
       roomId: this.state.roomId
     };
 
@@ -163,6 +161,9 @@ class Chat extends Component {
     e.preventDefault();
     this.socket.emit('hint', {roomId: this.state.roomId, index: this.state.clueCount});
     this.props.playSFX('hint');
+    this.setState({
+      coinBalance: this.state.coinBalance-=30
+    })
   }
 
   render () {
@@ -171,7 +172,7 @@ class Chat extends Component {
       return <Bubble deets={item} profile={users.profile} key={i} />;
     });
     const chatHeadElements = this.state.gameStarted
-                                ? <ChatHead deets={this.state} coins={users.coinBalance} />
+                                ? <ChatHead deets={this.state}  />
                                 : <ChatHeadPractice deets={this.state} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
     const avatarBG = {

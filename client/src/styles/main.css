@@ -1,3 +1,4 @@
+@charset "UTF-8";
 *, *:before, *:after {
   box-sizing: border-box; }
 
@@ -495,7 +496,7 @@ nav.menu a {
   border-radius: 15px;
   background-color: #f7f7f7;
   max-width: 55%;
-  font-size: 2rem; }
+  font-size: 1.5rem; }
   .chat-bubble.on-left {
     align-self: flex-start;
     margin-left: 2.5rem;
@@ -505,6 +506,41 @@ nav.menu a {
     .chat-bubble.on-left .bubble-name {
       bottom: 0px;
       left: -34px; }
+  .chat-bubble.is-correct {
+    border: 1px solid #009d7e;
+    background-color: rgba(0, 157, 126, 0.2);
+    font-size: 2rem; }
+    .chat-bubble.is-correct:after {
+      content: '✔';
+      position: absolute;
+      top: 50%;
+      right: -20px;
+      transform: translateY(-50%);
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      background-color: #009d7e;
+      font-size: 1.1rem;
+      line-height: 30px;
+      text-align: center; }
+  .chat-bubble.is-wrong {
+    border: 1px solid #c9172c;
+    background-color: rgba(201, 23, 44, 0.2);
+    font-size: 2rem; }
+    .chat-bubble.is-wrong:after {
+      content: '❌';
+      position: absolute;
+      top: 50%;
+      left: -20px;
+      transform: translateY(-50%);
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      background-color: #FFFFFF;
+      color: #FFFFFF;
+      font-size: 1.1rem;
+      line-height: 30px;
+      text-align: center; }
 
 .bubble-name {
   height: 35px;

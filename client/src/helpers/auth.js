@@ -17,7 +17,7 @@ export function logout () {
 export function saveUser (user) {
   return ref.child(`users/${user.uid}`)
     .set(user)
-    .then(() => user)
+    .then(() => user)    	
     .then((newUser) => saveNewUser(newUser))
     .then(console.log('New User Saved to DB'));
 }

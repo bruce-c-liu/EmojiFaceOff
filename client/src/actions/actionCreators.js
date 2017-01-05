@@ -1,6 +1,6 @@
 import auth, { logout, saveUser } from '../helpers/auth';
 import { CALL_API } from 'redux-api-middleware';
-import { SMSInvite, saveNewUser, shortenLink } from '../helpers/http.js';
+import { SMSInvite, saveNewUser, shortenLink, getUser } from '../helpers/http.js';
 import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 import * as shortid from 'shortid';
@@ -8,6 +8,7 @@ import * as shortid from 'shortid';
 const AUTH_USER = 'AUTH_USER';
 const UNAUTH_USER = 'UNAUTH_USER';
 const FETCHING_USER = 'FETCHING_USER';
+const FETCHING_USER_DB = 'FETCHING_USER_DB';
 const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE';
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS';
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER';
@@ -40,6 +41,19 @@ function fetchingUserFailure (error) {
     type: FETCHING_USER_FAILURE,
     error: 'Error fetching user.'
   };
+}
+
+export function fetchUserDB (uid) {
+  console.log("fetchUserDB called", uid )    
+  return function(dispatch) {
+    getUser(uid)
+    .then( resp =>{
+       dispatch({
+          type: FETCHING_USER_DB,
+          payload: resp.data
+      });
+    })
+  }
 }
 
 export function fetchingUserSuccess (uid, user, timestamp) {
