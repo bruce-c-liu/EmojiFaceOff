@@ -71,7 +71,6 @@ export function fetchingUserSuccess (uid, user, timestamp) {
   };
 }
 
-
 function goToNextRoute(next) {
   console.log("GOTO NEXT", next )
   browserHistory.push(`${next}`);

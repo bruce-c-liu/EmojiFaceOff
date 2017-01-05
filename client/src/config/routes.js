@@ -13,7 +13,7 @@ import AuthContainer from '../containers/AuthContainer';
 import RequestPrompt from '../components/RequestPrompt';
 import PendRequest from '../components/PendRequest';
 import CoinStore from '../components/CoinStore';
-
+import LogoutContainer from '../containers/LogoutContainer';
 export default function getRoutes (checkAuth) {
   return (
     <Router history={history}>
@@ -26,9 +26,9 @@ export default function getRoutes (checkAuth) {
         <Route path='onboard' component={OnBoard} onEnter={checkAuth} />
         <Route path='chat/:roomID' component={Chat} onEnter={checkAuth} />
         <Route path='coinstore' component={CoinStore} />
-        <Route path='nowhere' component={NoWhere} />
         <IndexRoute component={AuthContainer} onEnter={checkAuth} />
       </Route>
+      <Route path='logout' component={LogoutContainer} />
     </Router>
   );
 }
