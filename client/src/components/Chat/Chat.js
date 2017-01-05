@@ -11,7 +11,6 @@ import ChatHead from './ChatHead';
 import ChatHeadPractice from './ChatHeadPractice';
 import Bubble from './Bubble';
 import HintBar from './HintBar';
-import { getUser } from '../../helpers/http.js';
 
 class Chat extends Component {
 
@@ -103,19 +102,14 @@ class Chat extends Component {
   }
 
   componentDidMount () {
-    getUser(this.props.users.profile.info.uid)
-      .then(result => {
-        console.log('CURRENT USER FROM DB:', result.data);
-        console.log('CURRENT ROOM TYPE:', this.props.session.roomType);
-        this.socket.emit('joinRoom', {
-          roomId: this.state.roomId,
-          user: this.state.user,
-          elo: this.props.users.profile.ELO,
-          fbId: this.props.users.profile.auth,
-          avatar: this.props.users.profile.imgUrl,
-          type: this.props.session.roomType ? this.props.session.roomType : 'FRIEND_LINK'
-        });
-      });
+    this.socket.emit('joinRoom', {
+      roomId: this.state.roomId,
+      user: this.state.user,
+      elo: this.props.users.profile.ELO,
+      fbId: this.props.users.profile.auth,
+      avatar: this.props.users.profile.imgUrl,
+      type: this.props.session.roomType ? this.props.session.roomType : 'FRIEND_LINK'
+    });
   }
 
   componentDidUpdate () {
