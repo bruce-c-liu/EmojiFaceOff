@@ -89,33 +89,6 @@ module.exports = {
     }
   },
 
-  incrUserCoin: (fbId, amount) => {
-    console.log('Attempting to increase user coinage', fbId, amount);
-    if (fbId && amount) {
-      models.User.findOne({
-        where: {
-          auth: fbId
-        }
-      })
-      .then(result => {
-        if (result) {
-          let displayName = result.displayName;
-          let origAmount = result.coins;
-          let newAmount = origAmount + amount;
-          result.update({
-            coins: newAmount
-          })
-          .then((result) => {
-            if (result) console.log(`${displayName}'s coins updated from ${origAmount} to ${newAmount}`);
-          });
-        } else console.log('No user found to increase coin', result);
-      })
-      .catch(err => {
-        throw err;
-      });
-    }
-  },
-
   getAllUsers: (req, res, next) => {
     if (req) {
       models.User.findAll({})
