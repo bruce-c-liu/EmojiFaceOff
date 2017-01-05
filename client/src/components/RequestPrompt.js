@@ -69,7 +69,7 @@ class RequestPrompt extends Component {
   render () {
     return (
       <div className='inner-container is-center '>
-        <Header/>
+        <Header />
         <form className='RequestPrompt-form' onSubmit={this.requestNewPrompt.bind(this)}>
           <input className='reqPrompt'
             type='text' value={this.state.reqPrompt}

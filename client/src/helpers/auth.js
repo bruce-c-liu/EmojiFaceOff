@@ -7,8 +7,8 @@ export default function auth () {
 }
 
 export function checkIfAuthed (store) {
-	console.log("checkIfAuthed called", store.getState() )		
-  return store.getState().users.isAuthed === true
+  console.log('checkIfAuthed called', store.getState());
+  return store.getState().users.isAuthed;
 }
 
 export function logout () {
@@ -18,9 +18,8 @@ export function logout () {
 export function saveUser (user) {
   return ref.child(`users/${user.uid}`)
     .set(user)
-    .then(() => user)    	
+    // .then(() => user)
     .then((newUser) => {
-    	if(newUser)  return saveNewUser(newUser)
-    })
-
+      if (newUser) return saveNewUser(newUser);
+    });
 }

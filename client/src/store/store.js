@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from 'redux';
-import { syncHistoryWithStore} from 'react-router-redux';
+import { syncHistoryWithStore } from 'react-router-redux';
 import { apiMiddleware } from 'redux-api-middleware';
 import soundsMiddleware from 'redux-sounds';
 import { browserHistory } from 'react-router';

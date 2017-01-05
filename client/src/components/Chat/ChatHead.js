@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
-import Hint from './Hint';
+// import Hint from './Hint';
 
 class ChatHead extends Component {
   render () {
@@ -9,9 +9,9 @@ class ChatHead extends Component {
     return (
       <div className='chat-head_active' >
 
-     
-                <div className='flip-stat'>
-                  
+
+        <div className='flip-stat'>
+
                   <CSSTransitionGroup
                     transitionName='count'
                     transitionEnterTimeout={250}
@@ -22,7 +22,7 @@ class ChatHead extends Component {
                   <p> ROUND</p>
                 </div>
 
-                <div className='flip-stat'>
+        <div className='flip-stat'>
 
                   <CSSTransitionGroup
                     transitionName='count'
@@ -33,7 +33,7 @@ class ChatHead extends Component {
                   </CSSTransitionGroup>
                   <p> SCORE</p>
                 </div>
-                <div className='flip-stat'>
+        <div className='flip-stat'>
 
                   <CSSTransitionGroup
                     transitionName='count'
@@ -44,9 +44,6 @@ class ChatHead extends Component {
                   </CSSTransitionGroup>
                   <p> COINS</p>
                 </div>
-
-
-
 
       </div>
     );

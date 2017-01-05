@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
-import { browserHistory } from 'react-router';
-import { inviteBaseURL } from '../helpers/utils';
+// import { browserHistory } from 'react-router';
+// import { inviteBaseURL } from '../helpers/utils';
 import Header from './Header';
 import _ from 'lodash';
 
@@ -39,7 +39,7 @@ class ModeSelect extends Component {
 
   initGameRanked (e) {
     e.preventDefault();
-    this.props.fetchRoomId('ranked', this.props.users.profile.info.uid);
+    this.props.fetchRoomId('ranked', this.props.users.profile.auth);
     this.props.setRoomType('RANKED');
     this.props.playSFX('tap');
   }

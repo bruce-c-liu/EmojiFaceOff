@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
-import auth from '../helpers/auth.js';
+// import auth from '../helpers/auth.js';
 import { bindActionCreators } from 'redux';
-import { browserHistory, Link } from 'react-router';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions/actionCreators.js';
-import { formatUserInfo } from '../helpers/utils';
-import { firebaseAuth } from '../config/constants.js';
+// import { formatUserInfo } from '../helpers/utils';
+// import { firebaseAuth } from '../config/constants.js';
 
 class AuthContainer extends Component {
 
-  handleAuth(e) {
-    const nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname
-      e.preventDefault();
-      this.props.fetchAndHandleAuthedUser(nextPath)
-
+  handleAuth (e) {
+    const nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
+    e.preventDefault();
+    this.props.fetchAndHandleAuthedUser(nextPath);
   }
 
-
-  componentDidMount(){
-      const nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname
-      console.log("ROUTING", nextPath )
-
+  componentDidMount () {
+    const nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
+    console.log('ROUTING', nextPath);
   }
 
   render () {

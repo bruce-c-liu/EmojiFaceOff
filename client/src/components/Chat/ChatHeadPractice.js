@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class ChatHeadPractice extends Component {
   render () {
-    const {deets, startProp} = this.props;
+    // const {deets, startProp} = this.props;
     return (
       <div className='chat-head_inner'>
         {

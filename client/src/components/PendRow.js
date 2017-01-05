@@ -66,7 +66,7 @@ class PendRow extends Component {
     return (
       <tr style={this.state.approved ? displayNone : null}>
         <td>
-          <img style={avatarStyle} src={this.state.avatar} />
+          <img style={avatarStyle} alt='Smiley Face' src={this.state.avatar} />
         </td>
         <td>{this.state.prompt}</td>
         <td>{this.state.answers}</td>
