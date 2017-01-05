@@ -11,12 +11,14 @@ class RequestPrompt extends Component {
     this.state = {
       reqPrompt: '',
       reqAnswer: '',
-      user: ''
+      authedId: ''
     };
   }
 
-  componentWillMount () {
-    // console.log(this.props);
+  componentDidMount () {
+    this.setState({
+      authedId: this.props.users.authedId
+    });
   }
 
   handleChangePrompt (e) {
@@ -45,11 +47,8 @@ class RequestPrompt extends Component {
                         });
     if (answerOptions.length > 0 && this.state.reqPrompt.length > 0) {
       console.log(`Sending to the server => prompt: ${this.state.reqPrompt} ; answers: `, answerOptions);
-      /**
-       * USER NEEDS TO BE CHANGED
-       */
       axios.post('/api/requestPrompt', {
-        userFbId: '8008135',
+        userFbId: this.state.authedId,
         prompt: this.state.reqPrompt.toLowerCase(),
         answers: answerOptions
       })
