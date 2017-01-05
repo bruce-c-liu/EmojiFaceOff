@@ -1,4 +1,5 @@
 const RedisController = require('../db/Redis/RedisController.js');
+const RankedQueue = require('../game/helpers/rankedQueue.js');
 const singlePlayer = require('../game/modes/singlePlayer.js');
 const friendsVsFriends = require('../game/modes/friendsVsFriends.js');
 const ranked = require('../game/modes/ranked.js');
@@ -75,6 +76,7 @@ module.exports = (server) => {
 
     socket.on('message', msg => {
       messageHandler(msg, io, socket);
+      console.log(socket.rooms);
     });
 
     socket.on('hint', msg => {
@@ -98,6 +100,12 @@ module.exports = (server) => {
     });
 
     socket.on('disconnect', () => {
+      let rooms = Object.keys(socket.rooms);
+      for (let roomId in rooms) {
+        if (roomId !== socket.id) {
+          RankedQueue.removeRoom(roomId);
+        }
+      }
       delete openConnections[socket.id];
       console.log(socket.id, 'has disconnected!');
     });

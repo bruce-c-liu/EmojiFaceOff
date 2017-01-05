@@ -11,6 +11,7 @@ import ChatHead from './ChatHead';
 import ChatHeadPractice from './ChatHeadPractice';
 import Bubble from './Bubble';
 import HintBar from './HintBar';
+import { dequeueRankedRoom } from '../../helpers/http.js';
 
 class Chat extends Component {
 
@@ -115,6 +116,10 @@ class Chat extends Component {
   componentDidUpdate () {
     const node = this.refs.chatScroll;
     node.scrollTop = node.scrollHeight + 200;
+  }
+
+  componentWillUnmount () {
+
   }
 
   announceNewPlayer () {
