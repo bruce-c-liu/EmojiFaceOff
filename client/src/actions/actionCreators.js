@@ -26,9 +26,9 @@ export function authUser (uid) {
     getUser(uid)
     .then(resp => {
       dispatch({
-           type: FETCHING_USER_DB,
-           payload: resp.data
-         });
+        type: FETCHING_USER_DB,
+        payload: resp.data
+      });
     });
   };
 }
@@ -71,36 +71,28 @@ export function fetchingUserSuccess (uid, user, timestamp) {
   };
 }
 
-function goToNextRoute (next) {
-  console.log('GOTO NEXT', next);
-  browserHistory.push(`${next}`);
-}
-
 export function fetchAndHandleAuthedUser (next) {
   return function (dispatch) {
-      dispatch(fetchingUser());
-      console.log('NEXT', next);
-      return auth().then(({ user, credential }) => {
-          const userData = user.providerData[0];
-          const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
-          return dispatch(fetchingUserSuccess(user.uid, userInfo, Date.now()));
-        })
-            .then(({ user }) => {
-              return saveUser(user);
-            })
-            .then((resp) => {
-              if (resp) return dispatch(fetchUserDB(resp.data));
-            })
-            .then((payload) => {
-              if (payload) {
-                  dispatch(authUser(payload.payload.auth));
-                  goToNextRoute(next);
-                  console.log('END OF PROMISE CHAIN REACHED. HOORAY!~');
-                }
-            })
-
-        .catch((error) => dispatch(fetchingUserFailure(error)));
-    };
+    dispatch(fetchingUser());
+    console.log('NEXT', next);
+    return auth().then(({ user, credential }) => {
+      const userData = user.providerData[0];
+      const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
+      return dispatch(fetchingUserSuccess(user.uid, userInfo, Date.now()));
+    })
+    .then(({ user }) => {
+      return saveUser(user);
+    })
+    .then((resp) => {
+      if (resp) return dispatch(fetchUserDB(resp.data));
+    })
+    .then((payload) => {
+      if (payload) {
+        dispatch(authUser(payload.payload.auth));
+      }
+    })
+    .catch((error) => dispatch(fetchingUserFailure(error)));
+  };
 }
 
 export function logoutAndUnauth () {
