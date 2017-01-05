@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import CSSTransitionGroup from 'react-addons-css-transition-group';
-import {Motion, spring} from 'react-motion';
+// import CSSTransitionGroup from 'react-addons-css-transition-group';
+// import {Motion, spring} from 'react-motion';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../../actions/actionCreators.js';

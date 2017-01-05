@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
-import { browserHistory } from 'react-router';
-import { inviteBaseURL } from '../helpers/utils';
+// import { browserHistory } from 'react-router';
+// import { inviteBaseURL } from '../helpers/utils';
 import Header from './Header';
 import _ from 'lodash';
 

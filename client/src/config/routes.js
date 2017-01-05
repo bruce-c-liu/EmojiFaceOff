@@ -1,14 +1,14 @@
 import React from 'react';
 import { Router, Route, IndexRoute } from 'react-router';
-import store, { history } from '../store/store.js';
+import { history } from '../store/store.js';
 
 import MainContainer from '../containers/MainContainer';
 import Chat from '../components/Chat/Chat';
-import Login from '../components/Login';
+// import Login from '../components/Login';
 import ModeSelect from '../components/ModeSelect';
 import Invite from '../components/Invite';
 import OnBoard from '../components/OnBoard';
-import NoWhere from '../components/NoWhere';
+// import NoWhere from '../components/NoWhere';
 import AuthContainer from '../containers/AuthContainer';
 import RequestPrompt from '../components/RequestPrompt';
 import PendRequest from '../components/PendRequest';

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import getRoutes from './config/routes.js';
 import { checkIfAuthed } from './helpers/auth.js';
-import store, { history } from './store/store.js';
+import store from './store/store.js';
 
 // function checkAuth (nextState, replace) {
 //   if (store.getState().isFetching === true) {
@@ -13,7 +13,7 @@ import store, { history } from './store/store.js';
 //   const nextPathName = nextState.location.pathname;
 //   console.log("nextState",nextState )
 //     if(nextPathName === '/login'){
-      
+
 //     }
 //     if (isAuthed ) {
 //       console.log('AUTH IS TRUE FROM STORE');
@@ -24,21 +24,19 @@ import store, { history } from './store/store.js';
 //       console.log('AUTH IS FALSE FROM STORE');
 //       //replace('/login')
 //     }
-  
+
 // }
 
 function checkAuth (nextState, replace) {
- 
-  if(nextState.location.pathname !== '/login'){
-      const isAuthed = checkIfAuthed(store)
-        if (!isAuthed ) {
+  if (nextState.location.pathname !== '/login') {
+    const isAuthed = checkIfAuthed(store);
+    if (!isAuthed) {
           replace({
-               pathname: '/login',
-               state: { nextPathname: nextState.location.pathname }
-             })
+            pathname: '/login',
+            state: { nextPathname: nextState.location.pathname }
+          });
         }
   }
-
 }
 
 ReactDOM.render(

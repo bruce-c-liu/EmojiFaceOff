@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
-import { TransitionMotion, spring, presets } from 'react-motion';
+// import { TransitionMotion, spring, presets } from 'react-motion';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators';
 import { inviteBaseURL } from '../helpers/utils';
 import btnIcon from '../assets/Messenger_Icon.png';
-import { browserHistory } from 'react-router';
+// import { browserHistory } from 'react-router';
 import Header from './Header';
 import OnBoard from './OnBoard';
 

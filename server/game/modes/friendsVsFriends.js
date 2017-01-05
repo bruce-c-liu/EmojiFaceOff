@@ -25,11 +25,13 @@ module.exports = {
   },
 
   joinRoomHandler: function (msg, io, socket) {
-    if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
-      socket.emit('message', {
-        user: 'ebot',
-        text: 'This is a single player room! Get outta here! 😡'
-      });
+    if (io.nsps['/'].adapter.rooms[msg.roomId]) {
+      if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
+        socket.emit('message', {
+          user: 'ebot',
+          text: 'This is a single player room! Get outta here! 😡'
+        });
+      }
     } else {
       socket.join(msg.roomId);
       console.log('Joined room:', msg.roomId);

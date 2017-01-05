@@ -1,6 +1,6 @@
 import auth, { logout, saveUser } from '../helpers/auth';
-import { CALL_API } from 'redux-api-middleware';
-import { SMSInvite, getUser, saveNewUser, shortenLink, getRankedRoom, enqueueRankedRoom } from '../helpers/http.js';
+// import { CALL_API } from 'redux-api-middleware';
+import { SMSInvite, getUser, shortenLink, getRankedRoom, enqueueRankedRoom } from '../helpers/http.js';
 import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 import * as shortid from 'shortid';
@@ -13,9 +13,9 @@ const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE';
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS';
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER';
 const SET_ROOM_TYPE = 'SET_ROOM_TYPE';
-const REQUEST = 'REQUEST';
-const SUCCESS = 'SUCCESS';
-const FAILURE = 'FAILURE';
+// const REQUEST = 'REQUEST';
+// const SUCCESS = 'SUCCESS';
+// const FAILURE = 'FAILURE';
 
 export function authUser (uid) {
   return function (dispatch) {
@@ -24,11 +24,11 @@ export function authUser (uid) {
       uid
     });
     getUser(uid)
-    .then(resp =>{
-         dispatch({
-          type: FETCHING_USER_DB,
-          payload: resp.data
-        });
+    .then(resp => {
+      dispatch({
+           type: FETCHING_USER_DB,
+           payload: resp.data
+         });
     });
   };
 }
@@ -71,38 +71,37 @@ export function fetchingUserSuccess (uid, user, timestamp) {
   };
 }
 
-function goToNextRoute(next) {
-  console.log("GOTO NEXT", next )
+function goToNextRoute (next) {
+  console.log('GOTO NEXT', next);
   browserHistory.push(`${next}`);
 }
 
-export function fetchAndHandleAuthedUser(next) {
-    return function(dispatch) {
-        dispatch(fetchingUser());
-        console.log("NEXT", next )      
-        return auth().then(({ user, credential }) => {
-                const userData = user.providerData[0];
-                const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
-                return dispatch(fetchingUserSuccess(user.uid, userInfo, Date.now()));
-            })
+export function fetchAndHandleAuthedUser (next) {
+  return function (dispatch) {
+      dispatch(fetchingUser());
+      console.log('NEXT', next);
+      return auth().then(({ user, credential }) => {
+          const userData = user.providerData[0];
+          const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
+          return dispatch(fetchingUserSuccess(user.uid, userInfo, Date.now()));
+        })
             .then(({ user }) => {
-              return saveUser(user)
+              return saveUser(user);
             })
             .then((resp) => {
-                if (resp) return dispatch(fetchUserDB(resp.data))
+              if (resp) return dispatch(fetchUserDB(resp.data));
             })
             .then((payload) => {
-                if (payload) {
-                     dispatch(authUser(payload.payload.auth))   
-                     goToNextRoute(next)
-                     console.log('END OF PROMISE CHAIN REACHED. HOORAY!~')                      
+              if (payload) {
+                  dispatch(authUser(payload.payload.auth));
+                  goToNextRoute(next);
+                  console.log('END OF PROMISE CHAIN REACHED. HOORAY!~');
                 }
             })
 
         .catch((error) => dispatch(fetchingUserFailure(error)));
     };
 }
-
 
 export function logoutAndUnauth () {
   return function (dispatch) {

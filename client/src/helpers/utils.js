@@ -10,8 +10,8 @@ let port = window.location.port;
 let host = window.location.hostname;
 let protocol = window.location.protocol;
 let Path = '/';
-let url;
-let options = { };
+// let url;
+// let options = { };
 
 if (protocol.indexOf('https') > -1) {
   protocol = 'wss:';

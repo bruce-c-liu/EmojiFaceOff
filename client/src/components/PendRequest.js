@@ -26,6 +26,7 @@ class PendRequest extends Component {
             item.Solutions.join(' + '),
             item.promptId
           ]);
+          return item;
         });
         this.setState({
           rows: storage
