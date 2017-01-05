@@ -17,11 +17,22 @@ const SUCCESS = 'SUCCESS';
 const FAILURE = 'FAILURE';
 
 export function authUser (uid) {
-  return {
-    type: AUTH_USER,
-    uid
-  };
+  return function(dispatch) {
+    dispatch({
+      type: AUTH_USER,
+      uid
+    })
+    getUser(uid)
+    .then(resp =>{
+        dispatch({
+          type: FETCHING_USER_DB,
+          payload: resp.data
+        })
+    })
+  }
+
 }
+
 
 function unauthUser () {
   return {
@@ -43,16 +54,14 @@ function fetchingUserFailure (error) {
   };
 }
 
-export function fetchUserDB (uid) {
-  console.log("fetchUserDB called", uid )    
-  return function(dispatch) {
-    getUser(uid)
-    .then( resp =>{
-       dispatch({
+
+
+// USED WHEN SAVING USER TO DB
+export function fetchUserDB (payload) {
+  console.log("fetchUserDB called", payload )    
+  return {
           type: FETCHING_USER_DB,
-          payload: resp.data
-      });
-    })
+          payload: payload
   }
 }
 
@@ -68,15 +77,20 @@ export function fetchingUserSuccess (uid, user, timestamp) {
 export function fetchAndHandleAuthedUser () {
   return function (dispatch) {
     dispatch(fetchingUser());
-    console.log('IN fetchAndHandleAuthedUser action');
-
     return auth().then(({user, credential}) => {
       const userData = user.providerData[0];
       const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
       return dispatch(fetchingUserSuccess(user.uid, userInfo, Date.now()));
     })
-    .then(({user}) => saveUser(user))
-    .then((user) => dispatch(authUser(user.uid)))
+    .then(({user}) =>  saveUser(user))
+    .then((resp) => {
+      if(resp) dispatch(fetchUserDB(resp.data))
+    })
+    .then((payload) =>{
+      if(payload) {
+        dispatch(authUser(payload.payload.auth))
+      }
+    })
     .catch((error) => dispatch(fetchingUserFailure(error)));
   };
 }

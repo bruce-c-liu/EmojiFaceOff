@@ -135,10 +135,11 @@ module.exports = {
       let imgUrl = req.body.imgUrl || '';
       let role = req.body.role || 'user';
       let auth = req.body.auth || '';
-
+      console.log('checking if user exists....')
       redClient.sismember('allUsers', `${displayName}:${auth}`)
       .then(result => {
         if (result) {
+          console.log('user exists...., searching for user in database', auth)
           models.User.findOne({
             where: {
               auth: auth
@@ -155,7 +156,7 @@ module.exports = {
           redClient.sadd('allUsers', `${displayName}:${auth}`)
           .then(result => {
             if (result) console.log(`${displayName} has been added to the redis cache`);
-            res.json(`${displayName} has been added to the redis cache`);
+            //res.json(`${displayName} has been added to the redis cache`);
           })
           .catch(err => {
             throw err;

@@ -22,7 +22,7 @@ class MainContainer extends Component {
         this.props.authUser(user.uid);
         this.props.fetchingUserSuccess(user.uid, userInfo, Date.now());
         if (this.props.location.pathname === '/') {
-          browserHistory.push(`/mode`);
+          //browserHistory.push(`/mode`);
         }
       } else {
         this.props.removeFetchingUser();

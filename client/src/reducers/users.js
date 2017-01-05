@@ -12,14 +12,12 @@ const initialState = {
   isFetching: true,
   error: '',
   isAuthed: false,
-  authedId: '',
-  coinBalance: 1000
+  authedId: ''
 };
 
 export default function users (state = initialState, action) {
   switch (action.type) { 
     case AUTH_USER :
-    console.log("HITTING AUTH_USER CASE",action.uid )   
       return {
         ...state,
         isAuthed: true,
@@ -50,6 +48,7 @@ export default function users (state = initialState, action) {
           profile: action.payload
         };
     case FETCHING_USER_DB:
+    console.log("case FETCHING_USER_DB", action.payload )    
       return {
         ...state,
         isFetching: false,
