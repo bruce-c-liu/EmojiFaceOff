@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import * as actionCreators from '../actions/actionCreators.js';
 // import { formatUserInfo } from '../helpers/utils';
 // import { firebaseAuth } from '../config/constants.js';
-
+import { browserHistory } from 'react-router';
 class AuthContainer extends Component {
 
   handleAuth (e) {
@@ -17,7 +17,18 @@ class AuthContainer extends Component {
 
   componentDidMount () {
     const nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
-    console.log('ROUTING', nextPath);
+    if (nextPath && this.checkLocalStorage()) {
+      browserHistory.push(`${nextPath}`);
+    }
+  }
+
+  checkLocalStorage () {
+    for (let key in window.localStorage) {
+      if (key.startsWith('firebase:authUser') && window.localStorage[key]) {
+        return true;
+      }
+      return false;
+    }
   }
 
   render () {
