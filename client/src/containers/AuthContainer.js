@@ -12,7 +12,6 @@ class AuthContainer extends Component {
   handleAuth (e) {
     e.preventDefault();
     this.props.fetchAndHandleAuthedUser()
-    .then(() => browserHistory.push('/mode'));
   }
 
   render () {

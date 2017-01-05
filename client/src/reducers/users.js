@@ -1,43 +1,22 @@
 const AUTH_USER = 'AUTH_USER';
 const UNAUTH_USER = 'UNAUTH_USER';
 const FETCHING_USER = 'FETCHING_USER';
+const FETCHING_USER_DB = 'FETCHING_USER_DB';
 const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE';
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS';
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER';
 
-const initialUserState = {
-  lastUpdated: 0,
-  info: {
-    name: '',
-    uid: '',
-    avatar: ''
 
-  }
-};
-
-function user (state = initialUserState, action) {
-  switch (action.type) {
-    case FETCHING_USER_SUCCESS :
-      return {
-        ...state,
-        info: action.user,
-        lastUpdated: action.timestamp
-      };
-    default :
-      return state;
-  }
-}
 
 const initialState = {
   isFetching: true,
   error: '',
   isAuthed: false,
-  authedId: '',
-  coinBalance: 1000
+  authedId: ''
 };
 
 export default function users (state = initialState, action) {
-  switch (action.type) {
+  switch (action.type) { 
     case AUTH_USER :
       return {
         ...state,
@@ -55,17 +34,6 @@ export default function users (state = initialState, action) {
         ...state,
         isFetching: true
       };
-    case FETCHING_USER_FAILURE:
-      return {
-        ...state,
-        isFetching: false,
-        error: action.error
-      };
-    case REMOVE_FETCHING_USER :
-      return {
-        ...state,
-        isFetching: false
-      };
     case FETCHING_USER_SUCCESS:
       return action.user === null
         ? {
@@ -77,8 +45,26 @@ export default function users (state = initialState, action) {
           ...state,
           isFetching: false,
           error: '',
-          profile: user(state[action.uid], action)
+          profile: action.payload
         };
+    case FETCHING_USER_DB:
+    console.log("case FETCHING_USER_DB", action.payload )    
+      return {
+        ...state,
+        isFetching: false,
+        profile: action.payload
+      };
+    case FETCHING_USER_FAILURE:
+      return {
+        ...state,
+        isFetching: false,
+        error: action.error
+      };
+    case REMOVE_FETCHING_USER :
+      return {
+        ...state,
+        isFetching: false
+      };
     default :
       return state;
   }

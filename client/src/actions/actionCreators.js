@@ -1,6 +1,6 @@
 import auth, { logout, saveUser } from '../helpers/auth';
 import { CALL_API } from 'redux-api-middleware';
-import { SMSInvite, saveNewUser, shortenLink } from '../helpers/http.js';
+import { SMSInvite, saveNewUser, shortenLink, getUser } from '../helpers/http.js';
 import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 import * as shortid from 'shortid';
@@ -8,6 +8,7 @@ import * as shortid from 'shortid';
 const AUTH_USER = 'AUTH_USER';
 const UNAUTH_USER = 'UNAUTH_USER';
 const FETCHING_USER = 'FETCHING_USER';
+const FETCHING_USER_DB = 'FETCHING_USER_DB';
 const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE';
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS';
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER';
@@ -16,11 +17,22 @@ const SUCCESS = 'SUCCESS';
 const FAILURE = 'FAILURE';
 
 export function authUser (uid) {
-  return {
-    type: AUTH_USER,
-    uid
-  };
+  return function(dispatch) {
+    dispatch({
+      type: AUTH_USER,
+      uid
+    })
+    getUser(uid)
+    .then(resp =>{
+        dispatch({
+          type: FETCHING_USER_DB,
+          payload: resp.data
+        })
+    })
+  }
+
 }
+
 
 function unauthUser () {
   return {
@@ -42,6 +54,17 @@ function fetchingUserFailure (error) {
   };
 }
 
+
+
+// USED WHEN SAVING USER TO DB
+export function fetchUserDB (payload) {
+  console.log("fetchUserDB called", payload )    
+  return {
+          type: FETCHING_USER_DB,
+          payload: payload
+  }
+}
+
 export function fetchingUserSuccess (uid, user, timestamp) {
   return {
     type: FETCHING_USER_SUCCESS,
@@ -54,15 +77,20 @@ export function fetchingUserSuccess (uid, user, timestamp) {
 export function fetchAndHandleAuthedUser () {
   return function (dispatch) {
     dispatch(fetchingUser());
-    console.log('IN fetchAndHandleAuthedUser action');
-
     return auth().then(({user, credential}) => {
       const userData = user.providerData[0];
       const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
       return dispatch(fetchingUserSuccess(user.uid, userInfo, Date.now()));
     })
-    .then(({user}) => saveUser(user))
-    .then((user) => dispatch(authUser(user.uid)))
+    .then(({user}) =>  saveUser(user))
+    .then((resp) => {
+      if(resp) dispatch(fetchUserDB(resp.data))
+    })
+    .then((payload) =>{
+      if(payload) {
+        dispatch(authUser(payload.payload.auth))
+      }
+    })
     .catch((error) => dispatch(fetchingUserFailure(error)));
   };
 }

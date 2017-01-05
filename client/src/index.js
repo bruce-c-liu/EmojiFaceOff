@@ -9,21 +9,22 @@ function checkAuth (nextState, replace) {
   if (store.getState().isFetching === true) {
     return;
   }
-
   const isAuthed = checkIfAuthed(store);
   const nextPathName = nextState.location.pathname;
-  if (nextPathName === '/' || nextPathName === '/login') {
-    if (isAuthed === true) {
+  console.log("nextState",nextState )
+    if(nextPathName === '/login'){
+      
+    }
+    if (isAuthed ) {
       console.log('AUTH IS TRUE FROM STORE');
 
-      replace('/mode');
+      //replace('/mode');
     }
-  } else {
-    if (isAuthed !== true) {
+   else {
       console.log('AUTH IS FALSE FROM STORE');
-      // replace('/nowhere')
+      //replace('/login')
     }
-  }
+  
 }
 
 ReactDOM.render(
