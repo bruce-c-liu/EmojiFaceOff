@@ -8,7 +8,7 @@ export default function auth () {
 
 export function checkIfAuthed (store) {
 	console.log("checkIfAuthed called", store.getState() )		
-  return store.getState().users.isAuthed
+  return store.getState().users.isAuthed === true
 }
 
 export function logout () {
