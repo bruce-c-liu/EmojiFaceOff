@@ -39,7 +39,7 @@ class MainContainer extends Component {
 
     return this.props.isFetching === true
                     ? <div className='loader'><p>Loading...</p></div>
-                    : <div className='inner-container'> {children}<Drawer opened={this.props.drawer} drawerAction={this.props.toggleDrawer}/></div>;
+                    : <div className='inner-container'> {children}<Drawer opened={this.props.drawer} logOut={this.props.logoutAndUnauth} drawerAction={this.props.toggleDrawer}/></div>;
   }
 
 }
