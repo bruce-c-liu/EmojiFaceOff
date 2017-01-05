@@ -138,8 +138,20 @@ module.exports = {
 
       redClient.sismember('allUsers', `${displayName}:${auth}`)
       .then(result => {
-        if (result) res.json('User already exists');
-        else {
+        if (result) {
+          models.User.findOne({
+            where: {
+              auth: auth
+            }
+          })
+          .then(result => {
+            res.json(result);
+          })
+          .catch(err => {
+            res.json(err);
+            throw err;
+          });
+        } else {
           redClient.sadd('allUsers', `${displayName}:${auth}`)
           .then(result => {
             if (result) console.log(`${displayName} has been added to the redis cache`);
@@ -157,7 +169,10 @@ module.exports = {
             auth: auth
           })
           .then(result => {
-            if (result) console.log(`${displayName} has been added to the PostGres`);
+            if (result) {
+              console.log(`${displayName} has been added to the PostGres`);
+              res.json(result);
+            }
           });
         }
       })
