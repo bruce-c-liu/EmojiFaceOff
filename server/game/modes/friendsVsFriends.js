@@ -171,6 +171,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
 
                       Final Scores:
                       ${finalRankings}
+                      
                       Press 'start' to begin a new game.`;
   io.sockets.in(msg.roomId).emit('newRound', 0);
   io.sockets.in(msg.roomId).emit('message', botResponse);
