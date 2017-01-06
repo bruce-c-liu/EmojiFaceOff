@@ -39,9 +39,19 @@ module.exports = {
 
     socket.emit('message', {
       user: 'ebot',
-      text: `Welcome to Emoji Face Off! 
-            💩 - talk each other while waiting for other friends to join.`
+      text: `\xa0\xa0🎉 Welcome to Emoji Face Off! 🎉\xa0\xa0
+            \xa0\xa0 👩 \xa0 Mode: Friends vs Friends \xa0👨`
     });
+    socket.emit('message', {
+      user: 'ebot',
+      text: `Please wait for other friends to join.
+
+             While waiting, you can:
+             1. 💩 - talk each other.
+             2. Get 💩 - 😶'ed.
+             3. Take a 💩.`
+    });
+
     console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
     socket.broadcast.to(msg.roomId).emit('message', {
       user: 'ebot',
@@ -79,10 +89,11 @@ module.exports = {
             console.log(rm.hints);
             rm.prompt = rm.prompts.pop();
             botResponse.text = `${msg.user} has started the game.
-                                Welcome to Emoji Face Off! 
+
+                                Welcome to Emoji Face Off!
                                 Are you doge enough?
 
-                                Round 1: Please translate [${rm.prompt}] into emoji form~`;
+                                Round 1: Emojify [${rm.prompt}]!`;
             rm.roundNum = 1;
             botResponse.roundNum = rm.roundNum;
 
@@ -120,7 +131,7 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
   botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum - 1}! 
-                      Round ${rm.roundNum}: [${rm.prompt}]`;
+                      Round ${rm.roundNum}: Emojify [${rm.prompt}]!`;
   botResponse.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
@@ -166,13 +177,13 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   // Reset all users'' scores
   io.sockets.in(msg.roomId).emit('score', null);
   // Emit winner/final scores.
-  botResponse.text = `Game Completed.
-                      The winner is ${winner.name} with ${winner.score} points!
+  botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
+                      ${winner.name} won with ${winner.score} points!
 
                       Final Scores:
                       ${finalRankings}
                       
-                      Press 'start' to begin a new game.`;
+                      Press 'start' to begin a new game. 🙌`;
   io.sockets.in(msg.roomId).emit('newRound', 0);
   io.sockets.in(msg.roomId).emit('message', botResponse);
   io.sockets.in(msg.roomId).emit('gameEnded');

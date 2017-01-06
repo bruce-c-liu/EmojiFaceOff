@@ -14,7 +14,7 @@ function addToOpenConnections (socket) {
   };
 }
 
-const TESTING_NUM_ROUNDS = 3;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
+const TESTING_NUM_ROUNDS = 1;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
 const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT DIFFICULTY OF PROMPTS
 function messageHandler (msg, io, socket) {
   if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
@@ -37,7 +37,7 @@ function joinRoomHandler (msg, io, socket) {
   } else if (msg.type === 'FRIENDS_VS_FRIENDS') {
     friendsVsFriends.joinRoomHandler(msg, io, socket);
   } else if (msg.type === 'RANKED') {
-    ranked.joinRoomHandler(msg, io, socket, TESTING_NUM_ROUNDS, RedisController);
+    ranked.joinRoomHandler(msg, io, socket, openConnections, TESTING_NUM_ROUNDS, RedisController);
   }
 
   // Initialize the room's data.

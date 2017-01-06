@@ -9,7 +9,7 @@ module.exports = {
     let botResponse = {user: 'ebot'};
 
     if (rm.roundNum === 0) {
-      botResponse.text = `Please wait while we search for a suitable opponent.`;
+      botResponse.text = `Please wait while we search for a suitable opponent. 😘`;
       socket.emit('message', botResponse);
     } else if (msg.text.codePointAt(0) > 0x03FF) {
       if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
@@ -30,7 +30,7 @@ module.exports = {
     }
   },
 
-  joinRoomHandler: function (msg, io, socket, TESTING_NUM_ROUNDS, RedisController) {
+  joinRoomHandler: function (msg, io, socket, openConnections, TESTING_NUM_ROUNDS, RedisController) {
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
     let numPlayers;
     // var clientsArray = Object.keys(rm.sockets);
@@ -59,7 +59,7 @@ module.exports = {
       console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
       socket.emit('message', {
         user: 'ebot',
-        text: 'Please wait while we search for a suitable opponent. 🤔'
+        text: 'Please wait while we search for a suitable opponent. 😘'
       });
       socket.broadcast.to(msg.roomId).emit('message', {
         user: 'ebot',
@@ -67,14 +67,18 @@ module.exports = {
       });
       numPlayers++;
       if (numPlayers === 2) {
-        startGame(msg, io, rm, TESTING_NUM_ROUNDS, RedisController);
+        startGame(msg, io, rm, openConnections, TESTING_NUM_ROUNDS, RedisController);
       }
     }
   }
 };
 
-function startGame (msg, io, rm, TESTING_NUM_ROUNDS, RedisController) {
+function startGame (msg, io, rm, openConnections, TESTING_NUM_ROUNDS, RedisController) {
   let botResponse = {user: 'ebot'};
+  let clients = io.nsps['/'].adapter.rooms[msg.roomId].sockets;
+  let clientsArray = Object.keys(clients);
+  rm.p1 = openConnections[clientsArray[0]];
+  rm.p2 = openConnections[clientsArray[1]];
   RedisController.getPrompts(rm.level)
     .then(filteredPrompts => {
       // randomly populate the room's "prompts" object from our library.
@@ -95,10 +99,13 @@ function startGame (msg, io, rm, TESTING_NUM_ROUNDS, RedisController) {
 
           console.log(rm.hints);
           rm.prompt = rm.prompts.pop();
-          botResponse.text = `Welcome to Emoji Face Off!
-                              You are playing [RANKED MODE].
+          botResponse.text = `\xa0\xa0🎉 Welcome to Emoji Face Off! 🎉\xa0\xa0
+                              \xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0 🏆\xa0 Mode: Ranked 🏆
                               
-                              Round 1: translate [${rm.prompt}] into emoji form~`;
+                              ${rm.p1.name} (RATING: ${rm.p1.elo})
+                              ${rm.p2.name} (RATING: ${rm.p2.elo})
+                              
+                              Round 1: Emojify [${rm.prompt}] !`;
           rm.roundNum = 1;
           botResponse.roundNum = rm.roundNum;
 
@@ -134,7 +141,7 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
   botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum - 1}! 
-                      Round ${rm.roundNum}: [${rm.prompt}]`;
+                      Round ${rm.roundNum}: Emojify [${rm.prompt}] !`;
   botResponse.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
@@ -186,14 +193,14 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   // Reset all users'' scores
   io.sockets.in(msg.roomId).emit('score', null);
   // Emit winner/final scores.
-  botResponse.text = `Game Complete.
+  botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
                       Congratulations to the winner ${winner.name}!
 
                       Final Scores:
-                      ${winner.name} 
+                      😎 ${winner.name} 😎
                       Score: ${winner.score} | Rating: ${winner.elo - changeInELO} => ${winner.elo} (+${changeInELO})
                       
-                      ${loser.name}
+                      😤 ${loser.name} 😤
                       Score: ${loser.score} | Rating: ${loser.elo + changeInELO} => ${loser.elo} (-${changeInELO})
 
                       Return to the Main Menu to begin a new game.`;
