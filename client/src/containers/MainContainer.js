@@ -16,10 +16,8 @@ class MainContainer extends Component {
         const userData = user.providerData[0];
         const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
         this.props.authUser(user.uid);
-        //this.props.fetchingUserSuccess(user.uid, userInfo, Date.now());
         this.props.setUserData(user.uid)
         if (this.props.location.pathname === '/') {
-          //browserHistory.push(`/mode`);
         }
       } else {
         this.props.removeFetchingUser();

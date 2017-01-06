@@ -8,22 +8,17 @@ class ChatHead extends Component {
 
     return (
       <div className='chat-head_active' >
-
-
-        <div className='flip-stat'>
-
-                  <CSSTransitionGroup
-                    transitionName='count'
-                    transitionEnterTimeout={250}
-                    transitionLeaveTimeout={250}
-                    >
-                    <span key={deets.round} >{deets.round}</span>
-                  </CSSTransitionGroup>
-                  <p> ROUND</p>
-                </div>
-
-        <div className='flip-stat'>
-
+          <div className='flip-stat'>
+                    <CSSTransitionGroup
+                      transitionName='count'
+                      transitionEnterTimeout={250}
+                      transitionLeaveTimeout={250}
+                      >
+                      <span key={deets.round} >{deets.round}</span>
+                    </CSSTransitionGroup>
+                    <p> ROUND</p>
+          </div>
+          <div className='flip-stat'>
                   <CSSTransitionGroup
                     transitionName='count'
                     transitionEnterTimeout={250}
@@ -32,9 +27,8 @@ class ChatHead extends Component {
                     <span key={deets.score} >{deets.score}</span>
                   </CSSTransitionGroup>
                   <p> SCORE</p>
-                </div>
-        <div className='flip-stat'>
-
+              </div>
+              <div className='flip-stat'>
                   <CSSTransitionGroup
                     transitionName='count'
                     transitionEnterTimeout={250}
@@ -43,8 +37,7 @@ class ChatHead extends Component {
                     <span key={deets.coinBalance} >{deets.coinBalance}</span>
                   </CSSTransitionGroup>
                   <p> COINS</p>
-                </div>
-
+              </div>
       </div>
     );
   }

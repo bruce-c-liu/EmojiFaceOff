@@ -7,6 +7,7 @@
 	background-color: $blue-pale;
 }
 .chat-head{
+	display: block;
 	width: 100%;
 	min-height: 60px;
 	display: flex;
@@ -14,6 +15,9 @@
 	align-items: center;
 	background-color: $orange;
 	padding: .25rem 1rem;
+	transition: min-height .2s ease;
+	overflow: hidden;
+
 }//chat-head
 .chat-head_inner{
 	width: 100%;
@@ -26,7 +30,7 @@
 	width: 100%;
 	min-height: 60px;
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
 	align-items: center;
 }//chat-head
 .flip-stat{
@@ -36,9 +40,10 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin-right: 1rem;
 	span{
 		font-family: 'Fredoka One', cursive;
-		font-size: 2.25rem;
+		font-size: 2.0rem;
 		font-weight: 400;
 		line-height: 1;
 	}
@@ -92,6 +97,11 @@
 	flex-grow: 1;
 	padding: 1rem 0;
 	overflow-y: auto; 
+	transform: translateY(0);
+	transition: transform .2s ease;
+	&.has-focus{
+		transform: translateY(-60px);
+	}
 }
 .chat-form_wrap{
 	width: 100%;
