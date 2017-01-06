@@ -29,15 +29,7 @@ client.on('connect', () => {
   })
   .then((result) => {
     if (result) console.log('Redis has finished intializing data.');
-    // if (result) return require('../db/Redis/RedisController.js').checkAnswer('buff', '&#x1F4AA;');
   })
-  // .then(result => {
-  //   console.log('is a member ', result);
-  //   if (result) return require('../db/Redis/RedisController.js').getPrompts();
-  // })
-  // .then(prompts => {
-  //   if (prompts) console.log('prompts...', prompts);
-  // })
   .catch(err => {
     throw err;
   });
