@@ -28,7 +28,8 @@ class Chat extends Component {
       joinedPlayer: null,
       joinedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
       announceBar: false,
-      coinBalance: 1000
+      coinBalance: 1000,
+      hasFocus: false
     };
     this.socket = io(socketURL);
 
@@ -135,6 +136,14 @@ class Chat extends Component {
       message: e.target.value
     });
   }
+  handleFocus(){
+    this.setState({
+      hasFocus: true
+    });
+  }
+  toggleMenu(){
+    this.props.toggleDrawer()
+  }
 
   startGame (e) {
     console.log('startGame');
@@ -158,7 +167,8 @@ class Chat extends Component {
     this.socket.emit('message', userMessage);
     this.props.playSFX('message');
     this.setState({
-      message: ''
+      message: '',
+      hasFocus: false
     });
   }
   requestHint (e) {
@@ -190,18 +200,31 @@ class Chat extends Component {
       'player-announce': true,
       'is-showing': this.state.announceBar
     });
+    const chatMsgClass = classNames({
+      'chat-messages': true,
+      'has-focus': this.state.hasFocus
+    });
+    const hamburgerClass = classNames({
+      'hamburger hamburger--elastic': true,
+      'is-active': this.props.ui.drawer
+    })
 
     return (
 
-      <div className='chat-view'>
-        <div className='chat-head'>
+      <div className="chat-view">
+        <div className="chat-head">
           {chatHeadElements}
+          <button className={hamburgerClass}  onClick={this.toggleMenu.bind(this)} type="button" >
+            <span className="hamburger-box">
+              <span className="hamburger-inner"></span>
+            </span>
+          </button> 
         </div>
         <div className={annouceClass}>
           <div className='bubble-name' style={avatarBG} />
           <p>{this.state.joinedPlayer} has joined the challenge!</p>
         </div>
-        <div className='chat-messages' ref='chatScroll'>
+        <div className={chatMsgClass} ref='chatScroll'>
           {chatList}
         </div>
         <div className='hint-bar'>
@@ -212,6 +235,7 @@ class Chat extends Component {
           <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
             <input type='text' value={this.state.message}
               onChange={this.handleChange.bind(this)}
+              onFocus={this.handleFocus.bind(this)}
               placeholder='Your Message Here' />
             <input className='btn-input' type='submit' value='Submit' disabled={this.state.message.length <= 0} />
           </form>
