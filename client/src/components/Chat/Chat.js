@@ -97,8 +97,7 @@ class Chat extends Component {
     console.log("CHAT IS MOUNTING" )
     this.setState({
       roomId: this.props.params.roomID,
-      // user: this.props.users.profile.displayName
-      user: 'TEST USER'
+      user: this.props.users.profile.displayName
     });
     console.log(this.props.users);
   }

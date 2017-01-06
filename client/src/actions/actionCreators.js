@@ -1,5 +1,4 @@
-import auth, { logout, saveUser } from '../helpers/auth';
-// import { CALL_API } from 'redux-api-middleware';
+import auth, { logout, saveUserFirebase } from '../helpers/auth';
 import { SMSInvite, getUser,saveNewUser, shortenLink, getRankedRoom, enqueueRankedRoom } from '../helpers/http.js';
 import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
@@ -29,6 +28,7 @@ export function authUser (uid) {
         payload: resp.data
       });
     });
+
   };
 }
 
@@ -98,7 +98,12 @@ export function postUserData(user){
         type: SET_USER_DATA,
         payload: user.data
       });
-      //console.log("fetchAndHandleAuthedUser SAVE USER", user.data)
+      let userFire = {
+        'name': user.data.displayName,
+        'uid': user.data.auth,
+        'avatar':  user.data.imgUrl
+      }
+      saveUserFirebase(userFire)
     })
   }
 }

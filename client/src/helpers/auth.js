@@ -23,7 +23,7 @@ export function logout () {
 // }
 
 
-export function saveUser (user) {
+export function saveUserFirebase (user) {
   return ref.child(`users/${user.uid}`).set(user)
 
 }
