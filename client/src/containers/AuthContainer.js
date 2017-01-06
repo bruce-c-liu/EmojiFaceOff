@@ -17,12 +17,11 @@ class AuthContainer extends Component {
 
   componentWillUpdate() {
     let nextPath;
-    if(this.props.routing.locationBeforeTransitions.state){
-      nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname
+    if (this.props.routing.locationBeforeTransitions.state) {
+      nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
     } else {
       nextPath = null;
     }
-    
     if (nextPath && this.checkLocalStorage()) {
       //browserHistory.push(`${nextPath}`);
       this.props.history.push(`${nextPath}`);

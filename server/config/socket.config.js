@@ -34,7 +34,7 @@ function joinRoomHandler (msg, io, socket) {
 
   if (msg.type === 'SINGLE_PLAYER') {
     singlePlayer.joinRoomHandler(msg, io, socket);
-  } else if (msg.type === 'FRIENDS_VS_FRIENDS' || msg.type === 'FRIEND_LINK') {
+  } else if (msg.type === 'FRIENDS_VS_FRIENDS') {
     friendsVsFriends.joinRoomHandler(msg, io, socket);
   } else if (msg.type === 'RANKED') {
     ranked.joinRoomHandler(msg, io, socket, TESTING_NUM_ROUNDS, RedisController);
