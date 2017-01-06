@@ -141,6 +141,12 @@ body {
   z-index: 10;
   box-shadow: 0px 3px 14px 7px rgba(0, 0, 0, 0.52); }
 
+.safari-mobile #root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%; }
+
 .outer-container {
   height: 100%;
   width: 100%;
@@ -601,7 +607,7 @@ nav.menu a {
 .brand-title {
   font-family: 'Fredoka One', cursive;
   color: #FF6B6B;
-  font-size: 3.5rem;
+  font-size: 3.2rem;
   text-align: center; }
 
 .avatar {
