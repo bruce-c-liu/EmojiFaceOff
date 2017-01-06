@@ -16,6 +16,7 @@ body {
   align-items: center;
   background-color: $gray-dk;
   background-size: cover;
+  overflow: hidden;
 }
 #root {
   position: relative;

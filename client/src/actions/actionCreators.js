@@ -52,15 +52,6 @@ function fetchingUserFailure (error) {
   };
 }
 
-// USED WHEN SAVING USER TO DB
-// export function fetchUserDB (payload) {
-//   console.log('fetchUserDB called', payload);
-//   return {
-//     type: FETCHING_USER_DB,
-//     payload: payload
-//   };
-// }
-
 export function fetchingUserSuccess (uid, user, timestamp) {
   return {
     type: FETCHING_USER_SUCCESS,
@@ -114,20 +105,8 @@ export function fetchAndHandleAuthedUser () {
     return auth().then(({ user, credential }) => {
       const userData = user.providerData[0];
       const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
-      // POST to DB => 
       return dispatch(postUserData(userInfo))
-      //return dispatch(fetchingUserSuccess(user.uid, userInfo, Date.now()));
     })
-    
-    // .then((resp) => {
-    //   console.log("fetchAndHandleAuthedUser", resp)
-    //   // if (resp) return dispatch(fetchUserDB(resp.data));
-    // })
-    // .then((payload) => {
-    //   if (payload) {
-    //     dispatch(authUser(payload.payload.auth));
-    //   }
-    // })
     .catch((error) => dispatch(fetchingUserFailure(error)));
   };
 }
@@ -245,6 +224,3 @@ export function toggleDrawer () {
   };
 }
 
-function _checkLocalUser(){
-
-}

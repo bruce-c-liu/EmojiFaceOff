@@ -16,17 +16,22 @@ class AuthContainer extends Component {
   }
 
   componentWillUpdate() {
-    let nextPath;
-    if (this.props.routing.locationBeforeTransitions.state) {
-      nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
-    } else {
-      nextPath = null;
-    }
-    if (nextPath && this.checkLocalStorage()) {
-      //browserHistory.push(`${nextPath}`);
-      this.props.history.push(`${nextPath}`);
-    }
+      let nextPath;
+      if (this.props.routing.locationBeforeTransitions.state) {
+          nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
+      } else {
+          nextPath = null;
+      }
+      if (nextPath && this.checkLocalStorage()) {
+          //browserHistory.push(`${nextPath}`);
+          if (nextPath === '/') {
+              this.props.history.push(`/mode`);
+          } else {
+              this.props.history.push(`${nextPath}`);
+          }
+      }
   }
+
 
   checkLocalStorage () {
     for (let key in window.localStorage) {
