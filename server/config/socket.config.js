@@ -1,6 +1,6 @@
 const RedisController = require('../db/Redis/RedisController.js');
 const RankedQueue = require('../game/helpers/rankedQueue.js');
-const singlePlayer = require('../game/modes/singlePlayer.js');
+const singlePlayer = require('../game/modes/singleplayer.js');
 const friendsVsFriends = require('../game/modes/friendsVsFriends.js');
 const ranked = require('../game/modes/ranked.js');
 
@@ -34,7 +34,7 @@ function joinRoomHandler (msg, io, socket) {
 
   if (msg.type === 'SINGLE_PLAYER') {
     singlePlayer.joinRoomHandler(msg, io, socket);
-  } else if (msg.type === 'FRIENDS_VS_FRIENDS' || msg.type === 'FRIEND_LINK') {
+  } else if (msg.type === 'FRIENDS_VS_FRIENDS') {
     friendsVsFriends.joinRoomHandler(msg, io, socket);
   } else if (msg.type === 'RANKED') {
     ranked.joinRoomHandler(msg, io, socket, TESTING_NUM_ROUNDS, RedisController);

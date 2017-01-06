@@ -98,17 +98,20 @@ class Chat extends Component {
       roomId: this.props.params.roomID,
       user: this.props.users.profile.displayName
     });
+    console.log(this.props.users);
   }
 
   componentDidMount () {
-    this.socket.emit('joinRoom', {
+    let obj = {
       roomId: this.state.roomId,
       user: this.state.user,
       elo: this.props.users.profile.ELO,
       fbId: this.props.users.profile.auth,
       avatar: this.props.users.profile.imgUrl,
-      type: this.props.session.roomType ? this.props.session.roomType : 'FRIEND_LINK'
-    });
+      type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS'
+    };
+    console.log('COMPONENT DID MOUNT Pt.2', obj);
+    this.socket.emit('joinRoom', obj);
   }
 
   componentDidUpdate () {
