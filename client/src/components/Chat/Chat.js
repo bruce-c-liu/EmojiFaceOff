@@ -113,7 +113,7 @@ class Chat extends Component {
 
   componentDidUpdate () {
     const node = this.refs.chatScroll;
-    node.scrollTop = node.scrollHeight + 200;
+    node.scrollTop = node.scrollHeight + 300;
   }
 
   componentWillUnmount () {

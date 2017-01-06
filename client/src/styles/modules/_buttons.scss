@@ -38,11 +38,15 @@ button{
   padding: .5rem 1rem;
   background-color: $orange;
   color: $white;
+  font-size: .85rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
   border-radius: 4px;
   border: none;
   outline: none;
+  opacity: 1;
+  -webkit-appearance: none;
 }
 
 .btn-login{

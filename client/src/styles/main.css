@@ -199,11 +199,15 @@ button {
   padding: .5rem 1rem;
   background-color: #FF6B6B;
   color: #FFFFFF;
+  font-size: .85rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
   border-radius: 4px;
   border: none;
-  outline: none; }
+  outline: none;
+  opacity: 1;
+  -webkit-appearance: none; }
 
 .btn-login {
   width: 95%;
@@ -462,6 +466,7 @@ nav.menu a {
   padding: .5rem 1rem;
   background-color: #FF6B6B;
   color: #FFFFFF;
+  font-weight: 600;
   border: 1px solid #FFFFFF;
   border-radius: 4px; }
 
