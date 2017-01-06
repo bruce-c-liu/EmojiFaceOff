@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import { RouteTransition } from 'react-router-transition';
-import {spring} from 'react-motion'
 import main from '../styles/main.css';
-import datatable from '../../node_modules/fixed-data-table/dist/fixed-data-table.css';
 import auth from '../helpers/auth.js';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
-import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { formatUserInfo } from '../helpers/utils';
 import { firebaseAuth } from '../config/constants.js';
@@ -20,7 +16,8 @@ class MainContainer extends Component {
         const userData = user.providerData[0];
         const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
         this.props.authUser(user.uid);
-        this.props.fetchingUserSuccess(user.uid, userInfo, Date.now());
+        //this.props.fetchingUserSuccess(user.uid, userInfo, Date.now());
+        this.props.setUserData(user.uid)
         if (this.props.location.pathname === '/') {
           //browserHistory.push(`/mode`);
         }

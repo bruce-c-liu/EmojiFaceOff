@@ -11,12 +11,14 @@ class RequestPrompt extends Component {
     this.state = {
       reqPrompt: '',
       reqAnswer: '',
-      user: ''
+      authedId: ''
     };
   }
 
-  componentWillMount () {
-    // console.log(this.props);
+  componentDidMount () {
+    this.setState({
+      authedId: this.props.users.authedId
+    });
   }
 
   handleChangePrompt (e) {
@@ -45,11 +47,8 @@ class RequestPrompt extends Component {
                         });
     if (answerOptions.length > 0 && this.state.reqPrompt.length > 0) {
       console.log(`Sending to the server => prompt: ${this.state.reqPrompt} ; answers: `, answerOptions);
-      /**
-       * USER NEEDS TO BE CHANGED
-       */
       axios.post('/api/requestPrompt', {
-        userFbId: '8008135',
+        userFbId: this.state.authedId,
         prompt: this.state.reqPrompt.toLowerCase(),
         answers: answerOptions
       })
@@ -69,18 +68,25 @@ class RequestPrompt extends Component {
   render () {
     return (
       <div className='inner-container is-center '>
-        <Header />
-        <form className='RequestPrompt-form' onSubmit={this.requestNewPrompt.bind(this)}>
-          <input className='reqPrompt'
-            type='text' value={this.state.reqPrompt}
-            onChange={this.handleChangePrompt.bind(this)}
-            placeholder='Your custom prompt' />
-          <input className='reqAnswer'
-            type='text' value={this.state.reqAnswer}
-            onChange={this.handleChangeAnswer.bind(this)}
-            placeholder='Answer to prompt' />
-          <input className='btn-input' type='submit' value='Submit' disabled={this.state.reqPrompt.length <= 0} />
-        </form>
+
+        <div className='request-prompt_wrap'>
+          <h1>Have any clever suggestions for prompts?</h1>
+          <form className='RequestPrompt-form' onSubmit={this.requestNewPrompt.bind(this)}>
+            <h3>Send us your requests</h3>
+            <h3>Get 200 coins on approval!</h3>
+            <input className='reqPrompt'
+              type='text' value={this.state.reqPrompt}
+              onChange={this.handleChangePrompt.bind(this)}
+              placeholder='Your custom prompt. For example: happy' />
+            <p />
+            <input className='reqAnswer'
+              type='text' value={this.state.reqAnswer}
+              onChange={this.handleChangeAnswer.bind(this)}
+              placeholder='Answer to prompt: 😀' />
+            <p />
+            <input className='btn-input' type='submit' value='Submit' disabled={this.state.reqPrompt.length <= 0} />
+          </form>
+        </div>
       </div>
     );
   }

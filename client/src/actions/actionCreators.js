@@ -13,9 +13,8 @@ const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE';
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS';
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER';
 const SET_ROOM_TYPE = 'SET_ROOM_TYPE';
-// const REQUEST = 'REQUEST';
-// const SUCCESS = 'SUCCESS';
-// const FAILURE = 'FAILURE';
+const SET_USER_DATA = 'SET_USER_DATA';
+
 
 export function authUser (uid) {
   return function (dispatch) {
@@ -71,10 +70,24 @@ export function fetchingUserSuccess (uid, user, timestamp) {
   };
 }
 
-export function fetchAndHandleAuthedUser (next) {
+export function setUserData(uid){
+  return function (dispatch) {
+     dispatch({
+      type: FETCHING_USER,
+    });
+    getUser(uid)
+    .then(resp => {
+      dispatch({
+        type: SET_USER_DATA,
+        payload: resp.data
+      });
+    });
+  }
+}
+
+export function fetchAndHandleAuthedUser () {
   return function (dispatch) {
     dispatch(fetchingUser());
-    console.log('NEXT', next);
     return auth().then(({ user, credential }) => {
       const userData = user.providerData[0];
       const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
@@ -207,4 +220,8 @@ export function toggleDrawer () {
   return {
     type: 'DRAWER'
   };
+}
+
+function _checkLocalUser(){
+
 }
