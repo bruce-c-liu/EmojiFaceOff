@@ -66,8 +66,7 @@ module.exports = {
 
             console.log('Hints Object:', rm.hints);
             rm.prompt = rm.prompts.pop();
-            botResponse.text = `Round 1
-                                Please translate [${rm.prompt}] into emoji form~`;
+            botResponse.text = `Round 1: What's [${rm.prompt}] in emoji form?!`;
             rm.roundNum = 1;
             botResponse.roundNum = rm.roundNum;
 
