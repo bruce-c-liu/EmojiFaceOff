@@ -15,11 +15,15 @@ export function logout () {
   return firebaseAuth().signOut();
 }
 
+// export function saveUser (user) {
+//   return ref.child(`users/${user.uid}`).set(user)
+//     .then((newUser) => {
+//       if (newUser) return saveNewUser(newUser);
+//     });
+// }
+
+
 export function saveUser (user) {
-  return ref.child(`users/${user.uid}`)
-    .set(user)
-    // .then(() => user)
-    .then((newUser) => {
-      if (newUser) return saveNewUser(newUser);
-    });
+  return ref.child(`users/${user.uid}`).set(user)
+
 }
