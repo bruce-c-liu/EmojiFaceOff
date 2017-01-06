@@ -95,7 +95,7 @@ class Chat extends Component {
   }
 
   componentWillMount () {
-    console.log("CHAT IS MOUNTING" )
+    console.log('CHAT IS MOUNTING');
     this.setState({
       roomId: this.props.params.roomID,
       user: this.props.users.profile.displayName
@@ -122,7 +122,7 @@ class Chat extends Component {
   }
 
   componentWillUnmount () {
-
+    this.socket.disconnect();
   }
 
   announceNewPlayer () {
@@ -136,13 +136,13 @@ class Chat extends Component {
       message: e.target.value
     });
   }
-  handleFocus(){
+  handleFocus () {
     this.setState({
       hasFocus: true
     });
   }
-  toggleMenu(){
-    this.props.toggleDrawer()
+  toggleMenu () {
+    this.props.toggleDrawer();
   }
 
   startGame (e) {
@@ -207,18 +207,18 @@ class Chat extends Component {
     const hamburgerClass = classNames({
       'hamburger hamburger--elastic': true,
       'is-active': this.props.ui.drawer
-    })
+    });
 
     return (
 
-      <div className="chat-view">
-        <div className="chat-head">
+      <div className='chat-view'>
+        <div className='chat-head'>
           {chatHeadElements}
-          <button className={hamburgerClass}  onClick={this.toggleMenu.bind(this)} type="button" >
-            <span className="hamburger-box">
-              <span className="hamburger-inner"></span>
+          <button className={hamburgerClass} onClick={this.toggleMenu.bind(this)} type='button' >
+            <span className='hamburger-box'>
+              <span className='hamburger-inner' />
             </span>
-          </button> 
+          </button>
         </div>
         <div className={annouceClass}>
           <div className='bubble-name' style={avatarBG} />
