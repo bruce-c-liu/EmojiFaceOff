@@ -98,8 +98,7 @@ function startGame (msg, io, rm, TESTING_NUM_ROUNDS, RedisController) {
           botResponse.text = `Welcome to Emoji Face Off!
                               You are playing [RANKED MODE].
                               
-                              Round 1
-                              Please translate [${rm.prompt}] into emoji form~`;
+                              Round 1: translate [${rm.prompt}] into emoji form~`;
           rm.roundNum = 1;
           botResponse.roundNum = rm.roundNum;
 
@@ -134,10 +133,8 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  botResponse.text = `Good job, ${msg.user}! 
-
-                      Round ${rm.roundNum}
-                      Please translate [${rm.prompt}] into emoji form~`;
+  botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum - 1}! 
+                      Round ${rm.roundNum}: [${rm.prompt}]`;
   botResponse.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
@@ -172,7 +169,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   let loser = findLoser(p1, p2);
   // ELO changes
   let expectedScoreP1 = elo.expectedScoreP1(winner.elo, loser.elo);
-  let changeInELO = elo.changeInELO(winner.elo, expectedScoreP1, 1);
+  let changeInELO = Math.round(elo.changeInELO(winner.elo, expectedScoreP1, 1));
 
   loser.elo = loser.elo - changeInELO;
   if (loser.elo < 0) {
@@ -193,8 +190,11 @@ function endGame (botResponse, msg, io, rm, openConnections) {
                       Congratulations to the winner ${winner.name}!
 
                       Final Scores:
-                      ${winner.name} (Score: ${winner.score} | Rating: ${winner.elo - changeInELO} -> ${winner.elo})
-                      ${loser.name} (Score: ${loser.score} | Rating: ${loser.elo + changeInELO} -> ${loser.elo})
+                      ${winner.name} 
+                      Score: ${winner.score} | Rating: ${winner.elo - changeInELO} => ${winner.elo} (+${changeInELO})
+                      
+                      ${loser.name}
+                      Score: ${loser.score} | Rating: ${loser.elo + changeInELO} => ${loser.elo} (-${changeInELO})
 
                       Return to the Main Menu to begin a new game.`;
   io.sockets.in(msg.roomId).emit('newRound', 0);

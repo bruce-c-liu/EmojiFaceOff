@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 // import auth from '../helpers/auth.js';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions/actionCreators.js';
 // import { formatUserInfo } from '../helpers/utils';
 // import { firebaseAuth } from '../config/constants.js';
-import { browserHistory } from 'react-router';
+
 class AuthContainer extends Component {
 
   handleAuth (e) {
@@ -15,23 +15,22 @@ class AuthContainer extends Component {
     this.props.fetchAndHandleAuthedUser(nextPath);
   }
 
-  componentWillUpdate() {
-      let nextPath;
-      if (this.props.routing.locationBeforeTransitions.state) {
-          nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
+  componentWillUpdate () {
+    let nextPath;
+    if (this.props.routing.locationBeforeTransitions.state) {
+      nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
+    } else {
+      nextPath = null;
+    }
+    if (nextPath && this.checkLocalStorage()) {
+          // browserHistory.push(`${nextPath}`);
+      if (nextPath === '/') {
+        this.props.history.push(`/mode`);
       } else {
-          nextPath = null;
+        this.props.history.push(`${nextPath}`);
       }
-      if (nextPath && this.checkLocalStorage()) {
-          //browserHistory.push(`${nextPath}`);
-          if (nextPath === '/') {
-              this.props.history.push(`/mode`);
-          } else {
-              this.props.history.push(`${nextPath}`);
-          }
-      }
+    }
   }
-
 
   checkLocalStorage () {
     for (let key in window.localStorage) {

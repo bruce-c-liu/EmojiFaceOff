@@ -40,7 +40,6 @@ module.exports = {
     socket.emit('message', {
       user: 'ebot',
       text: `Welcome to Emoji Face Off! 
-
             💩 - talk each other while waiting for other friends to join.`
     });
     console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
@@ -80,12 +79,10 @@ module.exports = {
             console.log(rm.hints);
             rm.prompt = rm.prompts.pop();
             botResponse.text = `${msg.user} has started the game.
-
                                 Welcome to Emoji Face Off! 
                                 Are you doge enough?
 
-                                Round 1
-                                Please translate [${rm.prompt}] into emoji form~`;
+                                Round 1: Please translate [${rm.prompt}] into emoji form~`;
             rm.roundNum = 1;
             botResponse.roundNum = rm.roundNum;
 
@@ -122,10 +119,8 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  botResponse.text = `Good job, ${msg.user}! 
-
-                      Round ${rm.roundNum}
-                      Please translate [${rm.prompt}] into emoji form~`;
+  botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum - 1}! 
+                      Round ${rm.roundNum}: [${rm.prompt}]`;
   botResponse.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);

@@ -6,12 +6,12 @@ module.exports = {
   },
 
   adjustedELO: function (currElo, expectedScore, actualScore) {
-    let k = 32; // A higher k factor means higher rating volatility.
+    let k = 50; // A higher k factor means higher rating volatility.
     return currElo + k * (actualScore - expectedScore);
   },
 
   changeInELO: function (currElo, expectedScore, actualScore) {
-    let k = 32; // A higher k factor means higher rating volatility.
+    let k = 50; // A higher k factor means higher rating volatility.
     return k * (actualScore - expectedScore);
   },
 
