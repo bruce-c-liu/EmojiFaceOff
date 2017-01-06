@@ -94,6 +94,7 @@ class Chat extends Component {
   }
 
   componentWillMount () {
+    console.log("CHAT IS MOUNTING" )
     this.setState({
       roomId: this.props.params.roomID,
       user: this.props.users.profile.displayName
@@ -116,7 +117,7 @@ class Chat extends Component {
 
   componentDidUpdate () {
     const node = this.refs.chatScroll;
-    node.scrollTop = node.scrollHeight + 200;
+    node.scrollTop = node.scrollHeight + 300;
   }
 
   componentWillUnmount () {

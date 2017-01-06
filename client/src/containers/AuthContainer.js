@@ -15,7 +15,7 @@ class AuthContainer extends Component {
     this.props.fetchAndHandleAuthedUser(nextPath);
   }
 
-  componentDidMount () {
+  componentWillUpdate() {
     let nextPath;
     if (this.props.routing.locationBeforeTransitions.state) {
       nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
@@ -23,7 +23,8 @@ class AuthContainer extends Component {
       nextPath = null;
     }
     if (nextPath && this.checkLocalStorage()) {
-      browserHistory.push(`${nextPath}`);
+      //browserHistory.push(`${nextPath}`);
+      this.props.history.push(`${nextPath}`);
     }
   }
 

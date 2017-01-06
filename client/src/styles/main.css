@@ -141,6 +141,12 @@ body {
   z-index: 10;
   box-shadow: 0px 3px 14px 7px rgba(0, 0, 0, 0.52); }
 
+.safari-mobile #root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%; }
+
 .outer-container {
   height: 100%;
   width: 100%;
@@ -193,11 +199,15 @@ button {
   padding: .5rem 1rem;
   background-color: #FF6B6B;
   color: #FFFFFF;
+  font-size: .85rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
   border-radius: 4px;
   border: none;
-  outline: none; }
+  outline: none;
+  opacity: 1;
+  -webkit-appearance: none; }
 
 .btn-login {
   width: 95%;
@@ -456,6 +466,7 @@ nav.menu a {
   padding: .5rem 1rem;
   background-color: #FF6B6B;
   color: #FFFFFF;
+  font-weight: 600;
   border: 1px solid #FFFFFF;
   border-radius: 4px; }
 
@@ -601,7 +612,7 @@ nav.menu a {
 .brand-title {
   font-family: 'Fredoka One', cursive;
   color: #FF6B6B;
-  font-size: 3.5rem;
+  font-size: 3.2rem;
   text-align: center; }
 
 .avatar {

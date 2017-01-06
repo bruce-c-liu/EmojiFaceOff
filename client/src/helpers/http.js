@@ -21,13 +21,13 @@ export function SMSInvite (userName, roomUrl, numbers) {
 }
 
 export function saveNewUser (newUser) {
-  console.log('SAVE NEW USER', newUser);
-
+  // console.log('SAVE NEW USER', newUser);
   return axios.post('/api/users', {
     displayName: newUser.name,
     imgUrl: newUser.avatar,
     auth: newUser.uid
   })
+    // .then((user) => {return user;})
     .catch((err) => {
       console.log(err);
     });

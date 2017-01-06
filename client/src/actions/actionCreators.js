@@ -1,6 +1,5 @@
-import auth, { logout, saveUser } from '../helpers/auth';
-// import { CALL_API } from 'redux-api-middleware';
-import { SMSInvite, getUser, shortenLink, getRankedRoom, enqueueRankedRoom } from '../helpers/http.js';
+import auth, { logout, saveUserFirebase } from '../helpers/auth';
+import { SMSInvite, getUser,saveNewUser, shortenLink, getRankedRoom, enqueueRankedRoom } from '../helpers/http.js';
 import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 import * as shortid from 'shortid';
@@ -29,6 +28,7 @@ export function authUser (uid) {
         payload: resp.data
       });
     });
+
   };
 }
 
@@ -53,13 +53,13 @@ function fetchingUserFailure (error) {
 }
 
 // USED WHEN SAVING USER TO DB
-export function fetchUserDB (payload) {
-  console.log('fetchUserDB called', payload);
-  return {
-    type: FETCHING_USER_DB,
-    payload: payload
-  };
-}
+// export function fetchUserDB (payload) {
+//   console.log('fetchUserDB called', payload);
+//   return {
+//     type: FETCHING_USER_DB,
+//     payload: payload
+//   };
+// }
 
 export function fetchingUserSuccess (uid, user, timestamp) {
   return {
@@ -85,25 +85,49 @@ export function setUserData(uid){
   }
 }
 
+export function postUserData(user){
+  console.log('postUserData', user)
+  return function (dispatch) {
+     dispatch({
+      type: FETCHING_USER,
+    });
+    saveNewUser(user)
+    .then(( user) => {
+      console.log('please get here saveNewUser', user.data)
+      dispatch({
+        type: SET_USER_DATA,
+        payload: user.data
+      });
+      let userFire = {
+        'name': user.data.displayName,
+        'uid': user.data.auth,
+        'avatar':  user.data.imgUrl
+      }
+      saveUserFirebase(userFire)
+    })
+  }
+}
+
 export function fetchAndHandleAuthedUser () {
   return function (dispatch) {
     dispatch(fetchingUser());
     return auth().then(({ user, credential }) => {
       const userData = user.providerData[0];
       const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
-      return dispatch(fetchingUserSuccess(user.uid, userInfo, Date.now()));
+      // POST to DB => 
+      return dispatch(postUserData(userInfo))
+      //return dispatch(fetchingUserSuccess(user.uid, userInfo, Date.now()));
     })
-    .then(({ user }) => {
-      return saveUser(user);
-    })
-    .then((resp) => {
-      if (resp) return dispatch(fetchUserDB(resp.data));
-    })
-    .then((payload) => {
-      if (payload) {
-        dispatch(authUser(payload.payload.auth));
-      }
-    })
+    
+    // .then((resp) => {
+    //   console.log("fetchAndHandleAuthedUser", resp)
+    //   // if (resp) return dispatch(fetchUserDB(resp.data));
+    // })
+    // .then((payload) => {
+    //   if (payload) {
+    //     dispatch(authUser(payload.payload.auth));
+    //   }
+    // })
     .catch((error) => dispatch(fetchingUserFailure(error)));
   };
 }
@@ -173,7 +197,6 @@ export function sendSMS (userName, roomUrl, numbers) {
        dispatch({
          type: 'IS_LOADED'
        });
-       browserHistory.push('/onboard');
      });
   };
 }
