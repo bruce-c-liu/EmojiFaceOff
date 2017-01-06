@@ -222,7 +222,7 @@ class Chat extends Component {
         </div>
         <div className={annouceClass}>
           <div className='bubble-name' style={avatarBG} />
-          <p>{this.state.joinedPlayer} has joined the challenge!</p>
+          <p><span>{this.state.joinedPlayer}</span> has joined the challenge!</p>
         </div>
         <div className={chatMsgClass} ref='chatScroll'>
           {chatList}
