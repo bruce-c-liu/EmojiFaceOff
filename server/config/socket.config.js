@@ -91,7 +91,7 @@ module.exports = (server) => {
         roomId (string): which room user is requesting to join,
         type (string): type of room ('SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED')
       } */
-    socket.on('joinRoom', msg => {
+    socket.on('joinOrCreateRoom', msg => {
       joinRoomHandler(msg, io, socket);
     });
 
