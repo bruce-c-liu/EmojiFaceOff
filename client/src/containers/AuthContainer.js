@@ -14,24 +14,30 @@ class AuthContainer extends Component {
     this.props.fetchAndHandleAuthedUser();
   }
 
-  componentWillUpdate () {
-    let nextPath;
-    console.log('component will update');
-    if (this.props.routing.locationBeforeTransitions.state) {
-      nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
-    } else nextPath = '/login';
+  componentWillUpdate() {
+      let nextPath;
+      console.log('component will update AUTH', this.props.routing.locationBeforeTransitions.state);
+      if (this.props.routing.locationBeforeTransitions.state) {
+          nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
+      } else nextPath = '/login';
 
-    if (this.checkLocalStorage()) {
-      if (nextPath === '/' || nextPath === '/login') this.props.history.push(`/mode`);
-      else this.props.history.push(`${nextPath}`);
-    }
+      if (this.checkLocalStorage()) {
+          console.log("LOCAL STORAGE NOAUTH:", nextPath)
+          if (nextPath === '/' || nextPath === '/login') this.props.history.push(`/mode`);
+          //else this.props.history.push(`${nextPath}`);
+          else {
+              console.log("NAVIGATING TO NEXT PATH:", nextPath)
+              browserHistory.push(`${nextPath}`);
+          }
+      }
   }
+
 
   checkLocalStorage () {
     for (let key in window.localStorage) {
       if (key.startsWith('firebase:authUser') && window.localStorage[key]) return true;
-      return false;
     }
+    return false;
   }
 
   render () {
