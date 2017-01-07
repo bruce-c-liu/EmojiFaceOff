@@ -4,28 +4,39 @@
 	background-color: rgba($white, 0.7);
 	padding: 2rem;
 }
+.round-select_wrap{
+	
+	h1{
+		font-family: $font-display;
+		color: $orange;
+	}
+}
 
-
-.count-selector{
+.count-control{
 	display: flex;
-	align-items: center;
-	height: 150px;
-	overflow: hidden;
+	flex-direction: column;
 	i{
 		font-size: 1.5rem;
 		color: $orange;
 	}
+}
+.count-selector{
+	display: flex;
+	align-items: center;
+	height: 150px;
 }
 
 .count-digit{
 	position: relative;
 	font-size: 7rem;
 	margin: 0 1rem;
-	min-width: 100px;
+	min-width: 110px;
 	min-height:  150px;
+	flex-grow: 1;
+	overflow-y: hidden;
 	span{
 		position: absolute;
-		top: 0%; left: 27%;
+		top: 0%; left: 0;
 	}
 }
 
