@@ -93,7 +93,7 @@ module.exports = {
                                 Welcome to Emoji Face Off!
                                 Are you doge enough?
 
-                                Round 1: Emojify [${rm.prompt}]!`;
+                                Round 1: Emojify [${rm.prompt}] !`;
             rm.roundNum = 1;
             botResponse.roundNum = rm.roundNum;
 
@@ -130,8 +130,7 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum - 1}! 
-                      Round ${rm.roundNum}: Emojify [${rm.prompt}]!`;
+  botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] !`;
   botResponse.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
@@ -171,14 +170,15 @@ function endGame (botResponse, msg, io, rm, openConnections) {
 
   msg.type = 'correctGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
-  // First, notify everyone the final answer was correct.
-  botResponse.text = `Good job, ${msg.user}!`;
-  io.sockets.in(msg.roomId).emit('message', botResponse);
+  // // First, notify everyone the final answer was correct.
+  // botResponse.text = `Good job, ${msg.user}!`;
+  // io.sockets.in(msg.roomId).emit('message', botResponse);
+
   // Reset all users'' scores
   io.sockets.in(msg.roomId).emit('score', null);
   // Emit winner/final scores.
   botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
-                      ${winner.name} won with ${winner.score} points!
+                      Congrats to the winner ${winner.name}!
 
                       Final Scores:
                       ${finalRankings}
