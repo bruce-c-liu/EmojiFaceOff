@@ -39,12 +39,12 @@ module.exports = {
 
     socket.emit('message', {
       user: 'ebot',
-      text: `\xa0\xa0🎉 Welcome to Emoji Face Off! 🎉\xa0\xa0
-            \xa0\xa0 👩 \xa0 Mode: Friends vs Friends \xa0👨`
+      text: `🎉 Welcome to Emoji Face Off! 🎉\xa0\xa0
+            \xa0👩 \xa0 Mode: Friends vs Friends \xa0👨`
     });
     socket.emit('message', {
       user: 'ebot',
-      text: `Please wait for other friends to join.
+      text: `Wait for other friends to join room.
 
              While waiting, you can:
              1. 💩 - talk each other.
@@ -89,9 +89,6 @@ module.exports = {
             console.log(rm.hints);
             rm.prompt = rm.prompts.pop();
             botResponse.text = `${msg.user} has started the game.
-
-                                Welcome to Emoji Face Off!
-                                Are you doge enough?
 
                                 Round 1: Emojify [${rm.prompt}] !`;
             rm.roundNum = 1;
