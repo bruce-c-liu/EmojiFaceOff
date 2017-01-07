@@ -197,14 +197,16 @@ export function fetchBitlyLink (longURL) {
   };
 }
 
-export function counterInc () {
+export function roundInc () {
   return {
-    type: 'INVITE_INC'
+    type: 'ROUND_COUNT_INC',
+    meta: {sound: 'tick'}
   };
 }
-export function counterDec () {
+export function roundDec () {
   return {
-    type: 'INVITE_DEC'
+    type: 'ROUND_COUNT_DEC',
+    meta: {sound: 'tick'}
   };
 }
 
