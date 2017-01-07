@@ -29,7 +29,8 @@ class Chat extends Component {
       joinedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
       announceBar: false,
       coinBalance: 1000,
-      hasFocus: false
+      hasFocus: false,
+      userInput: ''
     };
     this.socket = io(socketURL);
 
@@ -49,11 +50,21 @@ class Chat extends Component {
     });
 
     this.socket.on('hint', hint => {
-      this.state.solution[this.state.clueCount] = hint;
-      this.setState({
-        clueCount: ++this.state.clueCount
-      });
+        this.state.solution[this.state.clueCount] = hint;
+        console.log("EMIT HINT", hint)
+        this.setState({
+            clueCount: ++this.state.clueCount
+        });
+        console.log("this.state.clueCount", this.state.clueCount, this.state.solution.length)
+        if (this.state.clueCount >= this.state.solution.length) {
+            console.log(this.state.clueCount >= this.state.solution.length)
+            this.setState({
+                userInput: this.state.solution.join("")
+            });
+        }
+
     });
+
 
     this.socket.on('score', score => {
       this.setState({
@@ -133,7 +144,8 @@ class Chat extends Component {
 
   handleChange (e) {
     this.setState({
-      message: e.target.value
+      message: '',
+      userInput: e.target.value
     });
   }
   handleFocus(){
@@ -159,7 +171,7 @@ class Chat extends Component {
 
     const userMessage = {
       user: this.state.user,
-      text: this.state.message,
+      text: this.state.userInput,
       imgUrl: this.props.users.profile.imgUrl,
       roomId: this.state.roomId
     };
@@ -167,18 +179,19 @@ class Chat extends Component {
     this.socket.emit('message', userMessage);
     this.props.playSFX('message');
     this.setState({
-      message: '',
+      userInput: '',
       hasFocus: false
     });
   }
-  requestHint (e) {
-    e.preventDefault();
-    this.socket.emit('hint', {roomId: this.state.roomId, index: this.state.clueCount});
-    this.props.playSFX('hint');
-    this.setState({
-      coinBalance: this.state.coinBalance -= 30
-    });
+  requestHint(e) {
+      e.preventDefault();
+      this.socket.emit('hint', { roomId: this.state.roomId, index: this.state.clueCount });
+      this.props.playSFX('hint');
+      this.setState({
+          coinBalance: this.state.coinBalance -= 30
+      });
   }
+
 
   render () {
     const { users } = this.props;
@@ -209,6 +222,7 @@ class Chat extends Component {
       'is-active': this.props.ui.drawer
     })
 
+
     return (
 
       <div className="chat-view">
@@ -222,7 +236,7 @@ class Chat extends Component {
         </div>
         <div className={annouceClass}>
           <div className='bubble-name' style={avatarBG} />
-          <p>{this.state.joinedPlayer} has joined the challenge!</p>
+          <p><span>{this.state.joinedPlayer}</span> has joined the challenge!</p>
         </div>
         <div className={chatMsgClass} ref='chatScroll'>
           {chatList}
@@ -234,10 +248,11 @@ class Chat extends Component {
 
           <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
             <input type='text' value={this.state.message}
+              value={this.state.userInput}
               onChange={this.handleChange.bind(this)}
               onFocus={this.handleFocus.bind(this)}
               placeholder='Your Message Here' />
-            <input className='btn-input' type='submit' value='Submit' disabled={this.state.message.length <= 0} />
+            <input className='btn-input' type='submit' value='Submit'  />
           </form>
         </div>
 

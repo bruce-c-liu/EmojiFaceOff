@@ -28,7 +28,6 @@ export function authUser (uid) {
         payload: resp.data
       });
     });
-
   };
 }
 
@@ -163,6 +162,11 @@ export function fetchRoomId (type, fbId) {
       browserHistory.push(`/chat/${roomId}`);
     }
   };
+}
+export function updateCoinBalance(uid, amount){
+  return function (dispatch) {
+    
+  }
 }
 
 export function sendSMS (userName, roomUrl, numbers) {
