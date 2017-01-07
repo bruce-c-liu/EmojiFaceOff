@@ -80,7 +80,9 @@ class PendRow extends Component {
           </select>
         </td>
         <td>
-          <button onClick={this.approveRequest.bind(this)}>Approve!</button>
+          <div>
+            <button onClick={this.approveRequest.bind(this)}>Approve!</button>
+          </div>
         </td>
       </tr>
     );
