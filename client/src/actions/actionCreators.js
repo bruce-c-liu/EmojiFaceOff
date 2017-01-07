@@ -129,7 +129,7 @@ export function setRoomType (type) {
   };
 }
 
-export function fetchRoomId (type, fbId) {
+export function fetchRoomId (type, userELO) {
   return function (dispatch) {
     let roomId = shortid.generate();
     dispatch({
@@ -142,12 +142,7 @@ export function fetchRoomId (type, fbId) {
     if (type === 'friends') {
       browserHistory.push(`/invite`);
     } else if (type === 'ranked') {
-      let userELO;
-      getUser(fbId)
-        .then(result => {
-          userELO = result.data.ELO;
-          return getRankedRoom(userELO);
-        })
+      getRankedRoom(userELO)
         .then(result => {
           // Found a room!
           if (result.matchedRoom) {

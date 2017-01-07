@@ -8,7 +8,7 @@ module.exports = {
 
     let botResponse = {user: 'ebot'};
 
-    if (rm.roundNum === 0) {
+    if (!rm.gameStarted) {
       botResponse.text = `Please wait while we search for a suitable opponent. 😘`;
       socket.emit('message', botResponse);
     } else if (msg.text.codePointAt(0) > 0x03FF) {
@@ -35,6 +35,7 @@ module.exports = {
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
     Object.assign(rm, {
       level: TESTING_DIFFICULTY,
+      gameStarted: false,
       roundNum: 0,
       prompt: '',
       prompts: [],
@@ -55,6 +56,7 @@ module.exports = {
   },
 
   joinRoom: function (msg, io, socket, openConnections, TESTING_NUM_ROUNDS, RedisController) {
+    socket.join(msg.roomId);
     socket.emit('playerJoinedRoom', {
       playerName: `${msg.user}`,
       playerAvatar: `${msg.avatar}`,
@@ -73,6 +75,7 @@ module.exports = {
 
 function startGame (msg, io, openConnections, TESTING_NUM_ROUNDS, RedisController) {
   let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+  rm.gameStarted = true;
   let botResponse = {user: 'ebot'};
   let clients = io.nsps['/'].adapter.rooms[msg.roomId].sockets;
   let clientsArray = Object.keys(clients);
@@ -110,6 +113,7 @@ function startGame (msg, io, openConnections, TESTING_NUM_ROUNDS, RedisControlle
 
           io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
           io.sockets.in(msg.roomId).emit('message', botResponse);
+          io.sockets.in(msg.roomId).emit('gameStarted');
 
           let roundNum = 1;
           setTimeout(() => {
@@ -183,8 +187,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   msg.type = 'correctGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
   io.sockets.in(msg.roomId).emit('message', botResponse);
-  // Reset all users'' scores
-  io.sockets.in(msg.roomId).emit('score', null);
+  io.sockets.in(msg.roomId).emit('newRound', 0);
   // Emit winner/final scores.
   botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
                       Congrats to the winner ${winner.name}!
@@ -197,8 +200,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
                       Score: ${loser.score} | Rating: ${loser.elo + changeInELO} => ${loser.elo} (-${changeInELO})
 
                       Return to the Main Menu to begin a new game.`;
-  io.sockets.in(msg.roomId).emit('newRound', 0);
-  io.sockets.in(msg.roomId).emit('score', 0);
+
   io.sockets.in(msg.roomId).emit('message', botResponse);
 
   // Reset the room's data.
