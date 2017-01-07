@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
 
 class ChatHeadPractice extends Component {
+
   render () {
-    // const {deets, startProp} = this.props;
+    let element;
+    if (this.props.hostStatus) {
+      element = <button className='btn-start' onClick={(e) => this.props.startProp(e)}>START</button>;
+    } else {
+      if (this.props.roomType === 'RANKED'){
+        element = <p>Searching for a Suitable Opponent<p>
+      } else {
+        element = <p>Waiting for the Host to Begin the Game<p>
+      }
+    }
+
     return (
       <div className='chat-head_inner'>
         {
-            this.props.hostStatus ? <button className='btn-start' onClick={(e) => this.props.startProp(e)}>START</button>
-                          : <p>Waiting for host to begin the game.</p>
+          element
         }
-        <p> Practice Mode</p>
       </div>
     );
   }

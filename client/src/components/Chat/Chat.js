@@ -9,6 +9,7 @@ import ChatHead from './ChatHead';
 import ChatHeadPractice from './ChatHeadPractice';
 import Bubble from './Bubble';
 import HintBar from './HintBar';
+import { initSocketListeners } from '../../helpers/socketEvents.js';
 
 class Chat extends Component {
 
@@ -18,8 +19,8 @@ class Chat extends Component {
       user: '',
       userInput: '',
       roomId: null,
-      round: '',
-      score: null,
+      round: 0,
+      score: 0,
       chats: [],
       solution: [],
       numHintsReceived: 0,
@@ -31,69 +32,7 @@ class Chat extends Component {
       hasFocus: false
     };
     this.socket = io(socketURL);
-
-    this.socket.on('message', (message) => {
-      console.log('Message from server:', message);
-      this.setState({
-        chats: [...this.state.chats, message],
-        round: message.roundNum
-      });
-    });
-
-    this.socket.on('newRound', solutionLength => {
-      this.setState({
-        solution: Array(solutionLength).fill(''),
-        numHintsReceived: 0
-      });
-    });
-
-    this.socket.on('hint', hint => {
-      let newSolutionsArray = this.state.solution.slice();
-      newSolutionsArray[this.state.numHintsReceived] = hint;
-      let newNumHintsReceived = this.state.numHintsReceived + 1;
-      this.setState({
-        solution: newSolutionsArray,
-        numHintsReceived: newNumHintsReceived
-      });
-      if (this.state.numHintsReceived === this.state.solution.length) {
-        this.setState({
-          userInput: this.state.solution.join('')
-        });
-      }
-    });
-
-    this.socket.on('score', score => {
-      this.setState({
-        score: score
-      });
-    });
-
-    this.socket.on('gameStarted', () => {
-      this.setState({
-        gameStarted: true
-      });
-    });
-
-    this.socket.on('gameEnded', () => {
-      this.setState({
-        gameStarted: false
-      });
-    });
-
-      /* msg = {
-          room: (string) roomId joined
-          playerAvatar: (string) avatar URL
-          playerName: (string) player's name who just joined
-      } */
-    this.socket.on('roomJoined', (msg) => {
-      console.log('Server confirms this socket joined room:', msg.room);
-      this.setState({
-        joinedPlayer: msg.playerName,
-        joinedAvatar: msg.playerAvatar
-      });
-      this.props.playSFX('enter');
-      this.announceNewPlayer();
-    });
+    initSocketListeners.call(this);
   }
 
   componentWillMount () {
@@ -110,7 +49,8 @@ class Chat extends Component {
       elo: this.props.users.profile.ELO,
       fbId: this.props.users.profile.auth,
       avatar: this.props.users.profile.imgUrl,
-      type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS'
+      type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS',
+      isHost: this.props.session.isHost
     });
   }
 
@@ -120,6 +60,12 @@ class Chat extends Component {
   }
 
   componentWillUnmount () {
+    // Solves issue of ELO not updating. But this fetches the entire user...
+    // TODO: Better solution is to update store without doing a DB call. Update the store's ELO
+    // at the end of a ranked game.
+    this.props.setUserData(this.props.users.profile.auth);
+    this.props.setHost(false);
+    this.props.setRoomType(null);
     this.socket.disconnect();
   }
 
@@ -186,7 +132,7 @@ class Chat extends Component {
     });
     const chatHeadElements = this.state.gameStarted
                                 ? <ChatHead deets={this.state} />
-                                : <ChatHeadPractice deets={this.state} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
+                                : <ChatHeadPractice deets={this.state} roomType={this.props.session.roomType} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
     const avatarBG = {
       backgroundImage: `url(${this.state.joinedAvatar})`,
