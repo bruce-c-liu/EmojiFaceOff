@@ -30,8 +30,12 @@ module.exports = {
     }
   },
 
+<<<<<<< HEAD
+  joinRoomHandler: function (msg, io, socket, openConnections, TESTING_NUM_ROUNDS, RedisController) {
+=======
   createRoom: function (msg, io, socket, TESTING_DIFFICULTY) {
     socket.join(msg.roomId);
+>>>>>>> temp
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
     Object.assign(rm, {
       level: TESTING_DIFFICULTY,
@@ -54,6 +58,42 @@ module.exports = {
     });
   },
 
+<<<<<<< HEAD
+    if (numPlayers === 2) {
+      // TO-DO: DENY ENTRY
+      socket.emit('message', {
+        user: 'ebot',
+        text: `There are already 2 players in this RANKED room.
+               You have not been added to this room.`
+      });
+    } else if (numPlayers < 2) {
+      // Add this socket to the room.
+      socket.join(msg.roomId);
+      console.log('Joined room:', msg.roomId);
+      socket.emit('roomJoined', {
+        playerName: `${msg.user}`,
+        playerAvatar: `${msg.avatar}`,
+        room: msg.roomId
+      });
+      console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
+      socket.emit('message', {
+        user: 'ebot',
+        text: 'Please wait while we search for a suitable opponent. 😘'
+      });
+      socket.broadcast.to(msg.roomId).emit('message', {
+        user: 'ebot',
+        text: `${msg.user} has joined the room!`
+      });
+      numPlayers++;
+      if (numPlayers === 2) {
+        startGame(msg, io, rm, openConnections, TESTING_NUM_ROUNDS, RedisController);
+      }
+    }
+  }
+};
+
+function startGame (msg, io, rm, openConnections, TESTING_NUM_ROUNDS, RedisController) {
+=======
   joinRoom: function (msg, io, socket, openConnections, TESTING_NUM_ROUNDS, RedisController) {
     socket.emit('playerJoinedRoom', {
       playerName: `${msg.user}`,
@@ -73,6 +113,7 @@ module.exports = {
 
 function startGame (msg, io, openConnections, TESTING_NUM_ROUNDS, RedisController) {
   let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+>>>>>>> temp
   let botResponse = {user: 'ebot'};
   let clients = io.nsps['/'].adapter.rooms[msg.roomId].sockets;
   let clientsArray = Object.keys(clients);
@@ -138,7 +179,12 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
+<<<<<<< HEAD
+  botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum - 1}! 
+                      Round ${rm.roundNum}: Emojify [${rm.prompt}] !`;
+=======
   botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] !`;
+>>>>>>> temp
   botResponse.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);

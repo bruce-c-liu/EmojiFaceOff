@@ -216,12 +216,13 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   io.sockets.in(msg.roomId).emit('score', 0);
   // Emit winner/final scores.
   botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
+
                       Congrats to the winner ${winner.name}!
 
                       Final Scores:
                       ${finalRankings}
                       
-                      Press START to begin a new game. 🙌`;
+                      Press START to begin a new game. \xa0🙌`;
   io.sockets.in(msg.roomId).emit('newRound', 0);
   io.sockets.in(msg.roomId).emit('message', botResponse);
   io.sockets.in(msg.roomId).emit('gameEnded');

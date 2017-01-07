@@ -115,7 +115,13 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   socket.emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
+<<<<<<< HEAD
+  botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum - 1}.
+
+                      Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`;
+=======
   botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`;
+>>>>>>> temp
   botResponse.roundNum = rm.roundNum;
   socket.emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
@@ -128,10 +134,16 @@ function endGame (botResponse, msg, io, socket, openConnections, rm, TESTING_NUM
 
   msg.type = 'correctGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
+<<<<<<< HEAD
+  // First, notify everyone the final answer was correct.
+  botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum}!`;
+  socket.emit('message', botResponse);
+=======
   // // First, notify everyone the final answer was correct.
   // botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum}!`;
   // socket.emit('message', botResponse);
 
+>>>>>>> temp
   // Reset all users'' scores
   socket.emit('score', null);
   // Emit winner/final scores.
