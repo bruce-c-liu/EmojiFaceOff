@@ -22,8 +22,6 @@ export function logout () {
 //     });
 // }
 
-
 export function saveUserFirebase (user) {
-  return ref.child(`users/${user.uid}`).set(user)
-
+  return ref.child(`users/${user.uid}`).set(user);
 }
