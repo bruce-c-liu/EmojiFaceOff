@@ -8,15 +8,17 @@ import { formatUserInfo } from '../helpers/utils';
 import { firebaseAuth } from '../config/constants.js';
 import wallpaper from '../assets/wallpaper.png';
 import Drawer from '../components/UI/Drawer.js';
+import mixpanel from 'mixpanel-browser';
 
 class MainContainer extends Component {
   componentWillMount () {
+    mixpanel.init('a4ef7ec7ead2231829a3ff9f5d73647c');
     firebaseAuth().onAuthStateChanged((user) => {
       if (user) {
         const userData = user.providerData[0];
         const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
         this.props.authUser(user.uid);
-        this.props.setUserData(user.uid)
+        this.props.setUserData(user.uid);
         if (this.props.location.pathname === '/') {
         }
       } else {
@@ -34,15 +36,15 @@ class MainContainer extends Component {
 
     return this.props.isFetching === true
                     ? <div className='loader'><p>Loading...</p></div>
-                    : <div className='inner-container'> {children}<Drawer opened={this.props.drawer} logOut={this.props.logoutAndUnauth} drawerAction={this.props.toggleDrawer}/></div>;
+                    : <div className='inner-container'> {children}<Drawer opened={this.props.drawer} logOut={this.props.logoutAndUnauth} drawerAction={this.props.toggleDrawer} /></div>;
   }
 
 }
 
 export default connect(
   ({users, ui}) => ({
-    isAuthed: users.isAuthed, 
-    isFetching: users.isFetching, 
+    isAuthed: users.isAuthed,
+    isFetching: users.isFetching,
     drawer: ui.drawer
   }),
   (dispatch) => bindActionCreators(actionCreators, dispatch)

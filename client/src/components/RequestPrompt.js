@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
 import axios from 'axios';
 import Header from './Header';
+import mixpanel from 'mixpanel-browser';
 
 class RequestPrompt extends Component {
   constructor () {
@@ -49,24 +50,27 @@ class RequestPrompt extends Component {
     if (answerOptions.length > 0 && this.state.reqPrompt.length > 0) {
       console.log(`Sending to the server => prompt: ${this.state.reqPrompt} ; answers: `, answerOptions);
 
-      this.setState({
-        submitRequest: true
-      });
-      axios.post('/api/requestPrompt', {
-        userFbId: this.state.authedId,
-        prompt: this.state.reqPrompt.toLowerCase(),
-        answers: answerOptions
-      })
-      .then(result => {
-        console.log('response from server', result.status);
-        this.setState({
-          reqPrompt: '',
-          reqAnswer: ''
-        });
-      })
-      .catch(err => {
-        throw err;
-      });
+      mixpanel.track('Prompt Requested',
+        {'user': this.state.authedId}
+      );
+      // this.setState({
+      //   submitRequest: true
+      // });
+      // axios.post('/api/requestPrompt', {
+      //   userFbId: this.state.authedId,
+      //   prompt: this.state.reqPrompt.toLowerCase(),
+      //   answers: answerOptions
+      // })
+      // .then(result => {
+      //   console.log('response from server', result.status);
+      //   this.setState({
+      //     reqPrompt: '',
+      //     reqAnswer: ''
+      //   });
+      // })
+      // .catch(err => {
+      //   throw err;
+      // });
     }
   }
 
