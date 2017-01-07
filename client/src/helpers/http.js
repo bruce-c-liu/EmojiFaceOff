@@ -7,6 +7,14 @@ export function getUser (fbID) {
               });
 }
 
+export function writeUser(fbID, amount) {
+    return axios.put(`/api/users/${fbID}`)
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+
 export function SMSInvite (userName, roomUrl, numbers) {
   console.log('USERNAME FROM SMS', userName);
 

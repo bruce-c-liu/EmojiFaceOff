@@ -30,16 +30,35 @@ module.exports = {
     }
   },
 
+<<<<<<< HEAD
   joinRoomHandler: function (msg, io, socket, openConnections, TESTING_NUM_ROUNDS, RedisController) {
+=======
+  createRoom: function (msg, io, socket, TESTING_DIFFICULTY) {
+    socket.join(msg.roomId);
+>>>>>>> temp
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
-    let numPlayers;
-    // var clientsArray = Object.keys(rm.sockets);
-    if (rm === undefined) {
-      numPlayers = 0;
-    } else {
-      numPlayers = Object.keys(rm.sockets).length;
-    }
+    Object.assign(rm, {
+      level: TESTING_DIFFICULTY,
+      roundNum: 0,
+      prompt: '',
+      prompts: [],
+      solutions: {},
+      hints: {},
+      type: msg.type,               // options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+      host: ''                      // TODO
+    });
+    socket.emit('playerJoinedRoom', {
+      playerName: `${msg.user}`,
+      playerAvatar: `${msg.avatar}`,
+      room: msg.roomId
+    });
+    socket.emit('message', {
+      user: 'ebot',
+      text: 'Please wait while we search for a suitable opponent. 😘'
+    });
+  },
 
+<<<<<<< HEAD
     if (numPlayers === 2) {
       // TO-DO: DENY ENTRY
       socket.emit('message', {
@@ -74,6 +93,27 @@ module.exports = {
 };
 
 function startGame (msg, io, rm, openConnections, TESTING_NUM_ROUNDS, RedisController) {
+=======
+  joinRoom: function (msg, io, socket, openConnections, TESTING_NUM_ROUNDS, RedisController) {
+    socket.emit('playerJoinedRoom', {
+      playerName: `${msg.user}`,
+      playerAvatar: `${msg.avatar}`,
+      room: msg.roomId
+    });
+    console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
+
+    socket.broadcast.to(msg.roomId).emit('message', {
+      user: 'ebot',
+      text: `${msg.user} has joined the room!`
+    });
+
+    startGame(msg, io, openConnections, TESTING_NUM_ROUNDS, RedisController);
+  }
+};
+
+function startGame (msg, io, openConnections, TESTING_NUM_ROUNDS, RedisController) {
+  let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+>>>>>>> temp
   let botResponse = {user: 'ebot'};
   let clients = io.nsps['/'].adapter.rooms[msg.roomId].sockets;
   let clientsArray = Object.keys(clients);
@@ -110,7 +150,6 @@ function startGame (msg, io, rm, openConnections, TESTING_NUM_ROUNDS, RedisContr
           botResponse.roundNum = rm.roundNum;
 
           io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
-          io.sockets.in(msg.roomId).emit('score', 0);
           io.sockets.in(msg.roomId).emit('message', botResponse);
 
           let roundNum = 1;
@@ -126,13 +165,13 @@ function startGame (msg, io, rm, openConnections, TESTING_NUM_ROUNDS, RedisContr
 
 function checkAnswer (guess, prompt, solutions) {
   let msgCodePoints = [...guess];
-  let msgWithoutToneModifiers = '';
+  let msgWithoutModifiers = '';
   for (let codePoint of msgCodePoints) {
     if (!ignoredCodePoints[codePoint]) {     // check to see if it's an ignoredCodePoint
-      msgWithoutToneModifiers += codePoint;
+      msgWithoutModifiers += codePoint;
     }
   }
-  return solutions[prompt][msgWithoutToneModifiers];
+  return solutions[prompt][msgWithoutModifiers];
 }
 
 function nextRound (botResponse, msg, io, rm, openConnections, socket) {
@@ -140,8 +179,12 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
+<<<<<<< HEAD
   botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum - 1}! 
                       Round ${rm.roundNum}: Emojify [${rm.prompt}] !`;
+=======
+  botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] !`;
+>>>>>>> temp
   botResponse.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
@@ -170,10 +213,8 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   let clientsArray = Object.keys(clients);
   console.log('CLIENTS:', clientsArray);
 
-  let p1 = openConnections[clientsArray[0]];
-  let p2 = openConnections[clientsArray[1]];
-  let winner = findWinner(p1, p2);
-  let loser = findLoser(p1, p2);
+  let winner = findWinner(rm.p1, rm.p2);
+  let loser = findLoser(rm.p1, rm.p2);
   // ELO changes
   let expectedScoreP1 = elo.expectedScoreP1(winner.elo, loser.elo);
   let changeInELO = Math.round(elo.changeInELO(winner.elo, expectedScoreP1, 1));
@@ -194,7 +235,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   io.sockets.in(msg.roomId).emit('score', null);
   // Emit winner/final scores.
   botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
-                      Congratulations to the winner ${winner.name}!
+                      Congrats to the winner ${winner.name}!
 
                       Final Scores:
                       😎 ${winner.name} 😎
@@ -205,6 +246,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
 
                       Return to the Main Menu to begin a new game.`;
   io.sockets.in(msg.roomId).emit('newRound', 0);
+  io.sockets.in(msg.roomId).emit('score', 0);
   io.sockets.in(msg.roomId).emit('message', botResponse);
 
   // Reset the room's data.

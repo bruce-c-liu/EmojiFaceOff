@@ -1,5 +1,5 @@
 import auth, { logout, saveUserFirebase } from '../helpers/auth';
-import { SMSInvite, getUser,saveNewUser, shortenLink, getRankedRoom, enqueueRankedRoom } from '../helpers/http.js';
+import { SMSInvite, getUser, saveNewUser, shortenLink, getRankedRoom, enqueueRankedRoom } from '../helpers/http.js';
 import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 import * as shortid from 'shortid';
@@ -14,7 +14,6 @@ const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER';
 const SET_ROOM_TYPE = 'SET_ROOM_TYPE';
 const SET_USER_DATA = 'SET_USER_DATA';
 
-
 export function authUser (uid) {
   return function (dispatch) {
     dispatch({
@@ -28,7 +27,6 @@ export function authUser (uid) {
         payload: resp.data
       });
     });
-
   };
 }
 
@@ -61,10 +59,10 @@ export function fetchingUserSuccess (uid, user, timestamp) {
   };
 }
 
-export function setUserData(uid){
+export function setUserData (uid) {
   return function (dispatch) {
-     dispatch({
-      type: FETCHING_USER,
+    dispatch({
+      type: FETCHING_USER
     });
     getUser(uid)
     .then(resp => {
@@ -73,18 +71,18 @@ export function setUserData(uid){
         payload: resp.data
       });
     });
-  }
+  };
 }
 
-export function postUserData(user){
-  console.log('postUserData', user)
+export function postUserData (user) {
+  console.log('postUserData', user);
   return function (dispatch) {
-     dispatch({
-      type: FETCHING_USER,
+    dispatch({
+      type: FETCHING_USER
     });
     saveNewUser(user)
-    .then(( user) => {
-      console.log('please get here saveNewUser', user.data)
+    .then((user) => {
+      console.log('please get here saveNewUser', user.data);
       dispatch({
         type: SET_USER_DATA,
         payload: user.data
@@ -92,11 +90,11 @@ export function postUserData(user){
       let userFire = {
         'name': user.data.displayName,
         'uid': user.data.auth,
-        'avatar':  user.data.imgUrl
-      }
-      saveUserFirebase(userFire)
-    })
-  }
+        'avatar': user.data.imgUrl
+      };
+      saveUserFirebase(userFire);
+    });
+  };
 }
 
 export function fetchAndHandleAuthedUser () {
@@ -105,7 +103,7 @@ export function fetchAndHandleAuthedUser () {
     return auth().then(({ user, credential }) => {
       const userData = user.providerData[0];
       const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
-      return dispatch(postUserData(userInfo))
+      return dispatch(postUserData(userInfo));
     })
     .catch((error) => dispatch(fetchingUserFailure(error)));
   };
@@ -164,6 +162,11 @@ export function fetchRoomId (type, fbId) {
     }
   };
 }
+export function updateCoinBalance (uid, amount) {
+  return function (dispatch) {
+
+  };
+}
 
 export function sendSMS (userName, roomUrl, numbers) {
   return function (dispatch) {
@@ -204,10 +207,10 @@ export function counterDec () {
   };
 }
 
-export function setHost (boolean) {
+export function setHost (isHost) {
   return {
     type: 'SET_HOST',
-    payload: boolean
+    payload: isHost
   };
 }
 

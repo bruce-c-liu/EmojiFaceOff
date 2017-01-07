@@ -11,7 +11,8 @@ class RequestPrompt extends Component {
     this.state = {
       reqPrompt: '',
       reqAnswer: '',
-      authedId: ''
+      authedId: '',
+      submitRequest: false
     };
   }
 
@@ -47,6 +48,10 @@ class RequestPrompt extends Component {
                         });
     if (answerOptions.length > 0 && this.state.reqPrompt.length > 0) {
       console.log(`Sending to the server => prompt: ${this.state.reqPrompt} ; answers: `, answerOptions);
+
+      this.setState({
+        submitRequest: true
+      });
       axios.post('/api/requestPrompt', {
         userFbId: this.state.authedId,
         prompt: this.state.reqPrompt.toLowerCase(),
@@ -86,6 +91,10 @@ class RequestPrompt extends Component {
             <p />
             <input className='btn-input' type='submit' value='Submit' disabled={this.state.reqPrompt.length <= 0} />
           </form>
+
+          <div>
+            {this.state.submitRequest ? <h6>Your request has been submitted for approval!</h6> : null}
+          </div>
         </div>
       </div>
     );

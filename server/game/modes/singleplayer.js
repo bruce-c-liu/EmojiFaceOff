@@ -5,7 +5,6 @@ module.exports = {
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
 
     let botResponse = { user: 'ebot' };
-
     if (rm.gameStarted && msg.text.codePointAt(0) > 0x03FF) {
       if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
         openConnections[socket.id].score++;                           // Increment the user's score.
@@ -18,17 +17,27 @@ module.exports = {
         wrongAnswer(msg, io, rm);
       }
     } else {
-      // Emit user's message to all sockets connected to this room.
       msg.type = 'chat';
       msg.roundNum = rm.roundNum;
       socket.emit('message', msg);
     }
   },
 
-  joinRoomHandler: function (msg, io, socket) {
+  createRoom: function (msg, io, socket, TESTING_DIFFICULTY) {
     socket.join(msg.roomId);
+    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+    Object.assign(rm, {
+      level: TESTING_DIFFICULTY,
+      roundNum: 0,
+      prompt: '',
+      prompts: [],
+      solutions: {},
+      hints: {},
+      type: msg.type,               // options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+      host: ''                      // IMPLEMENT LATER
+    });
     console.log('Joined room:', msg.roomId);
-    socket.emit('roomJoined', {
+    socket.emit('playerJoinedRoom', {
       room: msg.roomId,
       playerName: msg.user,
       playerAvatar: msg.avatar
@@ -106,9 +115,13 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   socket.emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
+<<<<<<< HEAD
   botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum - 1}.
 
                       Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`;
+=======
+  botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`;
+>>>>>>> temp
   botResponse.roundNum = rm.roundNum;
   socket.emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
@@ -121,9 +134,16 @@ function endGame (botResponse, msg, io, socket, openConnections, rm, TESTING_NUM
 
   msg.type = 'correctGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
+<<<<<<< HEAD
   // First, notify everyone the final answer was correct.
   botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum}!`;
   socket.emit('message', botResponse);
+=======
+  // // First, notify everyone the final answer was correct.
+  // botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum}!`;
+  // socket.emit('message', botResponse);
+
+>>>>>>> temp
   // Reset all users'' scores
   socket.emit('score', null);
   // Emit winner/final scores.

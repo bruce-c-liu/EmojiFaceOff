@@ -21,7 +21,7 @@ export default function getRoutes (checkAuth) {
         <Route path='login' component={AuthContainer} onEnter={checkAuth} />
         <Route path='mode' component={ModeSelect} onEnter={checkAuth} />
         <Route path='request' component={RequestPrompt} onEnter={checkAuth} />
-        <Route path='pendrequest' component={PendRequest} />
+        <Route path='pendrequest' component={PendRequest} onEnter={checkAuth} />
         <Route path='invite' component={Invite} onEnter={checkAuth} />
         <Route path='onboard' component={OnBoard} onEnter={checkAuth} />
         <Route path='chat/:roomID' component={Chat} onEnter={checkAuth} />

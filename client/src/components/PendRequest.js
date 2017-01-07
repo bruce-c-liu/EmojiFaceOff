@@ -50,6 +50,14 @@ class PendRequest extends Component {
         <p>In pending requests</p>
         <table>
           <thead />
+          <tr>
+            <th>User</th>
+            <th>Prompt</th>
+            <th>Answer</th>
+            <th>Level</th>
+            <th>Add/Rem</th>
+            <p />
+          </tr>
           <tbody>
             {tableRows}
           </tbody>

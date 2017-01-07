@@ -10,33 +10,26 @@ import * as actionCreators from '../actions/actionCreators.js';
 class AuthContainer extends Component {
 
   handleAuth (e) {
-    const nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
     e.preventDefault();
-    this.props.fetchAndHandleAuthedUser(nextPath);
+    this.props.fetchAndHandleAuthedUser();
   }
 
   componentWillUpdate () {
     let nextPath;
+    console.log('component will update');
     if (this.props.routing.locationBeforeTransitions.state) {
       nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
-    } else {
-      nextPath = null;
-    }
-    if (nextPath && this.checkLocalStorage()) {
-          // browserHistory.push(`${nextPath}`);
-      if (nextPath === '/') {
-        this.props.history.push(`/mode`);
-      } else {
-        this.props.history.push(`${nextPath}`);
-      }
+    } else nextPath = '/login';
+
+    if (this.checkLocalStorage()) {
+      if (nextPath === '/' || nextPath === '/login') this.props.history.push(`/mode`);
+      else this.props.history.push(`${nextPath}`);
     }
   }
 
   checkLocalStorage () {
     for (let key in window.localStorage) {
-      if (key.startsWith('firebase:authUser') && window.localStorage[key]) {
-        return true;
-      }
+      if (key.startsWith('firebase:authUser') && window.localStorage[key]) return true;
       return false;
     }
   }

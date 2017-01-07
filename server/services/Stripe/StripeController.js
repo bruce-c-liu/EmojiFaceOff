@@ -21,18 +21,17 @@ module.exports = {
     let fbId = req.body.fbId || null;
     let cashMoola = chargeAmount[req.body.coinPack] || null;
     let coins = coinAmount[req.body.coinPack] || null;
-
+    console.log('Creating charge for token', token, fbId, cashMoola);
     if (token && fbId && cashMoola) {
       stripe.charges.create({
         amount: cashMoola,
         receipt_email: email,
         currency: 'usd',
         source: token,
-        description: `Thank you for playing and buying the ${req.body.coinPack.toUpperCase()} Doge Coin Pack! 
+        description: `${req.body.coinPack.toUpperCase()} Doge Coin Pack! 
                       ${coins} coins have been credited to your account!  `
       })
       .then(result => {
-        console.log('Payment success', result, coins);
         if (result.paid && !result.failurecode && coins) {
           UserController.incrUserCoin(fbId, coins);
         } else {

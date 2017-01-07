@@ -60,32 +60,32 @@ module.exports = {
     }
   },
 
-  decrUserCoin: (req, res, next) => {
-    if (req.params.fbID) {
+  incrUserCoin: (fbId, coins) => {
+    if (fbId) {
       models.User.findOne({
         where: {
-          auth: req.params.fbID
+          auth: fbId
         }
       })
       .then(result => {
         if (result) {
           let displayName = result.displayName;
           let origAmount = result.coins;
-          let newAmount = origAmount - 30;
+          let newAmount = origAmount + coins;
           result.update({
             coins: newAmount
           })
           .then((result) => {
-            if (result) res.json(`${displayName}'s coins updated from ${origAmount} to ${newAmount}`);
+            if (result) console.log(`${displayName}'s coins updated from ${origAmount} to ${newAmount}`);
           });
-        } else res.json('No user found');
+        } else console.log('No user found');
       })
       .catch(err => {
-        res.json(err);
+        console.log(err);
         throw err;
       });
     } else {
-      res.json('Please provide a unique fbId');
+      console.log('Please provide a unique fbId');
     }
   },
 
@@ -135,11 +135,11 @@ module.exports = {
       let imgUrl = req.body.imgUrl || '';
       let role = req.body.role || 'user';
       let auth = req.body.auth || '';
-      console.log('checking if user exists....')
+      console.log('checking if user exists....');
       redClient.sismember('allUsers', `${displayName}:${auth}`)
       .then(result => {
         if (result) {
-          console.log('user exists...., searching for user in database', auth)
+          console.log('user exists...., searching for user in database', auth);
           models.User.findOne({
             where: {
               auth: auth
@@ -156,7 +156,7 @@ module.exports = {
           redClient.sadd('allUsers', `${displayName}:${auth}`)
           .then(result => {
             if (result) console.log(`${displayName} has been added to the redis cache`);
-            //res.json(`${displayName} has been added to the redis cache`);
+            // res.json(`${displayName} has been added to the redis cache`);
           })
           .catch(err => {
             throw err;
