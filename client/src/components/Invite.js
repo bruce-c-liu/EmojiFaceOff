@@ -16,7 +16,7 @@ class Invite extends Component {
   constructor () {
     super();
     this.state = {
-      inviteCount: 1,
+      roundCount: 5,
       longRoomURL: null,
       shortRoomURL: null,
       onBoard: false,
@@ -34,27 +34,17 @@ class Invite extends Component {
     this.props.fetchBitlyLink(this.state.longRoomURL);
   }
 
-  InviteCountInc () {
-    if (this.props.session.inviteCount < 6) {
-      this.props.counterInc();
-      this.props.playSFX('tick');
+  RoundCountInc () {
+    if (this.props.session.roundCount < 20) {
+      this.props.roundInc();
     }
   }
 
-  InviteCountDec () {
+  RoundCountDec () {
     console.log('INC INVITE');
-    if (this.props.session.inviteCount >= 2) {
-      this.props.counterDec();
-      this.props.playSFX('tick');
+    if (this.props.session.roundCount >= 5) {
+      this.props.roundDec();
     }
-  }
-
-  inviteBySms (e) {
-    e.preventDefault();
-    let userName = this.props.users.profile.displayName;
-    let roomUrl = this.props.session.inviteURL;
-    let numbers = ReactDOM.findDOMNode(this.refs.toSMS).value.split(',');
-    this.props.sendSMS(userName, roomUrl, numbers);
   }
 
   popModal (e) {
@@ -76,38 +66,43 @@ Click here to Play: ${this.state.longRoomURL}`
     return (
       <div className='inner-container is-center invite-wrap'>
         <Header />
-        {this.state.longRoomURL}
-        <p> How many friends would you like to invite in this game?</p>
-        <div className='count-selector'>
-          <i className='ion-chevron-down' onClick={this.InviteCountDec.bind(this)} />
-          <CSSTransitionGroup
-            component='span'
-            className='count-digit'
-            transitionName='count'
-            transitionEnterTimeout={250}
-            transitionLeaveTimeout={250}
-          >
-            <span key={this.props.session.inviteCount} >{this.props.session.inviteCount}</span>
-          </CSSTransitionGroup>
-          <i className='ion-chevron-up' onClick={this.InviteCountInc.bind(this)} />
+        <div className="round-select_wrap">
+
+            <div className='count-selector'>
+            <h1>ROUNDS</h1>
+
+              <CSSTransitionGroup
+                component='span'
+                className='count-digit'
+                transitionName='count'
+                transitionEnterTimeout={250}
+                transitionLeaveTimeout={250}
+              >
+                <span key={this.props.session.roundCount} >{this.props.session.roundCount}</span>
+              </CSSTransitionGroup>
+              <div className="count-control">
+                  <i className='ion-chevron-up' onClick={this.RoundCountInc.bind(this)} />
+                  <i className='ion-chevron-down' onClick={this.RoundCountDec.bind(this)} />
+              </div>
+             
+             
+            </div>
         </div>
 
-        <form className='form-sms' onSubmit={this.inviteBySms.bind(this)} >
-          <div className='input-inline'>
-            <i className='ion-android-call' />
-            <input type='tel' ref='toSMS' placeholder='Invite by text message' />
-            <button className='btn-input'>Send</button>
-          </div>
-        </form>
-        <CopyToClipboard text={clipboardData}
-                  onCopy={() => this.setState({copied: true, })}>
-                  <button>Copy to clipboard with button</button>
-        </CopyToClipboard>
-        <h6 className='or-split'>OR</h6>
+   
+          <CopyToClipboard text={clipboardData}
+                    onCopy={() => this.setState({copied: true, })}>
+                    <button className='btn-fbshare'>Send text message to friends</button>
+          </CopyToClipboard>
+          <h6 className='or-split'>OR</h6>
 
-        <a className='btn-fbshare' href={encodedURL} onClick={this.popModal.bind(this)}>
-          <img src={btnIcon} alt='' />INVITE FACEBOOK FRIENDS
-        </a>
+          <a className='btn-fbshare' href={encodedURL} onClick={this.popModal.bind(this)}>
+            <img src={btnIcon} alt='' />Invite Facebook Friends
+          </a>
+
+        
+
+
 
         {loaderUI}
         <OnBoard show={this.state.onBoard} roomLink={this.props.session.roomID} />
