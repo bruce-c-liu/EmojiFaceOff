@@ -126,13 +126,13 @@ function startGame (msg, io, rm, openConnections, TESTING_NUM_ROUNDS, RedisContr
 
 function checkAnswer (guess, prompt, solutions) {
   let msgCodePoints = [...guess];
-  let msgWithoutToneModifiers = '';
+  let msgWithoutModifiers = '';
   for (let codePoint of msgCodePoints) {
     if (!ignoredCodePoints[codePoint]) {     // check to see if it's an ignoredCodePoint
-      msgWithoutToneModifiers += codePoint;
+      msgWithoutModifiers += codePoint;
     }
   }
-  return solutions[prompt][msgWithoutToneModifiers];
+  return solutions[prompt][msgWithoutModifiers];
 }
 
 function nextRound (botResponse, msg, io, rm, openConnections, socket) {
@@ -140,8 +140,7 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum - 1}! 
-                      Round ${rm.roundNum}: Emojify [${rm.prompt}] !`;
+  botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] !`;
   botResponse.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
@@ -194,7 +193,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   io.sockets.in(msg.roomId).emit('score', null);
   // Emit winner/final scores.
   botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
-                      Congratulations to the winner ${winner.name}!
+                      Congrats to the winner ${winner.name}!
 
                       Final Scores:
                       😎 ${winner.name} 😎
