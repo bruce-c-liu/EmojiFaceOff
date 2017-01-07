@@ -91,6 +91,15 @@ h1, h2, h3, h4, h5, h6 {
   .jumbo span {
     display: block; }
 
+.font-display {
+  font-family: "Fredoka One", cursive;
+  color: #FF6B6B;
+  margin-bottom: 2rem; }
+
+.emoji-glyph {
+  font-size: 4rem;
+  text-align: center; }
+
 .or-split {
   position: relative;
   width: 95%;
@@ -113,6 +122,26 @@ h1, h2, h3, h4, h5, h6 {
     height: 1px;
     width: 45%;
     background-color: #9B9F9F; }
+
+.steps-list {
+  margin: 1rem 0; }
+  .steps-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    color: #eceff2;
+    font-weight: 600; }
+    .steps-list li span {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      margin-right: 1rem;
+      border-radius: 50%;
+      background-color: #41CBCC;
+      color: #FFFFFF;
+      font-family: "Fredoka One", cursive;
+      text-align: center; }
 
 html, body {
   -webkit-overflow-scrolling: touch; }
@@ -219,7 +248,11 @@ button {
   border-radius: 3px;
   font-size: 1.15rem;
   font-weight: 600;
-  color: #FFFFFF; }
+  color: #FFFFFF;
+  text-align: center; }
+  .btn-login span {
+    font-size: 2rem;
+    vertical-align: middle; }
   .btn-login.is-full {
     display: block; }
 
@@ -288,6 +321,14 @@ button {
     background-color: #41CBCC;
     border-color: #41CBCC;
     color: #FFFFFF; }
+
+.btn-dismiss {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: #FFFFFF; }
+  .btn-dismiss i {
+    font-size: 1.5rem; }
 
 .header {
   position: absolute;
@@ -391,6 +432,26 @@ nav.menu a {
     background-color: rgba(65, 203, 204, 0.8);
     opacity: 1;
     z-index: 100; }
+
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background-color: rgba(33, 33, 35, 0.9);
+  transform: scale(0);
+  z-index: 150;
+  opacity: 0;
+  transition: transform .2s ease, opacity .25s ease; }
+  .modal.is-open {
+    transform: scale(1);
+    opacity: 1; }
 
 .chat-view {
   height: 100%;
