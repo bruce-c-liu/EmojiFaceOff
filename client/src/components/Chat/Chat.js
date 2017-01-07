@@ -9,122 +9,49 @@ import ChatHead from './ChatHead';
 import ChatHeadPractice from './ChatHeadPractice';
 import Bubble from './Bubble';
 import HintBar from './HintBar';
-import { dequeueRankedRoom } from '../../helpers/http.js';
+import { initSocketListeners } from '../../helpers/socketEvents.js';
 
 class Chat extends Component {
 
   constructor () {
     super();
     this.state = {
-      message: '',
       user: '',
+      userInput: '',
       roomId: null,
-      round: '',
-      score: null,
+      round: 0,
+      score: 0,
       chats: [],
       solution: [],
-      clueCount: 0,
+      numHintsReceived: 0,
       gameStarted: false,
       joinedPlayer: null,
       joinedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
       announceBar: false,
       coinBalance: 1000,
-      hasFocus: false,
-      userInput: ''
+      hasFocus: false
     };
     this.socket = io(socketURL);
-
-    this.socket.on('message', (message) => {
-      console.log('Message from server:', message);
-      this.setState({
-        chats: [...this.state.chats, message],
-        round: message.roundNum
-      });
-    });
-
-    this.socket.on('newRound', solutionLength => {
-      this.setState({
-        solution: Array(solutionLength).fill(''),
-        clueCount: 0
-      });
-    });
-
-    this.socket.on('hint', hint => {
-        this.state.solution[this.state.clueCount] = hint;
-        console.log("EMIT HINT", hint)
-        this.setState({
-            clueCount: ++this.state.clueCount
-        });
-        console.log("this.state.clueCount", this.state.clueCount, this.state.solution.length)
-        if (this.state.clueCount >= this.state.solution.length) {
-            console.log(this.state.clueCount >= this.state.solution.length)
-            this.setState({
-                userInput: this.state.solution.join("")
-            });
-        }
-
-    });
-
-
-    this.socket.on('score', score => {
-      this.setState({
-        score: score
-      });
-    });
-
-    this.socket.on('gameStarted', () => {
-      this.setState({
-        gameStarted: true
-      });
-    });
-
-    this.socket.on('gameEnded', () => {
-      this.setState({
-        gameStarted: false
-      });
-    });
-
-      /* msg = {
-          room: (string) roomId joined
-          playerAvatar: (string) avatar URL
-          playerName: (string) player's name who just joined
-      } */
-    this.socket.on('roomJoined', (msg) => {
-      console.log('Server confirms this socket joined room:', msg.room);
-      this.setState({
-        joinedPlayer: msg.playerName,
-        joinedAvatar: msg.playerAvatar,
-        announceBar: true
-      });
-      this.props.playSFX('enter');
-      setTimeout(() => {
-        this.setState({
-          announceBar: false
-        });
-      }, 2000);
-    });
+    initSocketListeners.call(this);
   }
 
   componentWillMount () {
-    console.log("CHAT IS MOUNTING" )
     this.setState({
       roomId: this.props.params.roomID,
       user: this.props.users.profile.displayName
     });
-    console.log(this.props.users);
   }
 
   componentDidMount () {
-    let obj = {
+    this.socket.emit('joinOrCreateRoom', {
       roomId: this.state.roomId,
-      user: this.state.user,
+      user: this.props.users.profile.displayName,
       elo: this.props.users.profile.ELO,
       fbId: this.props.users.profile.auth,
       avatar: this.props.users.profile.imgUrl,
-      type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS'
-    };
-    console.log('COMPONENT DID MOUNT Pt.2', obj);
-    this.socket.emit('joinRoom', obj);
+      type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS',
+      isHost: this.props.session.isHost
+    });
   }
 
   componentDidUpdate () {
@@ -133,36 +60,42 @@ class Chat extends Component {
   }
 
   componentWillUnmount () {
-
+    // Solves issue of ELO not updating. But this fetches the entire user...
+    // TODO: Better solution is to update store without doing a DB call. Update the store's ELO
+    // at the end of a ranked game.
+    this.props.setUserData(this.props.users.profile.auth);
+    this.props.setHost(false);
+    this.props.setRoomType(null);
+    this.socket.disconnect();
   }
 
   announceNewPlayer () {
     this.setState({
       announceBar: true
     });
+    setTimeout(() => {
+      this.setState({
+        announceBar: false
+      });
+    }, 3500);
   }
 
   handleChange (e) {
     this.setState({
-      message: '',
       userInput: e.target.value
     });
   }
-  handleFocus(){
+  handleFocus () {
     this.setState({
       hasFocus: true
     });
   }
-  toggleMenu(){
-    this.props.toggleDrawer()
+  toggleMenu () {
+    this.props.toggleDrawer();
   }
 
   startGame (e) {
-    console.log('startGame');
     e.preventDefault();
-    this.setState({
-      gameStarted: true
-    });
     this.props.playSFX('chime');
     this.socket.emit('startGame', { user: this.state.user, roomId: this.state.roomId });
   }
@@ -183,15 +116,14 @@ class Chat extends Component {
       hasFocus: false
     });
   }
-  requestHint(e) {
-      e.preventDefault();
-      this.socket.emit('hint', { roomId: this.state.roomId, index: this.state.clueCount });
-      this.props.playSFX('hint');
-      this.setState({
-          coinBalance: this.state.coinBalance -= 30
-      });
+  requestHint (e) {
+    e.preventDefault();
+    this.socket.emit('hint', { roomId: this.state.roomId, index: this.state.numHintsReceived });
+    this.props.playSFX('hint');
+    this.setState({
+      coinBalance: this.state.coinBalance - 30
+    });
   }
-
 
   render () {
     const { users } = this.props;
@@ -200,7 +132,7 @@ class Chat extends Component {
     });
     const chatHeadElements = this.state.gameStarted
                                 ? <ChatHead deets={this.state} />
-                                : <ChatHeadPractice deets={this.state} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
+                                : <ChatHeadPractice deets={this.state} roomType={this.props.session.roomType} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
     const avatarBG = {
       backgroundImage: `url(${this.state.joinedAvatar})`,
@@ -220,19 +152,18 @@ class Chat extends Component {
     const hamburgerClass = classNames({
       'hamburger hamburger--elastic': true,
       'is-active': this.props.ui.drawer
-    })
-
+    });
 
     return (
 
-      <div className="chat-view">
-        <div className="chat-head">
+      <div className='chat-view'>
+        <div className='chat-head'>
           {chatHeadElements}
-          <button className={hamburgerClass}  onClick={this.toggleMenu.bind(this)} type="button" >
-            <span className="hamburger-box">
-              <span className="hamburger-inner"></span>
+          <button className={hamburgerClass} onClick={this.toggleMenu.bind(this)} type='button' >
+            <span className='hamburger-box'>
+              <span className='hamburger-inner' />
             </span>
-          </button> 
+          </button>
         </div>
         <div className={annouceClass}>
           <div className='bubble-name' style={avatarBG} />
@@ -247,12 +178,12 @@ class Chat extends Component {
         <div className='chat-form_wrap'>
 
           <form className='chat-form' onSubmit={this.sendMessage.bind(this)}>
-            <input type='text' value={this.state.message}
+            <input type='text'
               value={this.state.userInput}
               onChange={this.handleChange.bind(this)}
               onFocus={this.handleFocus.bind(this)}
               placeholder='Your Message Here' />
-            <input className='btn-input' type='submit' value='Submit'  />
+            <input className='btn-input' type='submit' value='Submit' />
           </form>
         </div>
 

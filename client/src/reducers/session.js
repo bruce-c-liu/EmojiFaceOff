@@ -1,7 +1,7 @@
 const initialState = {
   roomID: 'POOP',
   inviteCount: 1,
-  isHost: true
+  isHost: false
 };
 
 function session (state = initialState, action) {

@@ -5,7 +5,6 @@ module.exports = {
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
 
     let botResponse = { user: 'ebot' };
-
     if (rm.gameStarted && msg.text.codePointAt(0) > 0x03FF) {
       if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
         openConnections[socket.id].score++;                           // Increment the user's score.
@@ -18,17 +17,27 @@ module.exports = {
         wrongAnswer(msg, io, rm);
       }
     } else {
-      // Emit user's message to all sockets connected to this room.
       msg.type = 'chat';
       msg.roundNum = rm.roundNum;
       socket.emit('message', msg);
     }
   },
 
-  joinRoomHandler: function (msg, io, socket) {
+  createRoom: function (msg, io, socket, TESTING_DIFFICULTY) {
     socket.join(msg.roomId);
+    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+    Object.assign(rm, {
+      level: TESTING_DIFFICULTY,
+      roundNum: 0,
+      prompt: '',
+      prompts: [],
+      solutions: {},
+      hints: {},
+      type: msg.type,               // options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+      host: ''                      // IMPLEMENT LATER
+    });
     console.log('Joined room:', msg.roomId);
-    socket.emit('roomJoined', {
+    socket.emit('playerJoinedRoom', {
       room: msg.roomId,
       playerName: msg.user,
       playerAvatar: msg.avatar
@@ -36,8 +45,9 @@ module.exports = {
     console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
     socket.emit('message', {
       user: 'ebot',
-      text: ` 🎉\xa0\xa0Welcome to Emoji Face Off!\xa0\xa0 🎉
-             🙏 Mode: Single Player Practice. 🙏
+      text: `\xa0\xa0🎉 Welcome to Emoji Face Off! 🎉\xa0\xa0
+             \xa0\xa0\xa0\xa0\xa0\xa0\xa0 🙏 Mode: Single Player 🙏
+             
              \xa0\xa0\xa0\xa0 Press Start when you're ready.`
     });
   },
@@ -66,7 +76,7 @@ module.exports = {
 
             console.log('Hints Object:', rm.hints);
             rm.prompt = rm.prompts.pop();
-            botResponse.text = `Round 1: What's [${rm.prompt}] in emoji form?!`;
+            botResponse.text = `Round 1: Emojify [${rm.prompt}] !`;
             rm.roundNum = 1;
             botResponse.roundNum = rm.roundNum;
 
@@ -105,9 +115,7 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   socket.emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  botResponse.text = `Good job, ${msg.user}! 
-                      Round ${rm.roundNum}
-                      Please translate [${rm.prompt}] into emoji form~`;
+  botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`;
   botResponse.roundNum = rm.roundNum;
   socket.emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
@@ -120,20 +128,21 @@ function endGame (botResponse, msg, io, socket, openConnections, rm, TESTING_NUM
 
   msg.type = 'correctGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
-  // First, notify everyone the final answer was correct.
-  botResponse.text = `Good job, ${msg.user}!`;
-  socket.emit('message', botResponse);
-  // Reset all users'' scores
+  // // First, notify everyone the final answer was correct.
+  // botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum}!`;
+  // socket.emit('message', botResponse);
+
+  // Reset all users' scores
   socket.emit('score', null);
   // Emit winner/final scores.
-  botResponse.text = `Game Completed!
+  botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
                       
                       ${timeElapsed} seconds to complete ${TESTING_NUM_ROUNDS} rounds.
                       ${secondsPerRnd} seconds / round.
 
-                      You kinda fucking suck...try harder next time. 💩
+                      That was 💩\xa0...\xa0try harder next time!
 
-                      Press 'start' to begin a new game.`;
+                      Press 'start' to begin a new game. 🙌`;
   socket.emit('newRound', 0);
   socket.emit('message', botResponse);
   socket.emit('gameEnded');

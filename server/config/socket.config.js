@@ -6,14 +6,6 @@ const ranked = require('../game/modes/ranked.js');
 
 let openConnections = {};
 
-function addToOpenConnections (socket) {
-  openConnections[socket.id] = {
-    socket: socket,
-    score: 0,
-    name: null
-  };
-}
-
 const TESTING_NUM_ROUNDS = 3;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
 const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT DIFFICULTY OF PROMPTS
 function messageHandler (msg, io, socket) {
@@ -26,30 +18,30 @@ function messageHandler (msg, io, socket) {
   }
 }
 
-function joinRoomHandler (msg, io, socket) {
+function joinOrCreateRoomHandler (msg, io, socket) {
   // Initialize/store user's info in openConnections
-  openConnections[socket.id].name = msg.user;   // Set the user's name
-  openConnections[socket.id].fbId = msg.fbId;   // Set the user's fbID
-  openConnections[socket.id].elo = msg.elo;     // Set the user's elo
+  openConnections[socket.id] = {
+    name: msg.user,
+    fbId: msg.fbId,
+    elo: msg.elo,
+    score: 0
+  };
 
   if (msg.type === 'SINGLE_PLAYER') {
-    singlePlayer.joinRoomHandler(msg, io, socket);
+    singlePlayer.createRoom(msg, io, socket, TESTING_DIFFICULTY);
   } else if (msg.type === 'FRIENDS_VS_FRIENDS') {
-    friendsVsFriends.joinRoomHandler(msg, io, socket);
+    if (msg.isHost) {
+      friendsVsFriends.createRoom(msg, io, socket, TESTING_DIFFICULTY);
+    } else {
+      friendsVsFriends.joinRoom(msg, io, socket, TESTING_DIFFICULTY);
+    }
   } else if (msg.type === 'RANKED') {
-    ranked.joinRoomHandler(msg, io, socket, TESTING_NUM_ROUNDS, RedisController);
+    if (io.nsps['/'].adapter.rooms[msg.roomId] === undefined) {
+      ranked.createRoom(msg, io, socket, TESTING_DIFFICULTY);
+    } else {
+      ranked.joinRoom(msg, io, socket, openConnections, TESTING_NUM_ROUNDS, RedisController);
+    }
   }
-
-  // Initialize the room's data.
-  let rm = io.nsps['/'].adapter.rooms[msg.roomId];
-  rm.level = TESTING_DIFFICULTY;
-  rm.roundNum = 0;
-  rm.prompt = '';
-  rm.prompts = [];
-  rm.solutions = {};
-  rm.hints = {};
-  rm.type = msg.type;                // options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
-  rm.host = '';                      // IMPLEMENT LATER
 }
 
 function hintHandler (msg, io, socket) {
@@ -71,12 +63,12 @@ module.exports = (server) => {
   const io = require('socket.io')(server);
 
   io.on('connection', socket => {
+    openConnections[socket.id] = {};
     console.log(socket.id, 'has connected!');
-    addToOpenConnections(socket);
+    console.log('Current open socket connections:', openConnections);
 
     socket.on('message', msg => {
       messageHandler(msg, io, socket);
-      console.log(socket.rooms);
     });
 
     socket.on('hint', msg => {
@@ -91,8 +83,8 @@ module.exports = (server) => {
         roomId (string): which room user is requesting to join,
         type (string): type of room ('SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED')
       } */
-    socket.on('joinRoom', msg => {
-      joinRoomHandler(msg, io, socket);
+    socket.on('joinOrCreateRoom', msg => {
+      joinOrCreateRoomHandler(msg, io, socket);
     });
 
     socket.on('startGame', msg => {
