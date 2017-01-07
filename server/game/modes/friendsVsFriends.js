@@ -24,44 +24,86 @@ module.exports = {
     }
   },
 
-  joinRoomHandler: function (msg, io, socket) {
-    if (io.nsps['/'].adapter.rooms[msg.roomId]) {
-      if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
-        socket.emit('message', {
-          user: 'ebot',
-          text: 'This is a single player room! Get outta here! 😡'
-        });
-        return;
-      }
-    }
+  createRoom: function (msg, io, socket, TESTING_DIFFICULTY) {
     socket.join(msg.roomId);
-    console.log('Joined room:', msg.roomId);
-
+    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+    Object.assign(rm, {
+      gameStarted: false,
+      level: TESTING_DIFFICULTY,
+      roundNum: 0,
+      prompt: '',
+      prompts: [],
+      solutions: {},
+      hints: {},
+      type: msg.type,               // options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
+      host: ''                      // IMPLEMENT LATER
+    });
     socket.emit('message', {
       user: 'ebot',
       text: `🎉 Welcome to Emoji Face Off! 🎉\xa0\xa0
-            \xa0👩 \xa0 Mode: Friends vs Friends \xa0👨`
+            \xa0👩 \xa0 Mode: Friends vs Friends \xa0👨
+
+            You are the Host and may start
+            the game at any time.`
     });
     socket.emit('message', {
       user: 'ebot',
       text: `Wait for other friends to join room.
-
-             While waiting, you can:
-             1. 💩 - talk each other.
-             2. Get 💩 - 😶'ed.
-             3. Take a 💩.`
+            💩 - talk each other while you wait!`
     });
+    io.sockets.in(msg.roomId).emit('playerJoinedRoom', {
+      playerName: msg.user,
+      playerAvatar: msg.avatar,
+      room: msg.roomId // Deprecated: Testing only.
+    });
+  },
 
-    console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
+  joinRoom: function (msg, io, socket) {
+    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+    if (rm === undefined) {       // This room does not exist.
+      socket.emit('roomDoesNotExist');
+      return;
+    } else if (rm !== undefined && rm.type !== 'FRIENDS_VS_FRIENDS') { // Someone trying to enter a non-FRIENDS_VS_FRIENDS room.
+      socket.emit('roomDoesNotExist');   // Technically the room exists, but it doesn't matter to the user.
+      return;
+    }
+
+    // Room exists and it's a FRIENDS_VS_FRIENDS room.
+    socket.join(msg.roomId);
     socket.broadcast.to(msg.roomId).emit('message', {
       user: 'ebot',
       text: `${msg.user} has joined the room!`
     });
-    io.sockets.in(msg.roomId).emit('roomJoined', {
-      playerName: `${msg.user}`,
-      playerAvatar: `${msg.avatar}`,
-      room: msg.roomId
+    io.sockets.in(msg.roomId).emit('playerJoinedRoom', {
+      playerName: msg.user,
+      playerAvatar: msg.avatar,
+      room: msg.roomId // Deprecated: Testing only.
     });
+
+    if (!rm.gameStarted) {
+      socket.emit('message', {
+        user: 'ebot',
+        text: `🎉 Welcome to Emoji Face Off! 🎉\xa0\xa0
+              \xa0👩 \xa0 Mode: Friends vs Friends \xa0👨`
+      });
+      socket.emit('message', {
+        user: 'ebot',
+        text: `Wait for other friends to join the room.
+               💩 - talk each other while you wait!`
+      });
+    } else if (rm.gameStarted) {
+      socket.emit('gameStarted');
+      socket.emit('newRound', rm.hints[rm.prompt].length);
+      socket.emit('message', {
+        user: 'ebot',
+        text: `Hello, you've joined a game
+               that's already in progress!
+               BETTER CATCH UP! 😱
+
+               Round ${rm.roundNum}: Emojify [${rm.prompt}] !`,
+        roundNum: rm.roundNum
+      });
+    }
   },
 
   startGame: function (msg, io, TESTING_NUM_ROUNDS, RedisController) {
@@ -96,7 +138,6 @@ module.exports = {
 
             io.sockets.in(msg.roomId).emit('gameStarted');
             io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
-            io.sockets.in(msg.roomId).emit('score', 0);
             io.sockets.in(msg.roomId).emit('message', botResponse);
 
             let roundNum = 1;
@@ -150,11 +191,11 @@ function findWinner (clientsArray, openConnections) {
 }
 
 function calcFinalRankings (clientsArray, openConnections) {
-  let finalRankings = '';
+  let finalRankings = [];
   clientsArray.forEach(client => {
-    finalRankings += `${openConnections[client].name}: ${openConnections[client].score}\n`;
+    finalRankings.push(`${openConnections[client].name}: ${openConnections[client].score}`);
   });
-  return finalRankings;
+  return finalRankings.join('\n');
 }
 
 function endGame (botResponse, msg, io, rm, openConnections) {
@@ -172,7 +213,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   // io.sockets.in(msg.roomId).emit('message', botResponse);
 
   // Reset all users'' scores
-  io.sockets.in(msg.roomId).emit('score', null);
+  io.sockets.in(msg.roomId).emit('score', 0);
   // Emit winner/final scores.
   botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
                       Congrats to the winner ${winner.name}!
@@ -180,7 +221,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
                       Final Scores:
                       ${finalRankings}
                       
-                      Press 'start' to begin a new game. 🙌`;
+                      Press START to begin a new game. 🙌`;
   io.sockets.in(msg.roomId).emit('newRound', 0);
   io.sockets.in(msg.roomId).emit('message', botResponse);
   io.sockets.in(msg.roomId).emit('gameEnded');
@@ -201,6 +242,5 @@ function endGame (botResponse, msg, io, rm, openConnections) {
 
 function wrongAnswer (msg, io, rm) {
   msg.type = 'incorrectGuess';
-  msg.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('message', msg);
 }
