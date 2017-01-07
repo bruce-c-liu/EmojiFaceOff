@@ -721,25 +721,34 @@ nav.menu a {
   background-color: rgba(255, 255, 255, 0.7);
   padding: 2rem; }
 
+.round-select_wrap h1 {
+  font-family: "Fredoka One", cursive;
+  color: #FF6B6B; }
+
+.count-control {
+  display: flex;
+  flex-direction: column; }
+  .count-control i {
+    font-size: 1.5rem;
+    color: #FF6B6B; }
+
 .count-selector {
   display: flex;
   align-items: center;
-  height: 150px;
-  overflow: hidden; }
-  .count-selector i {
-    font-size: 1.5rem;
-    color: #FF6B6B; }
+  height: 150px; }
 
 .count-digit {
   position: relative;
   font-size: 7rem;
   margin: 0 1rem;
-  min-width: 100px;
-  min-height: 150px; }
+  min-width: 110px;
+  min-height: 150px;
+  flex-grow: 1;
+  overflow-y: hidden; }
   .count-digit span {
     position: absolute;
     top: 0%;
-    left: 27%; }
+    left: 0; }
 
 .form-sms {
   width: 100%; }
