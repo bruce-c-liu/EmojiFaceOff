@@ -1,7 +1,7 @@
 const initialState = {
   roomID: 'POOP',
   roundCount: 10,
-  isHost: true
+  isHost: false
 };
 
 function session (state = initialState, action) {
@@ -20,11 +20,11 @@ function session (state = initialState, action) {
       });
     case 'ROUND_COUNT_INC':
       return Object.assign({}, state, {
-        roundCount: state.roundCount += 5
+        roundCount: state.roundCount + 5
       });
     case 'ROUND_COUNT_DEC':
       return Object.assign({}, state, {
-        roundCount: state.roundCount -=5
+        roundCount: state.roundCount -5
       });
     case 'SET_HOST':
       return Object.assign({}, state, {

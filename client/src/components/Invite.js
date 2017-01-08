@@ -42,7 +42,7 @@ class Invite extends Component {
 
   RoundCountDec () {
     console.log('INC INVITE');
-    if (this.props.session.roundCount >= 5) {
+    if (this.props.session.roundCount > 5) {
       this.props.roundDec();
     }
   }
