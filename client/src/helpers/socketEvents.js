@@ -69,4 +69,8 @@ export function initSocketListeners () {
       // (b) provides a link to direct them to the /mode screen to begin a new game
     });
   });
+
+  this.socket.on('newHost', () => {
+    this.props.setHost(true);
+  });
 }

@@ -50,7 +50,8 @@ class Chat extends Component {
       fbId: this.props.users.profile.auth,
       avatar: this.props.users.profile.imgUrl,
       type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS',
-      isHost: this.props.session.isHost
+      isHost: this.props.session.isHost,
+      totalRounds: this.props.session.roundCount
     });
   }
 

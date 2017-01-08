@@ -1,16 +1,16 @@
 const ignoredCodePoints = require('../helpers/ignoredCodePoints.js');
 
 module.exports = {
-  play: function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
+  play: function (io, msg, RedisController, openConnections, socket) {
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
 
     let botResponse = {user: 'ebot'};
     if (rm.gameStarted && msg.text.codePointAt(0) > 0x03FF) {
       if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
         openConnections[socket.id].score++;                           // Increment the user's score.
-        if (rm.roundNum < TESTING_NUM_ROUNDS) {
+        if (rm.roundNum < rm.totalRounds) {
           nextRound(botResponse, msg, io, rm, openConnections, socket);
-        } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
+        } else if (rm.roundNum === rm.totalRounds) {              // Current game's selected round num has been reached.
           endGame(botResponse, msg, io, rm, openConnections);
         }
       } else {                                       // A user replied with an incorrect answer.
@@ -30,6 +30,7 @@ module.exports = {
     Object.assign(rm, {
       gameStarted: false,
       level: TESTING_DIFFICULTY,
+      totalRounds: msg.totalRounds,
       roundNum: 0,
       prompt: '',
       prompts: [],
@@ -100,20 +101,44 @@ module.exports = {
                that's already in progress!
                BETTER CATCH UP! 😱
 
-               Round ${rm.roundNum}: Emojify [${rm.prompt}] !`,
+               Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`,
         roundNum: rm.roundNum
       });
     }
   },
 
-  startGame: function (msg, io, TESTING_NUM_ROUNDS, RedisController) {
+  leaveRoom: function (userInfo, io, socket, openConnections) {
+    if (userInfo.isHost) {
+      let clients = io.nsps['/'].adapter.rooms[userInfo.roomId].sockets;
+      let clientsArray = Object.keys(clients);
+      for (let client of clientsArray) {
+        if (client !== socket.id) {
+          io.to(client).emit('newHost');
+          openConnections[client].isHost = true;
+          io.sockets.in(userInfo.roomId).emit('message', {
+            user: 'ebot',
+            text: `${userInfo.user} (Host) has left the room.
+                   New host is now ${openConnections[client].name}.`
+          });
+          return;
+        }
+      }
+    } else if (!userInfo.isHost) {
+      io.sockets.in(userInfo.roomId).emit('message', {
+        user: 'ebot',
+        text: `${userInfo.user} has left the room.`
+      });
+    }
+  },
+
+  startGame: function (msg, io, RedisController) {
     let botResponse = {user: 'ebot'};
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
     rm.gameStarted = true;
     RedisController.getPrompts() // ADD BACK rm.level LATER
       .then(filteredPrompts => {
         // randomly populate the room's "prompts" object (based on room's difficulty) from our library.
-        while (rm.prompts.length < TESTING_NUM_ROUNDS) {
+        while (rm.prompts.length < rm.totalRounds) {
           let promptIndex = Math.floor(Math.random() * filteredPrompts.length);
           if (!rm.prompts.includes(filteredPrompts[promptIndex])) {
             rm.prompts.push(filteredPrompts[promptIndex]);
@@ -132,7 +157,7 @@ module.exports = {
             rm.prompt = rm.prompts.pop();
             botResponse.text = `${msg.user} has started the game.
 
-                                Round 1: Emojify [${rm.prompt}] !`;
+                                Round 1: Emojify [${rm.prompt}] ! 🤔`;
             rm.roundNum = 1;
             botResponse.roundNum = rm.roundNum;
 
@@ -168,7 +193,7 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] !`;
+  botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`;
   botResponse.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
