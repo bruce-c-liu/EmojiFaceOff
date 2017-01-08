@@ -67,11 +67,6 @@ class Chat extends Component {
     this.props.setUserData(this.props.users.profile.auth);
     this.props.setHost(false);
     this.props.setRoomType(null);
-    this.socket.emit('leaveRoom', {
-      roomId: this.state.roomId,
-      isHost: this.props.session.isHost,
-      user: this.state.user
-    });
     this.socket.disconnect();
   }
 

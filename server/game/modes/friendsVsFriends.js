@@ -101,31 +101,32 @@ module.exports = {
                that's already in progress!
                BETTER CATCH UP! 😱
 
-               Round ${rm.roundNum}: Emojify [${rm.prompt}] !`,
+               Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`,
         roundNum: rm.roundNum
       });
     }
   },
 
-  leaveRoom: function (msg, io, socket, openConnections) {
-    if (msg.isHost) {
-      let clients = io.nsps['/'].adapter.rooms[msg.roomId].sockets;
+  leaveRoom: function (userInfo, io, socket, openConnections) {
+    if (userInfo.isHost) {
+      let clients = io.nsps['/'].adapter.rooms[userInfo.roomId].sockets;
       let clientsArray = Object.keys(clients);
       for (let client of clientsArray) {
         if (client !== socket.id) {
           io.to(client).emit('newHost');
-          io.sockets.in(msg.roomId).emit('message', {
+          openConnections[client].isHost = true;
+          io.sockets.in(userInfo.roomId).emit('message', {
             user: 'ebot',
-            text: `${msg.user} (Host) has left the room.
+            text: `${userInfo.user} (Host) has left the room.
                    New host is now ${openConnections[client].name}.`
           });
           return;
         }
       }
-    } else if (!msg.isHost) {
-      io.sockets.in(msg.roomId).emit('message', {
+    } else if (!userInfo.isHost) {
+      io.sockets.in(userInfo.roomId).emit('message', {
         user: 'ebot',
-        text: `${msg.user} has left the room.`
+        text: `${userInfo.user} has left the room.`
       });
     }
   },
@@ -156,7 +157,7 @@ module.exports = {
             rm.prompt = rm.prompts.pop();
             botResponse.text = `${msg.user} has started the game.
 
-                                Round 1: Emojify [${rm.prompt}] !`;
+                                Round 1: Emojify [${rm.prompt}] ! 🤔`;
             rm.roundNum = 1;
             botResponse.roundNum = rm.roundNum;
 
@@ -192,7 +193,7 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] !`;
+  botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`;
   botResponse.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);

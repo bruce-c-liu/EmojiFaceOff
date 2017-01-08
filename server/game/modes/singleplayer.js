@@ -77,7 +77,7 @@ module.exports = {
 
             console.log('Hints Object:', rm.hints);
             rm.prompt = rm.prompts.pop();
-            botResponse.text = `Round 1: Emojify [${rm.prompt}] !`;
+            botResponse.text = `Round 1: Emojify [${rm.prompt}] ! 🤔`;
             rm.roundNum = 1;
             botResponse.roundNum = rm.roundNum;
 

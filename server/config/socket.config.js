@@ -23,6 +23,8 @@ function joinOrCreateRoomHandler (msg, io, socket) {
   openConnections[socket.id] = {
     name: msg.user,
     fbId: msg.fbId,
+    roomId: msg.roomId,
+    isHost: msg.isHost,
     elo: msg.elo,
     score: 0
   };
@@ -59,22 +61,23 @@ function startGameHandler (msg, io, socket) {
   }
 }
 
-function disconnectHandler (msg, io, socket) {
-  if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
-    // Do nothing.
-  } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'FRIENDS_VS_FRIENDS') {
-    friendsVsFriends.leaveRoom(msg, io, socket, openConnections);
-  } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'RANKED') {
-    ranked.leaveRoom(msg, io, socket, openConnections);
-    // If someone leaves a ranked room, remove the room from ranked queue.
-    let rooms = Object.keys(socket.rooms);
-    for (let roomId in rooms) {
-      if (roomId !== socket.id) {
-        RankedQueue.removeRoom(roomId);
+function disconnectHandler (userInfo, io, socket) {
+  // Note: If a user is the last to leave a room, the room will not exist when
+  // it gets to this handler.
+  if (io.nsps['/'].adapter.rooms[userInfo.roomId]) {
+    if (io.nsps['/'].adapter.rooms[userInfo.roomId].type === 'FRIENDS_VS_FRIENDS') {
+      friendsVsFriends.leaveRoom(userInfo, io, socket, openConnections);
+    } else if (io.nsps['/'].adapter.rooms[userInfo.roomId].type === 'RANKED') {
+      ranked.leaveRoom(userInfo, io, socket, openConnections);
+      // If someone leaves a ranked room, remove the room from ranked queue.
+      let rooms = Object.keys(socket.rooms);
+      for (let roomId in rooms) {
+        if (roomId !== socket.id) {
+          RankedQueue.removeRoom(roomId);
+        }
       }
     }
   }
-
   delete openConnections[socket.id];
 }
 
@@ -110,11 +113,13 @@ module.exports = (server) => {
       startGameHandler(msg, io, socket);
     });
 
-    socket.on('leaveRoom', msg => {
-      disconnectHandler(msg, io, socket);
-    });
-
     socket.on('disconnect', () => {
+      let userInfo = {
+        roomId: openConnections[socket.id].roomId,
+        isHost: openConnections[socket.id].isHost,
+        user: openConnections[socket.id].name
+      };
+      disconnectHandler(userInfo, io, socket);
       console.log(socket.id, 'has disconnected!');
     });
   });
