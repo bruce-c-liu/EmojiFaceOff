@@ -1,16 +1,16 @@
 const ignoredCodePoints = require('../helpers/ignoredCodePoints.js');
 
 module.exports = {
-  play: function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
+  play: function (io, msg, RedisController, openConnections, socket) {
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
 
     let botResponse = {user: 'ebot'};
     if (rm.gameStarted && msg.text.codePointAt(0) > 0x03FF) {
       if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
         openConnections[socket.id].score++;                           // Increment the user's score.
-        if (rm.roundNum < TESTING_NUM_ROUNDS) {
+        if (rm.roundNum < rm.totalRounds) {
           nextRound(botResponse, msg, io, rm, openConnections, socket);
-        } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
+        } else if (rm.roundNum === rm.totalRounds) {              // Current game's selected round num has been reached.
           endGame(botResponse, msg, io, rm, openConnections);
         }
       } else {                                       // A user replied with an incorrect answer.
@@ -30,6 +30,7 @@ module.exports = {
     Object.assign(rm, {
       gameStarted: false,
       level: TESTING_DIFFICULTY,
+      totalRounds: msg.totalRounds,
       roundNum: 0,
       prompt: '',
       prompts: [],
@@ -106,14 +107,37 @@ module.exports = {
     }
   },
 
-  startGame: function (msg, io, TESTING_NUM_ROUNDS, RedisController) {
+  leaveRoom: function (msg, io, socket, openConnections) {
+    if (msg.isHost) {
+      let clients = io.nsps['/'].adapter.rooms[msg.roomId].sockets;
+      let clientsArray = Object.keys(clients);
+      for (let client of clientsArray) {
+        if (client !== socket.id) {
+          io.to(client).emit('newHost');
+          io.sockets.in(msg.roomId).emit('message', {
+            user: 'ebot',
+            text: `${msg.user} (Host) has left the room.
+                   New host is now ${openConnections[client].name}.`
+          });
+          return;
+        }
+      }
+    } else if (!msg.isHost) {
+      io.sockets.in(msg.roomId).emit('message', {
+        user: 'ebot',
+        text: `${msg.user} has left the room.`
+      });
+    }
+  },
+
+  startGame: function (msg, io, RedisController) {
     let botResponse = {user: 'ebot'};
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
     rm.gameStarted = true;
     RedisController.getPrompts() // ADD BACK rm.level LATER
       .then(filteredPrompts => {
         // randomly populate the room's "prompts" object (based on room's difficulty) from our library.
-        while (rm.prompts.length < TESTING_NUM_ROUNDS) {
+        while (rm.prompts.length < rm.totalRounds) {
           let promptIndex = Math.floor(Math.random() * filteredPrompts.length);
           if (!rm.prompts.includes(filteredPrompts[promptIndex])) {
             rm.prompts.push(filteredPrompts[promptIndex]);

@@ -50,7 +50,8 @@ class Chat extends Component {
       fbId: this.props.users.profile.auth,
       avatar: this.props.users.profile.imgUrl,
       type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS',
-      isHost: this.props.session.isHost
+      isHost: this.props.session.isHost,
+      totalRounds: this.props.session.roundCount
     });
   }
 
@@ -66,6 +67,11 @@ class Chat extends Component {
     this.props.setUserData(this.props.users.profile.auth);
     this.props.setHost(false);
     this.props.setRoomType(null);
+    this.socket.emit('leaveRoom', {
+      roomId: this.state.roomId,
+      isHost: this.props.session.isHost,
+      user: this.state.user
+    });
     this.socket.disconnect();
   }
 

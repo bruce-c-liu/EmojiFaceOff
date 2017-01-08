@@ -10,9 +10,9 @@ const TESTING_NUM_ROUNDS = 3;   // CHANGE THIS FOR DIFFERENT NUMBER OF ROUNDS
 const TESTING_DIFFICULTY = 1;   // CHANGE THIS FOR DIFFERENT DIFFICULTY OF PROMPTS
 function messageHandler (msg, io, socket) {
   if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
-    singlePlayer.play(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+    singlePlayer.play(io, msg, RedisController, openConnections, socket);
   } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'FRIENDS_VS_FRIENDS') {
-    friendsVsFriends.play(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+    friendsVsFriends.play(io, msg, RedisController, openConnections, socket);
   } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'RANKED') {
     ranked.play(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
   }
@@ -51,12 +51,31 @@ function hintHandler (msg, io, socket) {
 
 function startGameHandler (msg, io, socket) {
   if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
-    singlePlayer.startGame(msg, io, socket, TESTING_NUM_ROUNDS, RedisController);
+    singlePlayer.startGame(msg, io, socket, RedisController);
   } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'FRIENDS_VS_FRIENDS') {
-    friendsVsFriends.startGame(msg, io, TESTING_NUM_ROUNDS, RedisController);
+    friendsVsFriends.startGame(msg, io, RedisController);
   } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'RANKED') {
-   // ranked.startGame(io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket);
+   // Ranked start game logic is handled in ranked.joinRoom()
   }
+}
+
+function disconnectHandler (msg, io, socket) {
+  if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'SINGLE_PLAYER') {
+    // Do nothing.
+  } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'FRIENDS_VS_FRIENDS') {
+    friendsVsFriends.leaveRoom(msg, io, socket, openConnections);
+  } else if (io.nsps['/'].adapter.rooms[msg.roomId].type === 'RANKED') {
+    ranked.leaveRoom(msg, io, socket, openConnections);
+    // If someone leaves a ranked room, remove the room from ranked queue.
+    let rooms = Object.keys(socket.rooms);
+    for (let roomId in rooms) {
+      if (roomId !== socket.id) {
+        RankedQueue.removeRoom(roomId);
+      }
+    }
+  }
+
+  delete openConnections[socket.id];
 }
 
 module.exports = (server) => {
@@ -91,14 +110,11 @@ module.exports = (server) => {
       startGameHandler(msg, io, socket);
     });
 
+    socket.on('leaveRoom', msg => {
+      disconnectHandler(msg, io, socket);
+    });
+
     socket.on('disconnect', () => {
-      let rooms = Object.keys(socket.rooms);
-      for (let roomId in rooms) {
-        if (roomId !== socket.id) {
-          RankedQueue.removeRoom(roomId);
-        }
-      }
-      delete openConnections[socket.id];
       console.log(socket.id, 'has disconnected!');
     });
   });

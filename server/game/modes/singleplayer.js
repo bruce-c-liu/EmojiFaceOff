@@ -1,17 +1,17 @@
 const ignoredCodePoints = require('../helpers/ignoredCodePoints.js');
 
 module.exports = {
-  play: function (io, msg, TESTING_NUM_ROUNDS, RedisController, openConnections, socket) {
+  play: function (io, msg, RedisController, openConnections, socket) {
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
 
     let botResponse = { user: 'ebot' };
     if (rm.gameStarted && msg.text.codePointAt(0) > 0x03FF) {
       if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
         openConnections[socket.id].score++;                           // Increment the user's score.
-        if (rm.roundNum < TESTING_NUM_ROUNDS) {
+        if (rm.roundNum < rm.totalRounds) {
           nextRound(botResponse, msg, io, rm, openConnections, socket);
-        } else if (rm.roundNum === TESTING_NUM_ROUNDS) {              // Current game's selected round num has been reached.
-          endGame(botResponse, msg, io, socket, openConnections, rm, TESTING_NUM_ROUNDS);
+        } else if (rm.roundNum === rm.totalRounds) {              // Current game's selected round num has been reached.
+          endGame(botResponse, msg, io, socket, openConnections, rm);
         }
       } else {                                       // A user replied with an incorrect answer.
         wrongAnswer(msg, io, rm);
@@ -29,6 +29,7 @@ module.exports = {
     Object.assign(rm, {
       level: TESTING_DIFFICULTY,
       roundNum: 0,
+      totalRounds: msg.totalRounds,
       prompt: '',
       prompts: [],
       solutions: {},
@@ -52,14 +53,14 @@ module.exports = {
     });
   },
 
-  startGame: function (msg, io, socket, TESTING_NUM_ROUNDS, RedisController) {
+  startGame: function (msg, io, socket, RedisController) {
     let botResponse = { user: 'ebot' };
     let rm = io.nsps['/'].adapter.rooms[msg.roomId];
     rm.gameStarted = true;
     RedisController.getPrompts()      // CHANGE BACK LATER: RedisController.getPrompts(rm.level)
       .then(filteredPrompts => {
         // randomly populate the room's "prompts" object from our library.
-        while (rm.prompts.length < TESTING_NUM_ROUNDS) {
+        while (rm.prompts.length < rm.totalRounds) {
           let promptIndex = Math.floor(Math.random() * filteredPrompts.length);
           if (!rm.prompts.includes(filteredPrompts[promptIndex])) {
             rm.prompts.push(filteredPrompts[promptIndex]);
@@ -122,9 +123,9 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   socket.emit('message', botResponse);
 }
 
-function endGame (botResponse, msg, io, socket, openConnections, rm, TESTING_NUM_ROUNDS) {
+function endGame (botResponse, msg, io, socket, openConnections, rm) {
   let timeElapsed = ((Date.now() - rm.startTime) / 1000).toFixed(2);
-  let secondsPerRnd = (timeElapsed / TESTING_NUM_ROUNDS).toFixed(2);
+  let secondsPerRnd = (timeElapsed / rm.totalRounds).toFixed(2);
 
   msg.type = 'correctGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
@@ -137,7 +138,7 @@ function endGame (botResponse, msg, io, socket, openConnections, rm, TESTING_NUM
   // Emit winner/final scores.
   botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
                       
-                      ${timeElapsed} seconds to complete ${TESTING_NUM_ROUNDS} rounds.
+                      ${timeElapsed} seconds to complete ${rm.totalRounds} rounds.
                       ${secondsPerRnd} seconds / round.
 
                       That was 💩\xa0...\xa0try harder next time!

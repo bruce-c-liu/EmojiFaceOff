@@ -11,7 +11,7 @@ module.exports = {
     if (!rm.gameStarted) {
       botResponse.text = `Please wait while we search for a suitable opponent. 😘`;
       socket.emit('message', botResponse);
-    } else if (msg.text.codePointAt(0) > 0x03FF) {
+    } else if (!rm.gameFinished && msg.text.codePointAt(0) > 0x03FF) {
       if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
         openConnections[socket.id].score++;                           // Increment the user's score.
         if (rm.roundNum < TESTING_NUM_ROUNDS) {
@@ -36,6 +36,7 @@ module.exports = {
     Object.assign(rm, {
       level: TESTING_DIFFICULTY,
       gameStarted: false,
+      gameFinished: false,
       roundNum: 0,
       prompt: '',
       prompts: [],
@@ -70,6 +71,13 @@ module.exports = {
     });
 
     startGame(msg, io, openConnections, TESTING_NUM_ROUNDS, RedisController);
+  },
+
+  leaveRoom: function (msg, io, socket, openConnections) {
+    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+    if (rm.gameStarted) {
+      endGameByLeaving(msg, io, socket, rm, openConnections);
+    }
   }
 };
 
@@ -157,13 +165,49 @@ function findLoser (p1, p2) {
   return p1.score > p2.score ? p2 : p1;
 }
 
-// deprecated
-function calcFinalRankings (clientsArray, openConnections, changeinELO, winnerOldELO, winnerNewELO, loser) {
-  let finalRankings = '';
-  clientsArray.forEach(client => {
-    finalRankings += `${openConnections[client].name}: ${openConnections[client].score}\n`;
+function endGameByLeaving (msg, io, socket, rm, openConnections) {
+  rm.gameFinished = true;
+  let clients = io.nsps['/'].adapter.rooms[msg.roomId].sockets;
+  let clientsArray = Object.keys(clients); // The two socketIds in this room
+  let winner, loser;
+
+  for (let client of clientsArray) {
+    if (client === socket.id) {
+      loser = openConnections[client];
+    } else {
+      winner = openConnections[client];
+    }
+  }
+  io.sockets.in(msg.roomId).emit('message', {
+    user: 'ebot',
+    text: `Your opponent has left the room. 
+           You win! 😂`
   });
-  return finalRankings;
+  // ELO changes
+  let expectedScoreP1 = elo.expectedScoreP1(winner.elo, loser.elo);
+  let changeInELO = Math.round(elo.changeInELO(winner.elo, expectedScoreP1, 1));
+
+  loser.elo = loser.elo - changeInELO;
+  if (loser.elo < 0) {
+    loser.elo = 0;
+  }
+  winner.elo = winner.elo + changeInELO;
+  elo.updateELOs(winner.fbId, winner.elo, loser.fbId, loser.elo);
+
+  io.sockets.in(msg.roomId).emit('message', {
+    user: 'ebot',
+    text: `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
+                      Congrats to the winner ${winner.name}!
+
+                      Final Scores:
+                      😎 ${winner.name} 😎
+                      Score: ${winner.score} | Rating: ${winner.elo - changeInELO} => ${winner.elo} (+${changeInELO})
+                      
+                      😤 ${loser.name} 😤
+                      Score: ${loser.score} | Rating: ${loser.elo + changeInELO} => ${loser.elo} (-${changeInELO})
+
+                      Return to the Main Menu to begin a new game.`
+  });
 }
 
 function endGame (botResponse, msg, io, rm, openConnections) {
@@ -187,7 +231,7 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   msg.type = 'correctGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
   io.sockets.in(msg.roomId).emit('message', botResponse);
-  io.sockets.in(msg.roomId).emit('newRound', 0);
+
   // Emit winner/final scores.
   botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
                       Congrats to the winner ${winner.name}!
@@ -209,6 +253,8 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   rm.prompts = [];
   rm.hints = {};
   rm.solutions = {};
+  rm.gameStarted = false;
+  rm.gameFinished = true;
 
   // Reset all user's scores to 0.
   for (let id of clientsArray) {
