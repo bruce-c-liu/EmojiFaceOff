@@ -48,6 +48,9 @@
 	flex-direction: column;
 	align-items: center;
 	margin-right: 1rem;
+	&.coin-stat{
+		min-width: 80px;
+	}
 	span{
 		font-family: 'Fredoka One', cursive;
 		font-size: 2.0rem;

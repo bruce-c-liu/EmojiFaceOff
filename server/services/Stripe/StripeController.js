@@ -21,7 +21,7 @@ module.exports = {
     let fbId = req.body.fbId || null;
     let cashMoola = chargeAmount[req.body.coinPack] || null;
     let coins = coinAmount[req.body.coinPack] || null;
-    console.log('Creating charge for token', token, fbId, cashMoola);
+    console.log('Creating charge for token', token, fbId, cashMoola, coins);
     if (token && fbId && cashMoola) {
       stripe.charges.create({
         amount: cashMoola,
@@ -33,7 +33,10 @@ module.exports = {
       })
       .then(result => {
         if (result.paid && !result.failurecode && coins) {
-          UserController.incrUserCoin(fbId, coins);
+          UserController.incrUserCoin(fbId, coins)
+          .then(data => {
+            res.json(data);
+          })
         } else {
           res.json(result);
         }

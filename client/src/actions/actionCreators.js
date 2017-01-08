@@ -1,5 +1,5 @@
 import auth, { logout, saveUserFirebase } from '../helpers/auth';
-import { SMSInvite, getUser, saveNewUser, shortenLink, getRankedRoom, enqueueRankedRoom } from '../helpers/http.js';
+import { SMSInvite, getUser, saveNewUser, coinsForHint, getRankedRoom, enqueueRankedRoom } from '../helpers/http.js';
 import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 import * as shortid from 'shortid';
@@ -178,18 +178,16 @@ export function sendSMS (userName, roomUrl, numbers) {
   };
 }
 
-export function fetchBitlyLink (longURL) {
-  return function (dispatch) {
-    shortenLink(longURL)
-          .then((resp) => {
-            console.log('BITLY LINK', resp);
-            dispatch({
-              type: 'FETCH_BITLY',
-              payload: resp
-            });
-          });
-  };
+export function spendCoins(uid){
+  return function(dispatch){
+      dispatch({
+        type: 'COINS_SPENT'
+      });
+      coinsForHint(uid)
+      .then(res => console.log("'COINS_SPENT",res ))
+  }
 }
+
 
 export function roundInc () {
   return {

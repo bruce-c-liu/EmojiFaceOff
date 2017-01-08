@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Hint from './Hint';
+import debounce from 'throttle-debounce/debounce';
 
 class HintBar extends Component {
   render () {
@@ -11,12 +12,11 @@ class HintBar extends Component {
     return (
       <div className='hint-bar'>
       		  <button className='btn-hint'
-        onClick={(e) => this.props.clickHint(e)}
+        onClick={debounce(200,(e) => this.props.clickHint(e))}
         disabled={hintInfo.numHintsReceived === hintInfo.solution.length} > ?</button>
 	              <div className='hint-wrap'>
 	        	  {hints}
 	        	  <span className='hint-count'>{hintNum}</span>
-
 	      </div>
       </div>
     );

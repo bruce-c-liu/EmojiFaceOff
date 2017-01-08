@@ -31,7 +31,7 @@ class Invite extends Component {
     });
   }
   componentDidMount () {
-    this.props.fetchBitlyLink(this.state.longRoomURL);
+    //this.props.fetchBitlyLink(this.state.longRoomURL);
   }
 
   RoundCountInc () {

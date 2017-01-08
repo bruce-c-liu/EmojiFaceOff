@@ -62,7 +62,7 @@ module.exports = {
 
   incrUserCoin: (fbId, coins) => {
     if (fbId) {
-      models.User.findOne({
+      return models.User.findOne({
         where: {
           auth: fbId
         }
@@ -72,11 +72,12 @@ module.exports = {
           let displayName = result.displayName;
           let origAmount = result.coins;
           let newAmount = origAmount + coins;
-          result.update({
+          return result.update({
             coins: newAmount
           })
           .then((result) => {
             if (result) console.log(`${displayName}'s coins updated from ${origAmount} to ${newAmount}`);
+            return result;
           });
         } else console.log('No user found');
       })
@@ -86,6 +87,35 @@ module.exports = {
       });
     } else {
       console.log('Please provide a unique fbId');
+    }
+  },
+
+  decrUserCoin: (req, res, next) => {
+    console.log('decrUserCoin', req.body)
+    if (req.body.fbId) {
+      models.User.findOne({
+        where: {
+          auth: req.body.fbId
+        }
+      })
+      .then(result => {
+        if (result) {
+          let origAmount = result.coins;
+          let newAmount = origAmount - 30;
+          result.update({
+            coins: newAmount
+          })
+          .then((result) => {
+            if (result) console.log(`${result.displayName}'s coins updated from ${origAmount} to ${newAmount}`);
+          });
+        } else res.json('No user found');
+      })
+      .catch(err => {
+        res.json(err);
+        throw err;
+      });
+    } else {
+      res.json('Please provide a unique fbId');
     }
   },
 

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
 import StripeCheckout from 'react-stripe-checkout';
 import axios from 'axios';
+import Header from './Header'
 
 class CoinStore extends Component {
   constructor () {
@@ -52,6 +53,7 @@ class CoinStore extends Component {
     return (
 
       <div className='inner-container is-center'>
+        <Header/>
         <div className='mode-select_wrap'>
           <h1> VERY COIN STORE!</h1>
           <div>
