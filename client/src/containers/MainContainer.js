@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { formatUserInfo } from '../helpers/utils';
 import { firebaseAuth } from '../config/constants.js';
 import wallpaper from '../assets/wallpaper.png';
-import Drawer from '../components/Drawer.js';
+import Drawer from '../components/UI/Drawer.js';
 
 class MainContainer extends Component {
   componentWillMount () {
@@ -40,7 +40,11 @@ class MainContainer extends Component {
 }
 
 export default connect(
-  ({users, ui}) => ({isAuthed: users.isAuthed, isFetching: users.isFetching, drawer: ui.drawer}),
+  ({users, ui}) => ({
+    isAuthed: users.isAuthed, 
+    isFetching: users.isFetching, 
+    drawer: ui.drawer
+  }),
   (dispatch) => bindActionCreators(actionCreators, dispatch)
 )(MainContainer);
 

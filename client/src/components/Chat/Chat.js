@@ -28,7 +28,7 @@ class Chat extends Component {
       joinedPlayer: null,
       joinedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
       announceBar: false,
-      coinBalance: 1000,
+      coinBalance: null,
       hasFocus: false
     };
     this.socket = io(socketURL);
@@ -38,7 +38,8 @@ class Chat extends Component {
   componentWillMount () {
     this.setState({
       roomId: this.props.params.roomID,
-      user: this.props.users.profile.displayName
+      user: this.props.users.profile.displayName,
+      coinBalance: this.props.users.profile.coins
     });
   }
 
@@ -113,25 +114,27 @@ class Chat extends Component {
     this.props.playSFX('message');
     this.setState({
       userInput: '',
-      hasFocus: false
+      hasFocus: true
     });
   }
   requestHint (e) {
-    e.preventDefault();
+    //e.preventDefault();
+    e.persist();
     this.socket.emit('hint', { roomId: this.state.roomId, index: this.state.numHintsReceived });
     this.props.playSFX('hint');
+    this.props.spendCoins(this.props.users.profile.auth);
     this.setState({
       coinBalance: this.state.coinBalance - 30
-    });
+    })
   }
 
   render () {
-    const { users } = this.props;
+    const { users  } = this.props;
     const chatList = this.state.chats.map((item, i) => {
       return <Bubble deets={item} profile={users.profile} key={i} />;
     });
     const chatHeadElements = this.state.gameStarted
-                                ? <ChatHead deets={this.state} />
+                                ? <ChatHead deets={this.state} coinBal={this.state.coinBalance} />
                                 : <ChatHeadPractice deets={this.state} roomType={this.props.session.roomType} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
     const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
     const avatarBG = {

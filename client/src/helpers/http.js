@@ -14,6 +14,16 @@ export function writeUser(fbID, amount) {
         });
 }
 
+export function coinsForHint(fbId) {
+    return axios.post(`/api/hintUsed`, {
+            fbId: fbId
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+}
+
+
 
 export function SMSInvite (userName, roomUrl, numbers) {
   console.log('USERNAME FROM SMS', userName);
