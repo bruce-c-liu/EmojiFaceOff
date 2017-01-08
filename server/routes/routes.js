@@ -19,6 +19,7 @@ module.exports = (app, express) => {
   app.post('/api/users', UserController.addUser);
   app.get('/api/users/:fbID', UserController.getUser);
   app.put('/api/users/:fbID', UserController.updateUser);
+  app.post('/api/hintUsed', UserController.decrUserCoin);
 
   app.get('/api/pendPrompts', LibraryController.pendPrompts);
   app.post('/api/requestPrompt', LibraryController.addPrompt);
