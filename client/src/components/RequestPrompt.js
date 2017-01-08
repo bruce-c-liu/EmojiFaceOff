@@ -73,7 +73,7 @@ class RequestPrompt extends Component {
   render () {
     return (
       <div className='inner-container is-center '>
-
+        <Header/>
         <div className='request-prompt_wrap'>
           <h1>Have any clever suggestions for prompts?</h1>
           <form className='RequestPrompt-form' onSubmit={this.requestNewPrompt.bind(this)}>
