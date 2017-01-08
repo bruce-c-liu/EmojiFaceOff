@@ -50,27 +50,27 @@ class RequestPrompt extends Component {
     if (answerOptions.length > 0 && this.state.reqPrompt.length > 0) {
       console.log(`Sending to the server => prompt: ${this.state.reqPrompt} ; answers: `, answerOptions);
 
-      mixpanel.track('Prompt Requested',
-        {'user': this.state.authedId}
-      );
-      // this.setState({
-      //   submitRequest: true
-      // });
-      // axios.post('/api/requestPrompt', {
-      //   userFbId: this.state.authedId,
-      //   prompt: this.state.reqPrompt.toLowerCase(),
-      //   answers: answerOptions
-      // })
-      // .then(result => {
-      //   console.log('response from server', result.status);
-      //   this.setState({
-      //     reqPrompt: '',
-      //     reqAnswer: ''
-      //   });
-      // })
-      // .catch(err => {
-      //   throw err;
-      // });
+      mixpanel.track('Prompt Requested');
+
+      mixpanel.people.increment('Prompts Requested');
+      this.setState({
+        submitRequest: true
+      });
+      axios.post('/api/requestPrompt', {
+        userFbId: this.state.authedId,
+        prompt: this.state.reqPrompt.toLowerCase(),
+        answers: answerOptions
+      })
+      .then(result => {
+        console.log('response from server', result.status);
+        this.setState({
+          reqPrompt: '',
+          reqAnswer: ''
+        });
+      })
+      .catch(err => {
+        throw err;
+      });
     }
   }
 
