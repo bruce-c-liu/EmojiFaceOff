@@ -20,14 +20,17 @@ const checkLocalStorage = () => {
 
 function checkAuth (nextState, replace) {
   let userExists = JSON.parse(checkLocalStorage());
+  
+ if(userExists){
   let name = userExists.displayName.split(' ');
-
   mixpanel.identify(userExists.uid);
   mixpanel.people.set_once({
     '$first_name': name[0],
     '$last_name': name[1],
     '$email': userExists.email
   });
+ }
+  
 
   if (!firebaseAuth().currentUser && nextState.location.pathname !== '/login' && !userExists) {
     replace({
