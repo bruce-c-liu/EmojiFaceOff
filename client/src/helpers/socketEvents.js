@@ -1,3 +1,5 @@
+import mixpanel from 'mixpanel-browser';
+
 export function initSocketListeners () {
   this.socket.on('message', (message) => {
     console.log('Message from server:', message);
@@ -5,6 +7,11 @@ export function initSocketListeners () {
       chats: [...this.state.chats, message],
       round: message.roundNum ? message.roundNum : this.state.round
     });
+    if (message.type === 'correctGuess') {
+      mixpanel.people.increment('Answered Correctly');
+    }else {
+      mixpanel.people.increment('Answered Wrong');
+    }
   });
 
   this.socket.on('newRound', solutionLength => {
@@ -41,6 +48,8 @@ export function initSocketListeners () {
   });
 
   this.socket.on('gameEnded', () => {
+    mixpanel.track('Game End');
+    mixpanel.people.increment('Games Finished');
     this.setState({
       gameStarted: false
     });

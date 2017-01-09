@@ -10,7 +10,7 @@ import ChatHeadPractice from './ChatHeadPractice';
 import Bubble from './Bubble';
 import HintBar from './HintBar';
 import { initSocketListeners } from '../../helpers/socketEvents.js';
-
+import mixpanel from 'mixpanel-browser';
 class Chat extends Component {
 
   constructor () {
@@ -54,6 +54,7 @@ class Chat extends Component {
       isHost: this.props.session.isHost,
       totalRounds: this.props.session.roundCount
     });
+    mixpanel.track('Nav Chat');
   }
 
   componentDidUpdate () {
@@ -98,6 +99,8 @@ class Chat extends Component {
 
   startGame (e) {
     e.preventDefault();
+    mixpanel.track('Game Start');
+    mixpanel.people.increment('Games Started');
     this.props.playSFX('chime');
     this.socket.emit('startGame', { user: this.state.user, roomId: this.state.roomId });
   }
@@ -111,6 +114,10 @@ class Chat extends Component {
       roomId: this.state.roomId
     };
 
+    if (userMessage.text.codePointAt(0) > 0x03FF && this.state.gameStarted) {
+      mixpanel.people.increment('Answer Attempt');
+    }
+
     this.socket.emit('message', userMessage);
     this.props.playSFX('message');
     this.setState({
@@ -119,18 +126,20 @@ class Chat extends Component {
     });
   }
   requestHint (e) {
-    //e.preventDefault();
+    // e.preventDefault();
     e.persist();
+    mixpanel.track('Click Hints');
+    mixpanel.people.increment('Hints Requsted');
     this.socket.emit('hint', { roomId: this.state.roomId, index: this.state.numHintsReceived });
     this.props.playSFX('hint');
     this.props.spendCoins(this.props.users.profile.auth);
     this.setState({
       coinBalance: this.state.coinBalance - 30
-    })
+    });
   }
 
   render () {
-    const { users  } = this.props;
+    const { users } = this.props;
     const chatList = this.state.chats.map((item, i) => {
       return <Bubble deets={item} profile={users.profile} key={i} />;
     });

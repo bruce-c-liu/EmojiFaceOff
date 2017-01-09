@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
 // import { browserHistory } from 'react-router';
-// import { inviteBaseURL } from '../helpers/utils';
+import mixpanel from 'mixpanel-browser';
 import Header from './Header';
 import _ from 'lodash';
 
@@ -29,8 +29,13 @@ class ModeSelect extends Component {
     });
   }
 
+  componentDidMount () {
+    mixpanel.track('Nav Mode');
+  }
+
   initGameFriends (e) {
     e.preventDefault();
+    mixpanel.track('Click Multiplayer');
     this.props.fetchRoomId('friends');
     this.props.setRoomType('FRIENDS_VS_FRIENDS');
     this.props.setHost(true);
@@ -39,6 +44,7 @@ class ModeSelect extends Component {
 
   initGameRanked (e) {
     e.preventDefault();
+    mixpanel.track('Click Ranked');
     // this.props.fetchRoomId('ranked', this.props.users.profile.auth);
     this.props.fetchRoomId('ranked', this.props.users.profile.ELO);
     this.props.setRoomType('RANKED');
@@ -47,6 +53,7 @@ class ModeSelect extends Component {
 
   initGameSolo (e) {
     e.preventDefault();
+    mixpanel.track('Click Solo');
     this.props.fetchRoomId('solo');
     this.props.setRoomType('SINGLE_PLAYER');
     this.props.setHost(true);
