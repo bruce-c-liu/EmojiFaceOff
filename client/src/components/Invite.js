@@ -116,7 +116,7 @@ Click here to Play: ${this.state.longRoomURL}`
             </ul>
             <Link to={`/chat/${session.roomID}`} className="btn-login">
                 Start Game <span>🎉🏁</span>
-              </Link>
+            </Link>
          </Modal>
       </div>
     );
