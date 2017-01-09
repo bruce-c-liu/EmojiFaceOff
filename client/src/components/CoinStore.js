@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';
 import StripeCheckout from 'react-stripe-checkout';
 import axios from 'axios';
-import Header from './Header'
+import Header from './Header';
+import mixpanel from 'mixpanel-browser';
 
 class CoinStore extends Component {
   constructor () {
@@ -22,6 +23,11 @@ class CoinStore extends Component {
     });
   }
 
+  componentDidMount () {
+    // this.props.fetchBitlyLink(this.state.longRoomURL);
+    mixpanel.track('Nav Coin Store');
+  }
+
   onToken (token) {
     console.log('sending charge', token, this.state);
     if (token && this.state.coinPack.length > 0) {
@@ -32,6 +38,7 @@ class CoinStore extends Component {
       })
       .then(token => {
         console.log('response from server', token);
+        if (this.state.coinPack) mixpanel.track(`Bought ${this.state.coinPack} Doge Pack`);
         this.setState({
           coinPack: ''
         });
@@ -47,13 +54,14 @@ class CoinStore extends Component {
     this.setState({
       coinPack: coinPack
     });
+    if (this.state.coinPack) mixpanel.track(`Bought ${this.state.coinPack} Doge Pack`);
   }
 
   render () {
     return (
 
       <div className='inner-container is-center'>
-        <Header/>
+        <Header />
         <div className='mode-select_wrap'>
           <h1> VERY COIN STORE!</h1>
           <div>

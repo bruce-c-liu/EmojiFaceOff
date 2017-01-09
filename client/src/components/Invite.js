@@ -11,6 +11,7 @@ import btnIcon from '../assets/Messenger_Icon.png';
 import Header from './Header';
 import OnBoard from './OnBoard';
 import Modal from './UI/Modal';
+import mixpanel from 'mixpanel-browser';
 
 class Invite extends Component {
   constructor () {
@@ -31,7 +32,8 @@ class Invite extends Component {
     });
   }
   componentDidMount () {
-    //this.props.fetchBitlyLink(this.state.longRoomURL);
+    // this.props.fetchBitlyLink(this.state.longRoomURL);
+    mixpanel.track('Nav Invite');
   }
 
   RoundCountInc () {
@@ -59,62 +61,56 @@ class Invite extends Component {
     const loaderUI = this.props.ui.loading
                             ? <div className='loader'><p>Sending Invitation</p></div>
                             : null;
-    const clipboardData=
+    const clipboardData =
 `${this.props.users.profile.displayName} is challenging you to an Emoji Faceoff.
-Click here to Play: ${this.state.longRoomURL}`
+Click here to Play: ${this.state.longRoomURL}`;
 
     return (
       <div className='inner-container is-center invite-wrap'>
         <Header />
-        <div className="round-select_wrap">
+        <div className='round-select_wrap'>
 
-            <div className='count-selector'>
+          <div className='count-selector'>
             <h1>ROUNDS</h1>
 
-              <CSSTransitionGroup
-                component='span'
-                className='count-digit'
-                transitionName='count'
-                transitionEnterTimeout={250}
-                transitionLeaveTimeout={250}
+            <CSSTransitionGroup
+              component='span'
+              className='count-digit'
+              transitionName='count'
+              transitionEnterTimeout={250}
+              transitionLeaveTimeout={250}
               >
-                <span key={this.props.session.roundCount} >{this.props.session.roundCount}</span>
-              </CSSTransitionGroup>
-              <div className="count-control">
-                  <i className='ion-chevron-up' onClick={this.RoundCountInc.bind(this)} />
-                  <i className='ion-chevron-down' onClick={this.RoundCountDec.bind(this)} />
-              </div>
-             
-             
+              <span key={this.props.session.roundCount} >{this.props.session.roundCount}</span>
+            </CSSTransitionGroup>
+            <div className='count-control'>
+              <i className='ion-chevron-up' onClick={this.RoundCountInc.bind(this)} />
+              <i className='ion-chevron-down' onClick={this.RoundCountDec.bind(this)} />
             </div>
+
+          </div>
         </div>
 
-   
-          <CopyToClipboard text={clipboardData}
-                    onCopy={() => this.setState({copied: true, })}>
-                    <button className='btn-fbshare'>Send text message to friends</button>
-          </CopyToClipboard>
-          <h6 className='or-split'>OR</h6>
+        <CopyToClipboard text={clipboardData}
+          onCopy={() => this.setState({copied: true })}>
+          <button className='btn-fbshare'>Send text message to friends</button>
+        </CopyToClipboard>
+        <h6 className='or-split'>OR</h6>
 
-          <a className='btn-fbshare' href={encodedURL} onClick={this.popModal.bind(this)}>
-            <img src={btnIcon} alt='' />Invite Facebook Friends
+        <a className='btn-fbshare' href={encodedURL} onClick={this.popModal.bind(this)}>
+          <img src={btnIcon} alt='' />Invite Facebook Friends
           </a>
-
-        
-
-
 
         {loaderUI}
         <OnBoard show={this.state.onBoard} roomLink={this.props.session.roomID} />
-        <Modal modalOpen={this.state.copied} toggleModal={()=>this.setState({copied: !this.state.copied})}>
-            <span className="emoji-glyph">👍</span>
-            <h1 className="font-display">Invite Link Copied!</h1>
-            <ul className="steps-list">
-              <li><span>1</span> Open your text message app</li>
-              <li><span>2</span> Text the invite link out to friends</li>
-              <li><span>3</span> Come back here and Start Game!</li>
-            </ul>
-            <Link to={`/chat/${session.roomID}`} className="btn-login">
+        <Modal modalOpen={this.state.copied} toggleModal={() => this.setState({copied: !this.state.copied})}>
+          <span className='emoji-glyph'>👍</span>
+          <h1 className='font-display'>Invite Link Copied!</h1>
+          <ul className='steps-list'>
+            <li><span>1</span> Open your text message app</li>
+            <li><span>2</span> Text the invite link out to friends</li>
+            <li><span>3</span> Come back here and Start Game!</li>
+          </ul>
+          <Link to={`/chat/${session.roomID}`} className='btn-login'>
                 Start Game <span>🎉🏁</span>
             </Link>
          </Modal>

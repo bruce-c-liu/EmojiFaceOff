@@ -21,6 +21,7 @@ class RequestPrompt extends Component {
     this.setState({
       authedId: this.props.users.authedId
     });
+    mixpanel.track('Nav Request');
   }
 
   handleChangePrompt (e) {
@@ -37,6 +38,7 @@ class RequestPrompt extends Component {
 
   requestNewPrompt (e) {
     e.preventDefault();
+    mixpanel.track('Click Request Prompt');
     console.log('Request sent to server', this.state);
     let tmpStorage = {};
     let answerOptions = this.state.reqAnswer
@@ -49,8 +51,6 @@ class RequestPrompt extends Component {
                         });
     if (answerOptions.length > 0 && this.state.reqPrompt.length > 0) {
       console.log(`Sending to the server => prompt: ${this.state.reqPrompt} ; answers: `, answerOptions);
-
-      mixpanel.track('Prompt Requested');
 
       mixpanel.people.increment('Prompts Requested');
       this.setState({
@@ -77,7 +77,7 @@ class RequestPrompt extends Component {
   render () {
     return (
       <div className='inner-container is-center '>
-        <Header/>
+        <Header />
         <div className='request-prompt_wrap'>
           <h1>Have any clever suggestions for prompts?</h1>
           <form className='RequestPrompt-form' onSubmit={this.requestNewPrompt.bind(this)}>
