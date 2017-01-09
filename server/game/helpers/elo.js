@@ -5,6 +5,7 @@ module.exports = {
     return 1 / (1 + Math.pow(10, ((eloP2 - eloP1) / 400)));
   },
 
+  // deprecated
   adjustedELO: function (currElo, expectedScore, actualScore) {
     let k = 50; // A higher k factor means higher rating volatility.
     return currElo + k * (actualScore - expectedScore);
