@@ -93,7 +93,6 @@ module.exports = {
   },
 
   decrUserCoin: (req, res, next) => {
-    console.log('decrUserCoin', req.body);
     if (req.body.fbId) {
       models.User.findOne({
         where: {
@@ -102,13 +101,13 @@ module.exports = {
       })
       .then(result => {
         if (result) {
-          let origAmount = result.coins;
-          let newAmount = origAmount - 30;
           result.update({
-            coins: newAmount
+            coins: result.coins - 30
           })
           .then((result) => {
-            if (result) console.log(`${result.displayName}'s coins updated from ${origAmount} to ${newAmount}`);
+            if (result) {
+              res.json('Coin decrease successful.');
+            }
           });
         } else res.json('No user found');
       })

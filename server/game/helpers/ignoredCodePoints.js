@@ -4,5 +4,7 @@ module.exports = {
   '🏽': true,       // 127997  x1F3FD
   '🏾': true,       // 127998  x1F3FE
   '🏿': true,       // 127999  x1F3FF
-  '\uFE0F': true    // emoji presentation selector
+  '\uFE0F': true,   // emoji presentation selector
+  '\u00A0': true,   // Nonbreaking space character
+  '\u0020': true    // Normal space character
 };

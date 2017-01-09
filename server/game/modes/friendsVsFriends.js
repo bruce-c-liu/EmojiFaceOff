@@ -185,6 +185,7 @@ function checkAnswer (guess, prompt, solutions) {
       msgWithoutToneModifiers += codePoint;
     }
   }
+
   return solutions[prompt][msgWithoutToneModifiers];
 }
 

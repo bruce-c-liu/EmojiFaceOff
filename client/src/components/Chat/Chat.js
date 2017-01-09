@@ -65,10 +65,6 @@ class Chat extends Component {
   }
 
   componentWillUnmount () {
-    // Solves issue of ELO not updating. But this fetches the entire user...
-    // TODO: Better solution is to update store without doing a DB call. Update the store's ELO
-    // at the end of a ranked game.
-    this.props.setUserData(this.props.users.profile.auth);
     this.props.setHost(false);
     this.props.setRoomType(null);
     this.socket.disconnect();

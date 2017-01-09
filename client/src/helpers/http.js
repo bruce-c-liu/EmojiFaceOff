@@ -7,23 +7,21 @@ export function getUser (fbID) {
               });
 }
 
-export function writeUser(fbID, amount) {
-    return axios.put(`/api/users/${fbID}`)
+export function writeUser (fbID, amount) {
+  return axios.put(`/api/users/${fbID}`)
         .catch((err) => {
-            console.log(err);
+          console.log(err);
         });
 }
 
-export function coinsForHint(fbId) {
-    return axios.post(`/api/hintUsed`, {
-            fbId: fbId
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+export function coinsForHint (fbId) {
+  return axios.put(`/api/hintUsed`, {
+    fbId: fbId
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 }
-
-
 
 export function SMSInvite (userName, roomUrl, numbers) {
   console.log('USERNAME FROM SMS', userName);

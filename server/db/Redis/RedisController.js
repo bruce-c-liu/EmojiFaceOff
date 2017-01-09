@@ -9,8 +9,12 @@ module.exports = {
    * if not level is given then return all prompts
    */
   getPrompts: (level) => {
-    if (level) return redClient.smembers(`L${level}P`);
-    else return redClient.sunion(`L0P`, `L1P`, `L2P`, `L3P`, `L4P`, `L5P`);
+    if (level) {
+      return redClient.smembers(`L${level}P`);
+    } else {
+      // return redClient.sunion(`L0P`, `L1P`, `L2P`, `L3P`, `L4P`, `L5P`);
+      return redClient.sunion(`L0P`, `L1P`, `L2P`, `L3P`);
+    }
   },
 
   // Deprecated
@@ -43,22 +47,19 @@ module.exports = {
   },
 
   getAllAnswers: (prompts) => {
-    let redisCalls = [];
     let solutions = {};
-    for (let prompt of prompts) {
+
+    return Promise.map(prompts, (prompt) => {
       solutions[prompt] = {};
-      redisCalls.push(redClient.smembers(`PTA:${prompt}`).then(answers => {
+      return redClient.smembers(`PTA:${prompt}`).then(answers => {
         for (let answer of answers) {
           solutions[prompt][answer] = true;
         }
-      }));
-    }
-    return Promise.all(redisCalls).then(() => {
-      return solutions;
-    });
+      });
+    }).then(() => solutions);
   },
 
-  getCommends: (t) => {
+  getCommends: () => {
     return redClient.smembers(`Commends`)
       .catch(err => {
         throw err;

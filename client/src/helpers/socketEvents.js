@@ -8,13 +8,13 @@ export function initSocketListeners () {
       round: message.roundNum ? message.roundNum : this.state.round
     });
     if (message.type === 'correctGuess') {
-      this.props.playSFX('correct')
+      this.props.playSFX('correct');
       mixpanel.people.increment('Answered Correctly');
-    } else if(message.type === 'incorrectGuess'){
-      this.props.playSFX('incorrect')
+    } else if (message.type === 'incorrectGuess') {
+      this.props.playSFX('incorrect');
       mixpanel.people.increment('Answered Wrong');
-    }else {
-     this.props.playSFX('chat')
+    } else {
+      this.props.playSFX('chat');
     }
   });
 

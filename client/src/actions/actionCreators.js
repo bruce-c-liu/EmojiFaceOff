@@ -178,16 +178,15 @@ export function sendSMS (userName, roomUrl, numbers) {
   };
 }
 
-export function spendCoins(uid){
-  return function(dispatch){
-      dispatch({
-        type: 'COINS_SPENT'
-      });
-      coinsForHint(uid)
-      .then(res => console.log("'COINS_SPENT",res ))
-  }
+export function spendCoins (uid) {
+  return function (dispatch) {
+    dispatch({
+      type: 'COINS_SPENT'
+    });
+    coinsForHint(uid)
+      .then(res => console.log('COINS_SPENT', res));
+  };
 }
-
 
 export function roundInc () {
   return {
