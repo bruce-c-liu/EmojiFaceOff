@@ -1,4 +1,5 @@
 {
+
   "main.css": "static/css/main.eed7952b.css",
   "main.css.map": "static/css/main.eed7952b.css.map",
   "main.js": "static/js/main.010c2d1d.js",
@@ -7,4 +8,5 @@
   "static\\media\\onboard.jpg": "static/media/onboard.c8c40285.jpg",
   "static\\media\\stop_hand.svg": "static/media/stop_hand.c1994277.svg",
   "static\\media\\wallpaper.png": "static/media/wallpaper.063f4ab6.png"
+
 }
