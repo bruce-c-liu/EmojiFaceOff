@@ -21,7 +21,8 @@ module.exports = (app, express) => {
   app.put('/api/users/:fbID', UserController.updateUser);
   app.post('/api/hintUsed', UserController.decrUserCoin);
 
-  app.get('/api/pendPrompts', LibraryController.pendPrompts);
+  app.get('/api/prompts/:type', LibraryController.pendPrompts);
+  app.get('/api/prompt/:promptId', LibraryController.prompt);
   app.post('/api/requestPrompt', LibraryController.addPrompt);
   app.put('/api/pendPrompts', LibraryController.updatePendPrompt);
 

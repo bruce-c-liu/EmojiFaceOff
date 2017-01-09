@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/actionCreators.js';
+import * as actionCreators from '../../actions/actionCreators.js';
 import axios from 'axios';
-import PendRow from './PendRow';
+import LibRow from './LibRow';
 
-class PendRequest extends Component {
+class Library extends Component {
   constructor () {
     super();
     this.state = {
@@ -14,9 +14,9 @@ class PendRequest extends Component {
   }
 
   componentDidMount () {
-    axios.get('/api/prompts/pend')
+    axios.get(`/api/prompts/${this.props.params.type}`)
     .then(result => {
-      console.log('pending Prompts', result.data);
+      console.log(`${this.props.params.type} Prompts`, result.data);
       if (result) {
         let storage = [];
         result.data.map((item) => {
@@ -41,13 +41,13 @@ class PendRequest extends Component {
   render () {
     const tableRows = this.state.rows.map((item, idx) => {
       return (
-        <PendRow deets={item} key={idx} />
+        <LibRow deets={item} key={idx} />
       );
     });
 
     return (
-      <div>
-        <p>In pending requests</p>
+      <div className='admin-container'>
+        <p>In Admin Library</p>
         <table>
           <thead />
           <tbody>
@@ -55,8 +55,7 @@ class PendRequest extends Component {
               <th>User</th>
               <th>Prompt</th>
               <th>Answer</th>
-              <th>Level</th>
-              <th>Add/Rem</th>
+              <th>Details</th>
               <th />
             </tr>
             {tableRows}
@@ -77,5 +76,5 @@ function mapStateToProps (state) {
 function mapDispachToProps (dispatch) {
   return bindActionCreators(actionCreators, dispatch);
 }
-export default connect(mapStateToProps, mapDispachToProps)(PendRequest);
+export default connect(mapStateToProps, mapDispachToProps)(Library);
 

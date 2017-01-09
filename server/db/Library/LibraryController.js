@@ -12,13 +12,36 @@ module.exports = {
     });
   },
 
+  prompt: (req, res, next) => {
+    console.log('Getting 1 prompt', req.params.promptId);
+    models.Library.findOne({
+      where: {
+        id: req.params.promptId
+      },
+      include: {
+        model: models.Solution
+      }
+    })
+    .then(result => {
+      res.json(result);
+    })
+    .catch(err => {
+      res.json(err);
+      throw err;
+    });
+  },
+
   pendPrompts: (req, res, next) => {
     console.log('in pending prompts');
+    let approved = true;
+    if (req.params.type.startsWith('pend')) {
+      approved = false;
+    }
     models.Library.findAll({
       include: {
         model: models.Solution,
         where: {
-          approved: false
+          approved: approved
         }
       }
     })
@@ -62,7 +85,8 @@ module.exports = {
       if (result) {
         return models.Library.update(
           {
-            approved: true
+            approved: true,
+            level: promptLevel
           },
           {
             where: {
@@ -131,7 +155,6 @@ module.exports = {
           })
           .then(result => {
             if (result[1]) console.log(`New answers( ${answers} ) for prompt( ${prompt} )`);
-            else console.log(`Answer ( ${answers} ) already exists for prompt( ${prompt} )`);
           })
           .catch(err => {
             throw err;
