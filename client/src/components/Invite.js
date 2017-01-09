@@ -57,7 +57,7 @@ class Invite extends Component {
 
   render () {
     const { session } = this.props;
-    const encodedURL = `fb-messenger://share/?link=http%3A%2F%2Femojifaceoff.herokuapp.com%2Fchat%2F${this.props.session.roomID}`;
+    const encodedURL = `fb-messenger://share/?link=http%3A%2F%2Femojifaceoff.com%2Fchat%2F${this.props.session.roomID}`;
     const loaderUI = this.props.ui.loading
                             ? <div className='loader'><p>Sending Invitation</p></div>
                             : null;
@@ -112,8 +112,8 @@ Click here to Play: ${this.state.longRoomURL}`;
           </ul>
           <Link to={`/chat/${session.roomID}`} className='btn-login'>
                 Start Game <span>🎉🏁</span>
-          </Link>
-        </Modal>
+            </Link>
+         </Modal>
       </div>
     );
   }
