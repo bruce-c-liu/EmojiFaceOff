@@ -30,15 +30,7 @@ class ChatHead extends Component {
                   <p> SCORE</p>
               </div>
               <div className='flip-stat coin-stat'>
-            {/* JSX Comment 
-              <CSSTransitionGroup
-                transitionName='count'
-                transitionEnterTimeout={250}
-                transitionLeaveTimeout={250}
-                >
-                <span key={coinBal} >{coinBal}</span>
-              </CSSTransitionGroup>
-            */}
+
             <Motion defaultStyle={{x: 0}} style={{x: spring(coinBal)}}>
               {value => <span>{Math.round(value.x)}</span>}
             </Motion>

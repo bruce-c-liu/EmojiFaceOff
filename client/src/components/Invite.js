@@ -9,9 +9,9 @@ import { inviteBaseURL } from '../helpers/utils';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import btnIcon from '../assets/Messenger_Icon.png';
 import Header from './Header';
-import OnBoard from './OnBoard';
 import Modal from './UI/Modal';
 import mixpanel from 'mixpanel-browser';
+import stop_sign from '../assets/stop_hand.svg';
 
 class Invite extends Component {
   constructor () {
@@ -22,7 +22,7 @@ class Invite extends Component {
       shortRoomURL: null,
       onBoard: false,
       copied: false,
-      copyContent: 'TEST THIS COPY'
+      startShown: false
     };
   }
 
@@ -51,8 +51,14 @@ class Invite extends Component {
 
   popModal (e) {
     this.setState({
-      onBoard: true
-    });
+      copied: true
+    })
+    setTimeout(() => {
+      this.setState({
+        startShown: true
+      });
+    }, 8000);
+      
   }
 
   render () {
@@ -65,13 +71,19 @@ class Invite extends Component {
 `${this.props.users.profile.displayName} is challenging you to an Emoji Faceoff.
 Click here to Play: ${this.state.longRoomURL}`;
 
+const stopStart = this.state.startShown
+                            ?           <Link to={`/chat/${session.roomID}`} className='btn-login'>
+                                          Start Game <span>🎉🏁</span>
+                                          </Link>
+                              : <img className="glyph-stop" src={stop_sign} alt=""/>;
+
     return (
       <div className='inner-container is-center invite-wrap'>
         <Header />
         <div className='round-select_wrap'>
 
           <div className='count-selector'>
-            <h1>ROUNDS</h1>
+            <h1># OF ROUNDS</h1>
 
             <CSSTransitionGroup
               component='span'
@@ -91,7 +103,7 @@ Click here to Play: ${this.state.longRoomURL}`;
         </div>
 
         <CopyToClipboard text={clipboardData}
-          onCopy={() => this.setState({copied: true })}>
+          onCopy={this.popModal.bind(this)}>
           <button className='btn-fbshare'>Send text message to friends</button>
         </CopyToClipboard>
         <h6 className='or-split'>OR</h6>
@@ -101,8 +113,8 @@ Click here to Play: ${this.state.longRoomURL}`;
           </a>
 
         {loaderUI}
-        <OnBoard show={this.state.onBoard} roomLink={this.props.session.roomID} />
-        <Modal modalOpen={this.state.copied} toggleModal={() => this.setState({copied: !this.state.copied})}>
+    
+        <Modal modalOpen={this.state.copied} toggleModal={() => this.popModal.bind(this)}>
           <span className='emoji-glyph'>👍</span>
           <h1 className='font-display'>Invite Link Copied!</h1>
           <ul className='steps-list'>
@@ -110,9 +122,7 @@ Click here to Play: ${this.state.longRoomURL}`;
             <li><span>2</span> Text the invite link out to friends</li>
             <li><span>3</span> Come back here and Start Game!</li>
           </ul>
-          <Link to={`/chat/${session.roomID}`} className='btn-login'>
-                Start Game <span>🎉🏁</span>
-            </Link>
+          {stopStart}
          </Modal>
       </div>
     );

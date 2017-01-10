@@ -12,7 +12,10 @@ const soundsData = {
   chime: `${process.env.PUBLIC_URL}/sounds/Selection_Chime.mp3`,
   tap: `${process.env.PUBLIC_URL}/sounds/Button_Click.mp3`,
   tick: `${process.env.PUBLIC_URL}/sounds/Button_Tick.mp3`,
-  enter: `${process.env.PUBLIC_URL}/sounds/Notification_Enter.mp3`
+  enter: `${process.env.PUBLIC_URL}/sounds/Notification_Enter.mp3`,
+  correct: `${process.env.PUBLIC_URL}/sounds/Notification_Correct.mp3`,
+  incorrect: `${process.env.PUBLIC_URL}/sounds/Action_Incorrect.mp3`,
+  chat: `${process.env.PUBLIC_URL}/sounds/Button_Blip_Chat.mp3`
 };
 
 // Import our Sound Data Object

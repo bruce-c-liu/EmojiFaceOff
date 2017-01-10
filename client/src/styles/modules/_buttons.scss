@@ -25,20 +25,27 @@ button{
 }
 
 .btn-hint{
+  height: 35px;
   margin-left: 1rem;
-  font-size: 1.65rem;
+  padding: 0 .5rem;
+  font-size: 1rem;
   font-family: 'Fredoka One', cursive;
-  color: $orange;
+  color: $white;
+  background-color: $turq;
+  border-radius: 4px;
+  letter-spacing: 1px;
   &:disabled{
-    color: darken($blue-pale, 10%);
+    background-color: darken($blue-pale, 10%);
   }
 }
 
 .btn-input{
   padding: .5rem 1rem;
   background-color: $orange;
+  font-family: 'Fredoka One', cursive;
   color: $white;
-  font-size: .85rem;
+  font-size: 1rem;
+  letter-spacing: 1px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -47,6 +54,18 @@ button{
   outline: none;
   opacity: 1;
   -webkit-appearance: none;
+}
+
+.btn-buy{
+  height: 50px;
+  width: 100px;
+  line-height: 50px;
+  margin-left: .5rem;
+  border-radius: 4px;
+  background-color: $orange;
+  font-family: $font-display;
+  color:$gray-lt;
+  font-size: 2rem;
 }
 
 .btn-login{

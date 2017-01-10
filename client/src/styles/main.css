@@ -218,18 +218,25 @@ button {
     background-color: #009d7e; }
 
 .btn-hint {
+  height: 35px;
   margin-left: 1rem;
-  font-size: 1.65rem;
+  padding: 0 .5rem;
+  font-size: 1rem;
   font-family: 'Fredoka One', cursive;
-  color: #FF6B6B; }
+  color: #FFFFFF;
+  background-color: #41CBCC;
+  border-radius: 4px;
+  letter-spacing: 1px; }
   .btn-hint:disabled {
-    color: #bfcfe7; }
+    background-color: #bfcfe7; }
 
 .btn-input {
   padding: .5rem 1rem;
   background-color: #FF6B6B;
+  font-family: 'Fredoka One', cursive;
   color: #FFFFFF;
-  font-size: .85rem;
+  font-size: 1rem;
+  letter-spacing: 1px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -238,6 +245,17 @@ button {
   outline: none;
   opacity: 1;
   -webkit-appearance: none; }
+
+.btn-buy {
+  height: 50px;
+  width: 100px;
+  line-height: 50px;
+  margin-left: .5rem;
+  border-radius: 4px;
+  background-color: #FF6B6B;
+  font-family: "Fredoka One", cursive;
+  color: #eceff2;
+  font-size: 2rem; }
 
 .btn-login {
   width: 95%;
@@ -351,7 +369,8 @@ button {
   width: 90%;
   height: 100%;
   padding: 3rem  2rem;
-  background: linear-gradient(to top, #1772ae 0%, #11527d 65%, #0d4163 100%);
+  background-color: #c7f0f0;
+  box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.48);
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1); }
   .drawer.is-open {
@@ -361,7 +380,8 @@ nav.menu a {
   display: block;
   padding: 1rem .5rem;
   font-size: 1.5rem;
-  color: #eceff2;
+  font-weight: 600;
+  color: #32b8b9;
   letter-spacing: 1px; }
 
 .example-enter {
@@ -461,6 +481,7 @@ nav.menu a {
   background-color: #e4ebf5; }
 
 .chat-messages {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -573,7 +594,7 @@ nav.menu a {
   position: relative;
   min-width: 24%;
   align-self: flex-end;
-  padding: .4rem .6rem;
+  padding: .4rem .8rem;
   margin-bottom: 2rem;
   margin-right: 2.5rem;
   border-radius: 15px;
@@ -586,6 +607,11 @@ nav.menu a {
     background-color: #1371ba;
     font-size: 1.1rem;
     color: #FFFFFF; }
+    .chat-bubble.on-left em {
+      display: block;
+      font-style: normal;
+      font-weight: 800;
+      font-size: 1.3rem; }
     .chat-bubble.on-left .bubble-name {
       bottom: 0px;
       left: -34px; }
@@ -755,6 +781,9 @@ nav.menu a {
 .form-sms {
   width: 100%; }
 
+.glyph-stop {
+  max-width: 50%; }
+
 .input-inline {
   position: relative;
   display: flex;
@@ -790,17 +819,52 @@ nav.menu a {
   position: absolute;
   height: 100%;
   width: 100%;
-  top: 0;
+  bottom: 0;
   left: 0;
-  background-color: rgba(33, 33, 35, 0.9);
+  background-color: #eceff2;
+  background-size: cover;
+  background-position: bottom center;
   padding: 2rem 3rem;
-  transform: translateY(200%);
   transition: transform .3s ease; }
   .onboard-wrap p {
     color: #eceff2;
     font-size: 1.25rem; }
   .onboard-wrap.is-visible {
     transform: translateY(0); }
+
+.store-items {
+  background-color: #FFFFFF; }
+
+.store-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+  .store-item:last-child {
+    border-bottom: none; }
+  .store-item .dotted {
+    height: 1px;
+    flex-grow: 1;
+    border-bottom: 2px dashed #baecec; }
+  .store-item h4 {
+    font-family: "Fredoka One", cursive;
+    font-size: 2rem;
+    color: #41CBCC;
+    margin-right: .5rem; }
+
+.store-balance {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+  .store-balance p {
+    font-size: 2rem;
+    color: #9B9F9F; }
+  .store-balance h4 {
+    font-family: "Fredoka One", cursive;
+    font-size: 2rem;
+    color: #424242;
+    margin-right: .5rem; }
 
 .loader {
   width: 100%;
