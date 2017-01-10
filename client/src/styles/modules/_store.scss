@@ -35,7 +35,15 @@
 		font-size: 2rem;
 		color: $gray;
 	}
+<<<<<<< HEAD
 
+=======
+	.dotted{
+		height: 1px;
+		flex-grow: 1;
+		border-bottom: 2px dashed lighten($turq, 30%);
+	}
+>>>>>>> merge conflicts
 	h4{
 		font-family: $font-display;
 		font-size: 2rem;

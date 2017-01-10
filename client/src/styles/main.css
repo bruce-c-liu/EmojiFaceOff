@@ -832,8 +832,19 @@ nav.menu a {
   .onboard-wrap.is-visible {
     transform: translateY(0); }
 
+<<<<<<< HEAD
 .store-items {
   background-color: #FFFFFF; }
+=======
+
+.store-items {
+  background-color: #FFFFFF; }
+
+.store-items h1 {
+  border-bottom: 1px solid #41CBCC;
+  padding-bottom: 1rem; }
+
+>>>>>>> merge conflicts
 
 .store-item {
   width: 100%;
@@ -858,6 +869,8 @@ nav.menu a {
   justify-content: space-between;
   align-items: center;
   margin-top: 2rem; }
+
+
   .store-balance p {
     font-size: 2rem;
     color: #9B9F9F; }
