@@ -1,6 +1,6 @@
 const initialState = {
   roomID: 'POOP',
-  roundCount: 10,
+  roundCount: 3,
   isHost: false,
   roomType: null,
   inviteURL: ''

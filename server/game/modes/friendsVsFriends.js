@@ -1,141 +1,31 @@
 const ignoredCodePoints = require('../helpers/ignoredCodePoints.js');
+const RedisController = require('../../db/Redis/RedisController.js');
 
 module.exports = {
-  play: function (io, msg, RedisController, openConnections, socket) {
-    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
-
-    let botResponse = {user: 'ebot'};
+  play: function (io, socket, clients, rm, msg) {
     if (rm.gameStarted && msg.text.codePointAt(0) > 0x03FF) {
-      if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
-        openConnections[socket.id].score++;                           // Increment the user's score.
+      if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {   // A user replied with a correct answer.
         if (rm.roundNum < rm.totalRounds) {
-          nextRound(botResponse, msg, io, rm, openConnections, socket);
-        } else if (rm.roundNum === rm.totalRounds) {              // Current game's selected round num has been reached.
-          endGame(botResponse, msg, io, rm, openConnections);
+          nextRound(io, socket, clients, rm, msg);
+        } else if (rm.roundNum === rm.totalRounds) { // Current game's selected round num has been reached.
+          endGame(io, socket, clients, rm, msg);
         }
       } else {                                       // A user replied with an incorrect answer.
-        wrongAnswer(msg, io, rm);
+        wrongAnswer(io, msg);
       }
     } else {
       // Emit user's message to all sockets connected to this room.
       msg.type = 'chat';
-      msg.roundNum = rm.roundNum;
       io.sockets.in(msg.roomId).emit('message', msg);
     }
   },
 
-  createRoom: function (msg, io, socket, TESTING_DIFFICULTY) {
-    socket.join(msg.roomId);
-    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
-    Object.assign(rm, {
-      gameStarted: false,
-      level: TESTING_DIFFICULTY,
-      totalRounds: msg.totalRounds,
-      roundNum: 0,
-      prompt: '',
-      prompts: [],
-      solutions: {},
-      hints: {},
-      type: msg.type,               // options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
-      host: ''                      // TODO: IMPLEMENT LATER?
-    });
-    socket.emit('message', {
-      user: 'ebot',
-      text: `🎉 Welcome to Emoji Face Off! 🎉\xa0\xa0
-            \xa0👩 \xa0 Mode: Friends vs Friends \xa0👨
-
-            You are the Host and may start
-            the game at any time.`
-    });
-    socket.emit('message', {
-      user: 'ebot',
-      text: `Wait for other friends to join room.
-            💩 - talk each other while you wait!`
-    });
-    io.sockets.in(msg.roomId).emit('playerJoinedRoom', {
-      playerName: msg.user,
-      playerAvatar: msg.avatar,
-      room: msg.roomId // Deprecated: Testing only.
-    });
-  },
-
-  joinRoom: function (msg, io, socket) {
-    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
-    if (rm === undefined) {       // This room does not exist.
-      socket.emit('roomDoesNotExist');
-      return;
-    } else if (rm !== undefined && rm.type !== 'FRIENDS_VS_FRIENDS') { // Someone trying to enter a non-FRIENDS_VS_FRIENDS room.
-      socket.emit('roomDoesNotExist');   // Technically the room exists, but it doesn't matter to the user.
-      return;
-    }
-
-    // Room exists and it's a FRIENDS_VS_FRIENDS room.
-    socket.join(msg.roomId);
-    socket.broadcast.to(msg.roomId).emit('message', {
-      user: 'ebot',
-      text: `${msg.user} has joined the room!`
-    });
-    io.sockets.in(msg.roomId).emit('playerJoinedRoom', {
-      playerName: msg.user,
-      playerAvatar: msg.avatar,
-      room: msg.roomId // Deprecated: Testing only.
-    });
-
-    if (!rm.gameStarted) {
-      socket.emit('message', {
-        user: 'ebot',
-        text: `🎉 Welcome to Emoji Face Off! 🎉\xa0\xa0
-              \xa0👩 \xa0 Mode: Friends vs Friends \xa0👨`
-      });
-      socket.emit('message', {
-        user: 'ebot',
-        text: `Wait for other friends to join the room.
-               💩 - talk each other while you wait!`
-      });
-    } else if (rm.gameStarted) {
-      socket.emit('gameStarted');
-      socket.emit('newRound', rm.hints[rm.prompt].length);
-      socket.emit('message', {
-        user: 'ebot',
-        text: `Hello, you've joined a game
-               that's already in progress!
-               BETTER CATCH UP! 😱
-
-               Round ${rm.roundNum}: <em>${rm.prompt}</em>`,
-        roundNum: rm.roundNum
-      });
-    }
-  },
-
-  leaveRoom: function (userInfo, io, socket, openConnections) {
-    if (userInfo.isHost) {
-      let clients = io.nsps['/'].adapter.rooms[userInfo.roomId].sockets;
-      let clientsArray = Object.keys(clients);
-      for (let client of clientsArray) {
-        if (client !== socket.id) {
-          io.to(client).emit('newHost');
-          openConnections[client].isHost = true;
-          io.sockets.in(userInfo.roomId).emit('message', {
-            user: 'ebot',
-            text: `${userInfo.user} (Host) has left the room.
-                   New host is now ${openConnections[client].name}.`
-          });
-          return;
-        }
-      }
-    } else if (!userInfo.isHost) {
-      io.sockets.in(userInfo.roomId).emit('message', {
-        user: 'ebot',
-        text: `${userInfo.user} has left the room.`
-      });
-    }
-  },
-
-  startGame: function (msg, io, RedisController) {
-    let botResponse = {user: 'ebot'};
-    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+  startGame: function (io, socket, clients, rm, roomId) {
+    let host = clients[socket.id];
     rm.gameStarted = true;
-    RedisController.getPrompts() // ADD BACK rm.level LATER
+    rm.roundNum = 1;
+
+    RedisController.getPrompts() // TODO: Get prompts by rm.level
       .then(filteredPrompts => {
         // randomly populate the room's "prompts" object (based on room's difficulty) from our library.
         while (rm.prompts.length < rm.totalRounds) {
@@ -155,102 +45,210 @@ module.exports = {
 
             console.log(rm.hints);
             rm.prompt = rm.prompts.pop();
-            botResponse.text = `${msg.user} has started the game.
+            io.sockets.in(roomId).emit('gameStarted');
+            io.sockets.in(roomId).emit('newPrompt', rm.hints[rm.prompt].length);
+            io.sockets.in(roomId).emit('message', {
+              user: 'ebot',
+              roundNum: rm.roundNum,
+              text: `${host.name} has started the game.
 
-                                Round 1:  <em>${rm.prompt}</em>`;
-            rm.roundNum = 1;
-            botResponse.roundNum = rm.roundNum;
+                     Round 1:
+                     <em>${rm.prompt}</em>`
+            });
 
-            io.sockets.in(msg.roomId).emit('gameStarted');
-            io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
-            io.sockets.in(msg.roomId).emit('message', botResponse);
-
-            let roundNum = 1;
-            setTimeout(() => {
-              console.log('time out called:', roundNum, rm.roundNum);
-              if (roundNum === rm.roundNum) {
-                console.log('TIMED OUT!!!!!!!!!!!!');
-              }
-            }, 7000);
+            // TODO
+            // let roundNum = 1;
+            // setTimeout(() => {
+            //   console.log('time out called:', roundNum, rm.roundNum);
+            //   if (roundNum === rm.roundNum) {
+            //     console.log('TIMED OUT!!!!!!!!!!!!');
+            //   }
+            // }, 7000);
           });
       });
+  },
+
+  createRoom: function (io, socket, rooms, data) {
+    socket.join(data.roomId);
+    let rm = rooms[data.roomId];
+    Object.assign(rm, {
+      gameStarted: false,
+      level: data.level,
+      totalRounds: data.totalRounds,
+      roundNum: 0,
+      prompt: '',
+      prompts: [],
+      solutions: {},
+      hints: {},
+      type: 'FRIENDS_VS_FRIENDS',
+      host: socket.id                      // TODO: IMPLEMENT LATER?
+    });
+    socket.emit('playerJoinedRoom', {
+      playerName: data.user,
+      playerAvatar: data.avatar
+    });
+    socket.emit('message', {
+      user: 'ebot',
+      text: `🎉 Welcome to Emoji Face Off! 🎉
+            \xa0👩 \xa0 Mode: Friends vs Friends \xa0👨
+
+            You are the Host! Wait for friends 
+            to join before starting the game.`
+    });
+    socket.emit('message', {
+      user: 'ebot',
+      text: `Wait for other friends to join room.
+            💩 - talk each other while you wait!`
+    });
+  },
+
+  joinRoom: function (io, socket, rm, data) {
+    let roomId = data.roomId;
+    if (rm === undefined || rm.type !== 'FRIENDS_VS_FRIENDS') { // This room either: (a) does not exist OR (b) is NOT a FRIENDS_VS_FRIENDS room.
+      socket.emit('roomDoesNotExist');                          // Technically the room may exist, but it doesn't matter to the user since they're not allowed to enter it.
+      return;
+    }
+
+    // Room exists and it's a FRIENDS_VS_FRIENDS room.
+    socket.join(roomId);
+    socket.broadcast.to(roomId).emit('message', {
+      user: 'ebot',
+      text: `${data.user} has joined the room!`
+    });
+    io.sockets.in(roomId).emit('playerJoinedRoom', {
+      playerName: data.user,
+      playerAvatar: data.avatar
+    });
+
+    if (!rm.gameStarted) {
+      socket.emit('message', {
+        user: 'ebot',
+        text: `🎉 Welcome to Emoji Face Off! 🎉
+              \xa0👩 \xa0 Mode: Friends vs Friends \xa0👨`
+      });
+      socket.emit('message', {
+        user: 'ebot',
+        text: `Wait for other friends to join the room.
+               💩 - talk each other while you wait!`
+      });
+    } else if (rm.gameStarted) {
+      socket.emit('gameStarted');
+      socket.emit('newPrompt', rm.hints[rm.prompt].length);
+      socket.emit('message', {
+        user: 'ebot',
+        text: `You joined a game that
+               is already in progress!
+               BETTER CATCH UP! 😱
+
+               Round ${rm.roundNum}: 
+               <em>[${rm.prompt}]</em> `,
+        roundNum: rm.roundNum
+      });
+    }
+  },
+
+  leaveRoom: function (io, socket, clients, rm) {
+    let user = clients[socket.id];
+    if (user.isHost) {
+      let socketsInRoom = rm.sockets;
+      let socketIDsInRoom = Object.keys(socketsInRoom);
+      for (let id of socketIDsInRoom) {
+        if (id !== socket.id) {
+          io.to(id).emit('newHost');  // set that client as new host.
+          clients[id].isHost = true;
+          io.sockets.in(user.roomId).emit('message', {
+            user: 'ebot',
+            text: `${user.name} (Host) has left the room.
+                   New host is now ${clients[id].name}.`
+          });
+          break;
+        }
+      }
+    } else if (!user.isHost) {
+      io.sockets.in(user.roomId).emit('message', {
+        user: 'ebot',
+        text: `${user.name} has left the room.`
+      });
+    }
   }
 };
 
 function checkAnswer (guess, prompt, solutions) {
   let msgCodePoints = [...guess];
-  let msgWithoutToneModifiers = '';
+  let msgWithoutModifiers = '';
   for (let codePoint of msgCodePoints) {
     if (!ignoredCodePoints[codePoint]) {     // check to see if it's an ignoredCodePoint
-      msgWithoutToneModifiers += codePoint;
+      msgWithoutModifiers += codePoint;
     }
   }
-
-  return solutions[prompt][msgWithoutToneModifiers];
+  return solutions[prompt][msgWithoutModifiers];
 }
 
-function nextRound (botResponse, msg, io, rm, openConnections, socket) {
+function nextRound (io, socket, clients, rm, msg) {
+  clients[socket.id].score++;                           // Increment the user's score.
   msg.type = 'correctGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  botResponse.text = `Round ${rm.roundNum}:<em>${rm.prompt}</em>`;
-  botResponse.roundNum = rm.roundNum;
-  io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
-  socket.emit('score', openConnections[socket.id].score);
-  io.sockets.in(msg.roomId).emit('message', botResponse);
+
+  io.sockets.in(msg.roomId).emit('newPrompt', rm.hints[rm.prompt].length);
+  socket.emit('score', clients[socket.id].score);
+  io.sockets.in(msg.roomId).emit('message', {
+    user: 'ebot',
+    roundNum: rm.roundNum,
+    text: `Round ${rm.roundNum}:
+           <em>${rm.prompt}</em>`
+  });
 }
 
-function findWinner (clientsArray, openConnections) {
+// TODO: Handle cases of a tie.
+function findWinner (socketIDs, allClients) {
   // Grab the winning socketID
-  let socketID = clientsArray.reduce((winner, currUser) => {
-    console.log(openConnections[currUser].score);
-    console.log(openConnections[winner].score);
-    if (openConnections[currUser].score > openConnections[winner].score) {
-      return currUser;
-    } else {
-      return winner;
-    }
+  let socketID = socketIDs.reduce((winner, user) => {
+    return allClients[user].score > allClients[winner].score
+                                                ? user : winner;
   });
 
-  return openConnections[socketID];
+  return allClients[socketID];
 }
 
-function calcFinalRankings (clientsArray, openConnections) {
+function calcFinalRankings (socketIDs, allClients) {
   let finalRankings = [];
-  clientsArray.forEach(client => {
-    finalRankings.push(`${openConnections[client].name}: ${openConnections[client].score}`);
+  socketIDs.forEach(id => {
+    finalRankings.push(`${allClients[id].name}: ${allClients[id].score}`);
   });
   return finalRankings.join('\n');
 }
 
-function endGame (botResponse, msg, io, rm, openConnections) {
-  let clients = io.nsps['/'].adapter.rooms[msg.roomId].sockets;
-  let clientsArray = Object.keys(clients);
-  console.log('CLIENTS:', clientsArray);
+function endGame (io, socket, clients, rm, msg) {
+  clients[socket.id].score++;                           // Increment the user's score.
+  let socketsInRoom = rm.sockets; // socketsInRoom is an object with socketid:socketInfo key-value pairs
+  let socketIDsInRoom = Object.keys(socketsInRoom); // socketIDsInRoom contains the socket ids of all sockets in current room
 
-  let winner = findWinner(clientsArray, openConnections);
-  let finalRankings = calcFinalRankings(clientsArray, openConnections);
+  let winner = findWinner(socketIDsInRoom, clients);
+  let finalRankings = calcFinalRankings(socketIDsInRoom, clients);
 
+  // First, notify everyone the final answer was correct.
   msg.type = 'correctGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
-  // // First, notify everyone the final answer was correct.
-  // botResponse.text = `Good job, ${msg.user}!`;
-  // io.sockets.in(msg.roomId).emit('message', botResponse);
 
-  // Reset all users'' scores
+  // Reset all users' scores client side.
   io.sockets.in(msg.roomId).emit('score', 0);
+  // Wipe clues on client side.
+  io.sockets.in(msg.roomId).emit('newPrompt', 0);
   // Emit winner/final scores.
-  botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
+  io.sockets.in(msg.roomId).emit('message', {
+    user: 'ebot',
+    roundNum: rm.roundNum,
+    text: `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
 
-                      Congrats to the winner ${winner.name}!
+           Congrats ${winner.name}!
 
-                      Final Scores:
-                      ${finalRankings}
-                      
-                      Press START to begin a new game. \xa0🙌`;
-  io.sockets.in(msg.roomId).emit('newRound', 0);
-  io.sockets.in(msg.roomId).emit('message', botResponse);
+           Final Scores:
+           ${finalRankings}
+
+           Press START to begin a new game. \xa0🙌`
+  });
   io.sockets.in(msg.roomId).emit('gameEnded');
 
   // Reset the room's data.
@@ -261,13 +259,13 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   rm.solutions = {};
   rm.gameStarted = false;
 
-  // Reset all user's scores to 0.
-  for (let id of clientsArray) {
-    openConnections[id].score = 0;
+  // Reset all scores of players in this room to 0.
+  for (let id of socketIDsInRoom) {
+    clients[id].score = 0;
   }
 }
 
-function wrongAnswer (msg, io, rm) {
+function wrongAnswer (io, msg) {
   msg.type = 'incorrectGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
 }

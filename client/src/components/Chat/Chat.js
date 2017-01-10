@@ -11,7 +11,7 @@ import Bubble from './Bubble';
 import HintBar from './HintBar';
 import OnBoard from '../UI/OnBoard';
 import Modal from '../UI/Modal';
-import { initSocketListeners } from '../../helpers/socketEvents.js';
+import { initSocketListeners, createOrJoinRoom, sendMessage } from '../../helpers/socketEvents.js';
 import mixpanel from 'mixpanel-browser';
 class Chat extends Component {
   constructor () {
@@ -46,40 +46,7 @@ class Chat extends Component {
   }
 
   componentDidMount () {
-    this.socket.emit('joinOrCreateRoom', {
-      roomId: this.state.roomId,
-      user: this.props.users.profile.displayName,
-      elo: this.props.users.profile.ELO,
-      fbId: this.props.users.profile.auth,
-      avatar: this.props.users.profile.imgUrl,
-      type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS',
-      isHost: this.props.session.isHost,
-      totalRounds: this.props.session.roundCount
-    });
-    // if (this.props.session.isHost) {
-    //   this.socket.emit('createRoom', {
-    //     roomId: this.state.roomId,
-    //     user: this.props.users.profile.displayName,
-    //     elo: this.props.users.profile.ELO,
-    //     fbId: this.props.users.profile.auth,
-    //     avatar: this.props.users.profile.imgUrl,
-    //     type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS',
-    //     isHost: true,
-    //     totalRounds: this.props.session.roundCount
-    //   });
-    // } else {
-    //   this.socket.emit('joinRoom', {
-    //     roomId: this.state.roomId,
-    //     user: this.props.users.profile.displayName,
-    //     elo: this.props.users.profile.ELO,
-    //     fbId: this.props.users.profile.auth,
-    //     avatar: this.props.users.profile.imgUrl,
-    //     type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS',
-    //     isHost: true,
-    //     totalRounds: this.props.session.roundCount
-    //   });
-    // }
-
+    createOrJoinRoom.call(this);
     mixpanel.track('Nav Chat');
   }
 
@@ -89,7 +56,7 @@ class Chat extends Component {
   }
 
   componentWillUnmount () {
-    // this.props.setHost(false);
+    this.props.setHost(false);
     this.props.setRoomType(null);
     this.socket.disconnect();
   }
@@ -124,23 +91,16 @@ class Chat extends Component {
     mixpanel.track('Game Start');
     mixpanel.people.increment('Games Started');
     this.props.playSFX('chime');
-    this.socket.emit('startGame', { user: this.state.user, roomId: this.state.roomId });
+    this.socket.emit('startGame', this.state.roomId);
   }
   sendMessage (e) {
     e.preventDefault();
+    sendMessage.call(this);
 
-    const userMessage = {
-      user: this.state.user,
-      text: this.state.userInput,
-      imgUrl: this.props.users.profile.imgUrl,
-      roomId: this.state.roomId
-    };
-
-    if (userMessage.text.codePointAt(0) > 0x03FF && this.state.gameStarted) {
+    if (this.state.userInput.codePointAt(0) > 0x03FF && this.state.gameStarted) {
       mixpanel.people.increment('Answer Attempt');
     }
 
-    this.socket.emit('message', userMessage);
     this.setState({
       userInput: '',
       hasFocus: true
@@ -167,7 +127,6 @@ class Chat extends Component {
     const chatHeadElements = this.state.gameStarted
                                 ? <ChatHead deets={this.state} coinBal={this.state.coinBalance} />
                                 : <ChatHeadPractice deets={this.state} roomType={this.props.session.roomType} hostStatus={this.props.session.isHost} startProp={this.startGame.bind(this)} />;
-    const hintMax = this.state.solution.length && this.state.solution.length >= this.state.clueCount;
     const avatarBG = {
       backgroundImage: `url(${this.state.joinedAvatar})`,
       position: 'relative',

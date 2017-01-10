@@ -18,7 +18,7 @@ export function initSocketListeners () {
     }
   });
 
-  this.socket.on('newRound', solutionLength => {
+  this.socket.on('newPrompt', solutionLength => {
     this.setState({
       solution: Array(solutionLength).fill(''),
       numHintsReceived: 0
@@ -59,13 +59,7 @@ export function initSocketListeners () {
     });
   });
 
-    /* msg = {
-        room: (string) roomId joined
-        playerAvatar: (string) avatar URL
-        playerName: (string) player's name who just joined
-    } */
   this.socket.on('playerJoinedRoom', (msg) => {
-    console.log('Server confirms this socket joined room:', msg.room);
     this.setState({
       joinedPlayer: msg.playerName,
       joinedAvatar: msg.playerAvatar
@@ -87,4 +81,38 @@ export function initSocketListeners () {
   this.socket.on('newHost', () => {
     this.props.setHost(true);
   });
+}
+
+export function createOrJoinRoom () {
+  if (this.props.session.isHost) {
+    this.socket.emit('createRoom', {
+      roomId: this.state.roomId,
+      user: this.props.users.profile.displayName,
+      elo: this.props.users.profile.ELO,
+      fbId: this.props.users.profile.auth,
+      avatar: this.props.users.profile.imgUrl,
+      type: this.props.session.roomType,
+      totalRounds: this.props.session.roundCount,
+      level: this.props.session.level ? this.props.session.level : 1 // TODO: Make it dynamic by adding level to Store.
+    });
+  } else {
+    this.socket.emit('joinRoom', {
+      roomId: this.state.roomId,
+      user: this.props.users.profile.displayName,
+      elo: this.props.users.profile.ELO,
+      fbId: this.props.users.profile.auth,
+      avatar: this.props.users.profile.imgUrl,
+      type: this.props.session.roomType ? this.props.session.roomType : 'FRIENDS_VS_FRIENDS'
+    });
+  }
+}
+
+export function sendMessage () {
+  const userMessage = {
+    user: this.state.user,
+    text: this.state.userInput,
+    imgUrl: this.props.users.profile.imgUrl,
+    roomId: this.state.roomId
+  };
+  this.socket.emit('message', userMessage);
 }
