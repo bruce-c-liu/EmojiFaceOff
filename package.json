@@ -27,7 +27,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server/server.js",
+    "start": "concurrently  \" nodemon server/server.js \"   \"cd client && npm start  \" ",
     "dev": "concurrently  \" nodemon server/server.js \"   \"cd client && npm start  \"  \"cd client && npm run styles:watch  \"",
     "deploy": "node server/server.js"
   },
