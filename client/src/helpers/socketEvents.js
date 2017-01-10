@@ -108,6 +108,9 @@ export function createOrJoinRoom () {
 }
 
 export function sendMessage () {
+  if (this.state.userInput.length === 0) {
+    return;
+  }
   const userMessage = {
     user: this.state.user,
     text: this.state.userInput,

@@ -139,9 +139,9 @@ module.exports = {
         text: `You joined a game that
                is already in progress!
                BETTER CATCH UP! 😱
-
-               Round ${rm.roundNum}: 
-               <em>[${rm.prompt}]</em> `,
+               \n
+               Round ${rm.roundNum}:
+               <em>[${rm.prompt}]</em>`,
         roundNum: rm.roundNum
       });
     }

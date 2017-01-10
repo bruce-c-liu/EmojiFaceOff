@@ -10,10 +10,6 @@ module.exports = function initSocketIO (server) {
   io = require('socket.io')(server);
   rooms = io.nsps['/'].adapter.rooms;
 
-  // module.exports.io = io;
-  // module.exports.rooms = rooms;
-  // module.exports.clients = clients;
-
   io.on('connection', socket => {
     clients[socket.id] = {};
     console.log(socket.id, 'has connected!');
