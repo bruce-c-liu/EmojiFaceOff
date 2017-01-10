@@ -10,7 +10,7 @@ const SolutionController = require('../db/Solution/SolutionController.js');
 const StripeController = require('../services/Stripe/StripeController.js');
 
 module.exports = (app, express) => {
-  app.get('/api/getRoom', RoomController.getRoom); // deprecated
+  // app.get('/api/getRoom', RoomController.getRoom); // deprecated
 
   app.post('/api/sendInvite', TwilioController.textMessage);
   app.post('/api/shortenURL', BitlyController.shortURL);
