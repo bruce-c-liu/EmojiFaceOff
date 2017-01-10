@@ -43,6 +43,7 @@ class CoinStore extends Component {
         this.setState({
           coinPack: ''
         });
+        this.props.updateUserData(token)
       })
       .catch(err => {
         throw err;
@@ -63,17 +64,18 @@ class CoinStore extends Component {
     return (
       <div className='inner-container is-center is-relative'>
         <Header />
+
+        <div className='mode-select_wrap'>
         <div className="store-balance">
-          <p>Your Coin Balance: </p>
+          <p>Your Coin Balance</p>
           <Motion defaultStyle={{x: 0}} style={{x: spring(users.profile.coins)}}>
             {value => <h4>{Math.round(value.x)}</h4>}
           </Motion>
         </div>
-        <div className='mode-select_wrap'>
 
-
-          <h1> Re-up that skrilla</h1>
+          
           <div className="store-items">
+          <h1> Re-up that skrilla</h1>
 
               <div className="store-item">
                   <h4>1,000 Coins</h4>

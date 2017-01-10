@@ -59,6 +59,16 @@ export function fetchingUserSuccess (uid, user, timestamp) {
   };
 }
 
+export function updateUserData (payload) {
+console.log("updateUserData", payload)
+  return function (dispatch) {
+      dispatch({
+        type: SET_USER_DATA,
+        payload: payload.data
+      });
+  };
+}
+
 export function setUserData (uid) {
   return function (dispatch) {
     dispatch({

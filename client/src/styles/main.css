@@ -834,8 +834,13 @@ nav.menu a {
   .onboard-wrap.is-visible {
     transform: translateY(0); }
 
+.store-items h1 {
+  border-bottom: 1px solid #41CBCC;
+  padding-bottom: 1rem; }
+
 .store-item {
   width: 100%;
+  height: 70px;
   display: flex;
   justify-content: space-between;
   align-items: center; }
@@ -852,22 +857,25 @@ nav.menu a {
     margin-right: .5rem; }
 
 .store-balance {
-  position: absolute;
-  top: 60px;
-  left: 0;
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: #e4ebf5; }
+  margin-top: 2rem; }
   .store-balance p {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
     color: #9B9F9F; }
+  .store-balance .dotted {
+    height: 1px;
+    flex-grow: 1;
+    border-bottom: 2px dashed #baecec; }
   .store-balance h4 {
     font-family: "Fredoka One", cursive;
-    font-size: 2rem;
-    color: #424242;
-    margin-right: .5rem; }
+    font-size: 4rem;
+    color: #FF6B6B;
+    margin: .5rem; }
 
 .loader {
   width: 100%;
