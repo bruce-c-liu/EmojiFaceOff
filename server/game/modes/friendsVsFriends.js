@@ -101,7 +101,7 @@ module.exports = {
                that's already in progress!
                BETTER CATCH UP! 😱
 
-               Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`,
+               Round ${rm.roundNum}: <em>${rm.prompt}</em>`,
         roundNum: rm.roundNum
       });
     }
@@ -157,7 +157,7 @@ module.exports = {
             rm.prompt = rm.prompts.pop();
             botResponse.text = `${msg.user} has started the game.
 
-                                Round 1: Emojify [${rm.prompt}] ! 🤔`;
+                                Round 1:  <em>${rm.prompt}</em>`;
             rm.roundNum = 1;
             botResponse.roundNum = rm.roundNum;
 
@@ -193,7 +193,7 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`;
+  botResponse.text = `Round ${rm.roundNum}:<em>${rm.prompt}</em>`;
   botResponse.roundNum = rm.roundNum;
   io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);

@@ -84,16 +84,6 @@ class ModeSelect extends Component {
             </button>
           </div>
 
-          <div>
-            <div className='mode-select_vs'>
-              <div className='avatar is-md' style={avatarBG} />
-              <div className='avatar is-md' style={{backgroundImage: `url('http://static1.comicvine.com/uploads/original/11129/111293347/5489718-9865121372-52705.png')`}} />
-              <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/41/ae/41aeea32dd8af702606e89afe2ac4b5e.png')`}} />
-            </div>
-            <button className='btn-login is-full' onClick={this.initGameRanked.bind(this)} >
-                Ranked Mode
-            </button>
-          </div>
 
           <div>
             <div className='mode-select_vs'>

@@ -13,7 +13,7 @@ class HintBar extends Component {
       <div className='hint-bar'>
       		  <button className='btn-hint'
         onClick={debounce(200,(e) => this.props.clickHint(e))}
-        disabled={hintInfo.numHintsReceived === hintInfo.solution.length} > ?</button>
+        disabled={hintInfo.numHintsReceived === hintInfo.solution.length} > HINT</button>
 	              <div className='hint-wrap'>
 	        	  {hints}
 	        	  <span className='hint-count'>{hintNum}</span>

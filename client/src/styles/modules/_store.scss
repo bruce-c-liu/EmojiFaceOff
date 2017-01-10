@@ -1,0 +1,45 @@
+.store-items{
+	background-color: $white;
+}
+
+.store-item{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	//border-bottom: 1px solid lighten($gray, 10%);
+	&:last-child{
+		border-bottom: none;
+	}
+	.dotted{
+		height: 1px;
+		flex-grow: 1;
+		border-bottom: 2px dashed lighten($turq, 30%);
+		//margin: 0 1rem;
+	}
+	h4{
+		font-family: $font-display;
+		font-size: 2rem;
+		color: $turq;
+		margin-right: .5rem;
+	}
+}
+
+.store-balance{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	p{
+		font-size: 2rem;
+		color: $gray;
+	}
+
+	h4{
+		font-family: $font-display;
+		font-size: 2rem;
+		color: $gray-dk;
+		margin-right: .5rem;
+	}
+}

@@ -7,6 +7,7 @@
 	background-color: $blue-pale;
 }
 .chat-messages{
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
