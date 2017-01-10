@@ -194,6 +194,8 @@ body {
   align-items: center; }
   .inner-container.is-center {
     justify-content: center; }
+  .inner-container.is-relative {
+    position: relative; }
 
 button {
   background-color: transparent;
@@ -297,7 +299,7 @@ button {
   border-radius: 3px;
   font-size: 1.05rem;
   color: #FFFFFF;
-  font-weight: 400;
+  font-weight: 600;
   text-align: center; }
   .btn-fbshare.is-full {
     display: block; }
@@ -347,6 +349,21 @@ button {
   color: #FFFFFF; }
   .btn-dismiss i {
     font-size: 1.5rem; }
+
+.contact-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem; }
+
+.input-txt {
+  height: 50px;
+  border: 1px solid #41CBCC;
+  border-radius: 4px;
+  padding: 0 .5rem;
+  margin-bottom: 1rem;
+  outline: none;
+  font-size: 1rem; }
 
 .header {
   position: absolute;
@@ -751,6 +768,7 @@ nav.menu a {
 
 .round-select_wrap h1 {
   font-family: "Fredoka One", cursive;
+  font-size: 1.4rem;
   color: #FF6B6B; }
 
 .count-control {
@@ -832,14 +850,9 @@ nav.menu a {
   .onboard-wrap.is-visible {
     transform: translateY(0); }
 
-
-.store-items {
-  background-color: #FFFFFF; }
-
 .store-items h1 {
   border-bottom: 1px solid #41CBCC;
   padding-bottom: 1rem; }
-
 
 .store-item {
   width: 100%;
@@ -855,7 +868,7 @@ nav.menu a {
     border-bottom: 2px dashed #baecec; }
   .store-item h4 {
     font-family: "Fredoka One", cursive;
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: #41CBCC;
     margin-right: .5rem; }
 
@@ -864,10 +877,8 @@ nav.menu a {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  align-items: center; }
-
-
+  align-items: center;
+  margin-top: 2rem; }
   .store-balance p {
     font-size: 1.5rem;
     font-weight: 600;

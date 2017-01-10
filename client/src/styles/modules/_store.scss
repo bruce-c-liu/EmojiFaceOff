@@ -1,13 +1,8 @@
 .store-items{
-<<<<<<< HEAD
-	background-color: $white;
-=======
-	//background-color: $white;
 	h1{
 		border-bottom: 1px solid $turq;
 		padding-bottom: 1rem;
 	}
->>>>>>> Store done
 }
 
 .store-item{
@@ -28,7 +23,7 @@
 	}
 	h4{
 		font-family: $font-display;
-		font-size: 2rem;
+		font-size: 1.5rem;
 		color: $turq;
 		margin-right: .5rem;
 	}
@@ -41,6 +36,7 @@
 	justify-content: space-between;
 	align-items: center;
 	margin-top: 2rem;
+
 	p{
 		font-size: 1.5rem;
 		font-weight: 600;
