@@ -8,6 +8,10 @@ const initialState = {
 
 function session (state = initialState, action) {
   switch (action.type) {
+    // case 'SET_ROOM_ID':
+    //   return Object.assign({}, state, {
+    //     roomID: action.payload
+    //   });
     case 'FETCH_ROOM':
       return Object.assign({}, state, {
         roomID: action.payload
