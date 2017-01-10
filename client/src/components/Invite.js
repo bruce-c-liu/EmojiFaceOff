@@ -22,7 +22,9 @@ class Invite extends Component {
       shortRoomURL: null,
       onBoard: false,
       copied: false,
-      startShown: false
+      fbModal: false,
+      startShown: false,
+      startBtnReveal: false
     };
   }
 
@@ -49,16 +51,28 @@ class Invite extends Component {
     }
   }
 
-  popModal (e) {
-    this.setState({
-      copied: true
-    })
-    setTimeout(() => {
-      this.setState({
-        startShown: true
-      });
-    }, 8000);
-      
+ revealStartAction() {
+      setTimeout(() => {
+          this.setState({
+              startShown: true,
+              startBtnReveal: true
+
+          });
+      }, 8000);
+  }
+
+
+  popModal(type) {
+      if (type === 'sms') {
+          this.setState({
+              copied: true
+          })
+          this.revealStartAction()
+      } else {
+          this.setState({
+              fbModal: true
+          })
+      }
   }
 
   render () {
@@ -103,16 +117,19 @@ const stopStart = this.state.startShown
         </div>
 
         <CopyToClipboard text={clipboardData}
-          onCopy={this.popModal.bind(this)}>
+          onCopy={this.popModal.bind(this, 'sms')}>
           <button className='btn-fbshare'>Send text message to friends</button>
         </CopyToClipboard>
         <h6 className='or-split'>OR</h6>
-
-        <a className='btn-fbshare' href={encodedURL} onClick={this.popModal.bind(this)}>
+        <a className='btn-fbshare' href={encodedURL} onClick={this.revealStartAction.bind(this)}>
           <img src={btnIcon} alt='' />Invite Facebook Friends
-          </a>
-
-        {loaderUI}
+        </a>
+        { this.state.startBtnReveal
+                                      ?  <Link to={`/chat/${session.roomID}`} className='btn-login' style={{marginTop: '2rem'}}>
+                                            Start Game <span>🎉🏁</span>
+                                          </Link>
+                                       :  null
+        }
     
         <Modal modalOpen={this.state.copied} toggleModal={() => this.popModal.bind(this)}>
           <span className='emoji-glyph'>👍</span>
