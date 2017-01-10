@@ -60,7 +60,7 @@ module.exports = {
     }
   },
 
-  incrUserCoin: (fbId, coins) => {
+  incrUserCoin: (fbId, coins, res) => {
     if (fbId) {
       return models.User.findOne({
         where: {
@@ -72,12 +72,14 @@ module.exports = {
           let displayName = result.displayName;
           let origAmount = result.coins;
           let newAmount = origAmount + coins;
-          return result.update({
+          result.update({
             coins: newAmount
           })
           .then((result) => {
-            if (result) console.log(`${displayName}'s coins updated from ${origAmount} to ${newAmount}`);
-            return result;
+            if (result) {
+              console.log(`${displayName}'s coins updated from ${origAmount} to ${newAmount}`);
+              if (res) res.json(result);
+            }
           });
         } else console.log('No user found');
       })
@@ -91,7 +93,7 @@ module.exports = {
   },
 
   decrUserCoin: (req, res, next) => {
-    console.log('decrUserCoin', req.body)
+    console.log('decrUserCoin', req.body);
     if (req.body.fbId) {
       models.User.findOne({
         where: {
