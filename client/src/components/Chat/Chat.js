@@ -9,10 +9,11 @@ import ChatHead from './ChatHead';
 import ChatHeadPractice from './ChatHeadPractice';
 import Bubble from './Bubble';
 import HintBar from './HintBar';
+import OnBoard from '../UI/OnBoard';
+import Modal from '../UI/Modal';
 import { initSocketListeners } from '../../helpers/socketEvents.js';
 import mixpanel from 'mixpanel-browser';
 class Chat extends Component {
-
   constructor () {
     super();
     this.state = {
@@ -29,7 +30,8 @@ class Chat extends Component {
       joinedAvatar: 'http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png',
       announceBar: false,
       coinBalance: null,
-      hasFocus: false
+      hasFocus: false,
+      roomExists: true
     };
     this.socket = io(socketURL);
     initSocketListeners.call(this);
@@ -119,7 +121,7 @@ class Chat extends Component {
     }
 
     this.socket.emit('message', userMessage);
-    this.props.playSFX('message');
+    //this.props.playSFX('message');
     this.setState({
       userInput: '',
       hasFocus: true
@@ -199,7 +201,9 @@ class Chat extends Component {
             <input className='btn-input' type='submit' value='Submit' />
           </form>
         </div>
-
+        <Modal modalOpen={!this.state.roomExists}>
+            <p className="lead">You have entered an inactive room. Please click on the link below to start a new game.</p>
+         </Modal>
       </div>
     );
   }

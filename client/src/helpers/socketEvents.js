@@ -8,9 +8,13 @@ export function initSocketListeners () {
       round: message.roundNum ? message.roundNum : this.state.round
     });
     if (message.type === 'correctGuess') {
+      this.props.playSFX('correct')
       mixpanel.people.increment('Answered Correctly');
-    }else {
+    } else if(message.type === 'incorrectGuess'){
+      this.props.playSFX('incorrect')
       mixpanel.people.increment('Answered Wrong');
+    }else {
+     this.props.playSFX('chat')
     }
   });
 
@@ -73,6 +77,7 @@ export function initSocketListeners () {
   this.socket.on('roomDoesNotExist', () => {
     console.log('User tried to access a room that does not exist.');
     this.setState({
+      roomExists: false
       // Set some kind of state to display a component that:
       // (a) tells the user that the room they're trying to access doesn't exist
       // (b) provides a link to direct them to the /mode screen to begin a new game

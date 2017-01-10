@@ -17,7 +17,6 @@ class Drawer extends Component {
   	});
   	const linkData = [
   		{path: '/mode', icon: '🎉', text: 'Start New Game'},
-  		{path: '/mode', icon: '🏆', text: 'LeaderBoard'},
   		{path: '/request', icon: '❔', text: 'Suggest a Question '},
   		{path: '/logout', icon: '✌', text: 'Logout'},
             {path: '/coinstore', icon: '🤑', text: 'Coin Store'}
