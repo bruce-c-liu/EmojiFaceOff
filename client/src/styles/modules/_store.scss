@@ -1,5 +1,5 @@
 .store-items{
-	background-color: $white;
+	//background-color: $white;
 }
 
 .store-item{
@@ -19,17 +19,21 @@
 	}
 	h4{
 		font-family: $font-display;
-		font-size: 2rem;
+		font-size: 1.5rem;
 		color: $turq;
 		margin-right: .5rem;
 	}
 }
 
 .store-balance{
+	position: absolute;
+	top: 60px;
+	left: 0;
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	background-color: $blue-pale;
 
 	p{
 		font-size: 2rem;
