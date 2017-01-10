@@ -37,7 +37,7 @@ module.exports = {
       solutions: {},
       hints: {},
       type: msg.type,               // options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
-      host: ''                      // IMPLEMENT LATER
+      host: ''                      // TODO: IMPLEMENT LATER?
     });
     socket.emit('message', {
       user: 'ebot',
