@@ -832,14 +832,14 @@ nav.menu a {
   .onboard-wrap.is-visible {
     transform: translateY(0); }
 
-<<<<<<< HEAD
+
 .store-items {
   background-color: #FFFFFF; }
-=======
+
 .store-items h1 {
   border-bottom: 1px solid #41CBCC;
   padding-bottom: 1rem; }
->>>>>>> Store done
+
 
 .store-item {
   width: 100%;
@@ -864,12 +864,10 @@ nav.menu a {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-<<<<<<< HEAD
+
   align-items: center; }
-=======
-  align-items: center;
-  margin-top: 2rem; }
->>>>>>> Store done
+
+
   .store-balance p {
     font-size: 1.5rem;
     font-weight: 600;
