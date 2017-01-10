@@ -194,6 +194,8 @@ body {
   align-items: center; }
   .inner-container.is-center {
     justify-content: center; }
+  .inner-container.is-relative {
+    position: relative; }
 
 button {
   background-color: transparent;
@@ -832,9 +834,6 @@ nav.menu a {
   .onboard-wrap.is-visible {
     transform: translateY(0); }
 
-.store-items {
-  background-color: #FFFFFF; }
-
 .store-item {
   width: 100%;
   display: flex;
@@ -848,15 +847,19 @@ nav.menu a {
     border-bottom: 2px dashed #baecec; }
   .store-item h4 {
     font-family: "Fredoka One", cursive;
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: #41CBCC;
     margin-right: .5rem; }
 
 .store-balance {
+  position: absolute;
+  top: 60px;
+  left: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center; }
+  align-items: center;
+  background-color: #e4ebf5; }
   .store-balance p {
     font-size: 2rem;
     color: #9B9F9F; }
