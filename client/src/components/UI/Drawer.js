@@ -10,7 +10,6 @@ class Drawer extends Component {
 
   }
   render () {
-    mixpanel.track('Nav Drawer');
   	const drawerClass = classNames({
   		'drawer': true,
   		'is-open': this.props.opened
