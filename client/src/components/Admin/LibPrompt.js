@@ -19,6 +19,9 @@ class LibPrompt extends Component {
 
   componentDidMount () {
     console.log(this.props.params);
+    this.setState({
+      authedId: this.props.users.authedId
+    });
     axios.get(`/api/prompt/${this.props.params.promptID}`)
     .then(result => {
       console.log('Prompt details:', result.data);
@@ -27,7 +30,7 @@ class LibPrompt extends Component {
         result.data.Solutions.map((item) => {
           storage.push([
             item.id,
-            item.approved ? 'approved' : 'pending',
+            item.approved ? 'ACTIVE' : 'PENDING',
             item.name
           ]);
           return item;
@@ -56,28 +59,27 @@ class LibPrompt extends Component {
     let answerOptions = this.state.reqAnswer
                         .split(';')
                         .filter(answer => {
-                          if (answer.length > 0 && !tmpStorage[answer]) {
+                          if (answer.length > 0 && !tmpStorage[answer] && answer.codePointAt(0) > 0x03FF) {
                             tmpStorage[answer] = true;
                             return answer;
                           }
                         });
-    if (answerOptions.length > 0 && this.state.reqPrompt.length > 0) {
+    if (answerOptions.length > 0) {
       console.log(`Sending to the server => prompt: ${this.state.prompt} ; answers: `, answerOptions);
-      // axios.post('/api/requestPrompt', {
-      //   userFbId: this.state.authedId,
-      //   prompt: this.state.reqPrompt.toLowerCase(),
-      //   answers: answerOptions
-      // })
-      // .then(result => {
-      //   console.log('response from server', result.status);
-      //   this.setState({
-      //     reqPrompt: '',
-      //     reqAnswer: ''
-      //   });
-      // })
-      // .catch(err => {
-      //   throw err;
-      // });
+      axios.post('/api/requestPrompt', {
+        userFbId: this.state.authedId,
+        prompt: this.state.prompt.toLowerCase(),
+        answers: answerOptions
+      })
+      .then(result => {
+        console.log('response from server', result.status);
+        this.setState({
+          reqAnswer: ''
+        });
+      })
+      .catch(err => {
+        throw err;
+      });
     }
   }
 
@@ -90,24 +92,24 @@ class LibPrompt extends Component {
 
     return (
       <div>
-        <p>details for 1 prompt</p>
-        <table>
-          <thead />
-          <tbody>
-            <tr>
-              <th>id</th>
-              <th>approved</th>
-              <th>Orig Sol</th>
-              <th>New Sol</th>
-              <th>Edit</th>
-              <th />
-            </tr>
-            {promptRows}
-          </tbody>
-        </table>
         <div className='request-prompt_wrap'>
+          <h3>{`Edit Changes for answers for "${this.state.prompt}"`}</h3>
+          <table>
+            <thead />
+            <tbody>
+              <tr>
+                <th>id</th>
+                <th>Status</th>
+                <th>Orig Sol</th>
+                <th>New Sol</th>
+                <th>Edit</th>
+                <th />
+              </tr>
+              {promptRows}
+            </tbody>
+          </table>
           <form onSubmit={this.addAnswer.bind(this)}>
-            <h3>Add new answers</h3>
+            <h3>{`Add new answers for "${this.state.prompt}"`}</h3>
             <input className='reqAnswer'
               type='text' value={this.state.reqAnswer}
               onChange={this.handleChangeAnswer.bind(this)}

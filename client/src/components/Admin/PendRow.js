@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/actionCreators.js';
+import * as actionCreators from '../../actions/actionCreators.js';
 import axios from 'axios';
 
 class PendRow extends Component {

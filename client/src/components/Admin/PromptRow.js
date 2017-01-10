@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../../actions/actionCreators.js';
+import axios from 'axios';
 
 class PromptRow extends Component {
   constructor () {
@@ -12,7 +12,8 @@ class PromptRow extends Component {
       id: '',
       approved: '',
       origSolution: '',
-      newSolution: ''
+      newSolution: '',
+      deleted: false
     };
   }
 
@@ -26,9 +27,24 @@ class PromptRow extends Component {
     });
   }
 
-  approveRequest (e) {
+  deleteSolution (e) {
     e.preventDefault();
-    console.log('Edit button clicked');
+    console.log('Delete clicked');
+    axios.put('/api/deleteSolution', {
+      solutionId: this.state.id,
+      newSolution: this.state.newSolution
+    })
+    .then(result => {
+      console.log('Sucessfully deleted', result);
+      if (result.status >= 200) {
+        this.setState({
+          deleted: true
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
   }
 
   handleSelect (e) {
@@ -41,6 +57,16 @@ class PromptRow extends Component {
   updatePrompt (e) {
     e.preventDefault();
     console.log('updating prompt', this.state);
+    axios.put('/api/updateSolution', {
+      solutionId: this.state.id,
+      newSolution: this.state.newSolution
+    })
+    .then(result => {
+      console.log('Sucessfully updated', result);
+    })
+    .catch(err => {
+      console.log(err);
+    });
   }
 
   handleEdit (e) {
@@ -50,8 +76,11 @@ class PromptRow extends Component {
     });
   }
   render () {
+    const displayNone = {
+      display: 'none'
+    };
     return (
-      <tr>
+      <tr style={this.state.deleted ? displayNone : null}>
         <td>{this.state.id}</td>
         <td>{this.state.approved}</td>
         <td>{this.state.origSolution}</td>
@@ -62,12 +91,13 @@ class PromptRow extends Component {
               type='text' value={this.state.newSolution}
               onChange={this.handleEdit.bind(this)}
             />
-            <input className='btn-input' type='submit' value='Submit' disabled={this.state.newSolution.length <= 0} />
+            <p />
+            <input className='btn-input' type='submit' value='Update/Approve' disabled={this.state.newSolution.length <= 0} />
           </form>
         </td>
         <td>
           <div>
-            <button className='btn-input' onClick={this.approveRequest.bind(this)}>Delete</button>
+            <button className='btn-input' onClick={this.deleteSolution.bind(this)}>Delete</button>
           </div>
         </td>
       </tr>

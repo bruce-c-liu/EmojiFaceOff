@@ -16,7 +16,7 @@ class Library extends Component {
   componentDidMount () {
     axios.get(`/api/prompts/${this.props.params.type}`)
     .then(result => {
-      console.log(`${this.props.params.type} Prompts`, result.data);
+      console.log(`Prompts get data`, result.data);
       if (result) {
         let storage = [];
         result.data.map((item) => {
