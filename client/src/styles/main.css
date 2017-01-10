@@ -856,7 +856,8 @@ nav.menu a {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center; }
+  align-items: center;
+  margin-top: 2rem; }
   .store-balance p {
     font-size: 2rem;
     color: #9B9F9F; }
