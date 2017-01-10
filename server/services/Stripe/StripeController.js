@@ -33,10 +33,7 @@ module.exports = {
       })
       .then(result => {
         if (result.paid && !result.failurecode && coins) {
-          UserController.incrUserCoin(fbId, coins)
-          .then(data => {
-            res.json(data);
-          })
+          UserController.incrUserCoin(fbId, coins, res);
         } else {
           res.json(result);
         }
