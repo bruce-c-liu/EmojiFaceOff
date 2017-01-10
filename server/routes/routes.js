@@ -6,6 +6,7 @@ const UserController = require('../db/User/UserController.js');
 const RedisController = require('../db/Redis/RedisController.js');
 const BitlyController = require('../services/Bitly/BitlyController.js');
 const QueueController = require('../game/helpers/rankedQueue.js');
+const SolutionController = require('../db/Solution/SolutionController.js');
 const StripeController = require('../services/Stripe/StripeController.js');
 
 module.exports = (app, express) => {
@@ -21,7 +22,8 @@ module.exports = (app, express) => {
   app.put('/api/users/:fbID', UserController.updateUser);
   app.post('/api/hintUsed', UserController.decrUserCoin);
 
-  app.get('/api/pendPrompts', LibraryController.pendPrompts);
+  app.get('/api/prompts/:type', LibraryController.pendPrompts);
+  app.get('/api/prompt/:promptId', LibraryController.prompt);
   app.post('/api/requestPrompt', LibraryController.addPrompt);
   app.put('/api/pendPrompts', LibraryController.updatePendPrompt);
 
@@ -33,6 +35,9 @@ module.exports = (app, express) => {
   app.get('/api/adminCache', RedisController.getAdminsCache);
 
   app.post('/api/chargeUser', StripeController.chargeUser);
+
+  app.put('/api/updateSolution', SolutionController.updateSolution);
+  app.put('/api/deleteSolution', SolutionController.deleteSolution);
 
   app.get('*', (req, res) => {
     res.sendfile('./client/build/index.html');

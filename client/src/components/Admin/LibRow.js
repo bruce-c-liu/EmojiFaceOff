@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/actionCreators.js';
-import axios from 'axios';
+import * as actionCreators from '../../actions/actionCreators.js';
 
-class PendRow extends Component {
+class LibRow extends Component {
   constructor () {
     super();
     this.state = {
@@ -30,22 +30,8 @@ class PendRow extends Component {
 
   approveRequest (e) {
     e.preventDefault();
-    axios.put('/api/pendPrompts', {
-      promptId: this.state.promptId,
-      promptLevel: this.state.levelSelect,
-      answers: this.state.answers
-    })
-    .then(result => {
-      console.log('from server', result);
-      if (result) {
-        this.setState({
-          approved: true
-        });
-      }
-    })
-    .catch(err => {
-      throw err;
-    });
+    browserHistory.push(`/admin/libprompt/${this.state.promptId}`);
+    console.log('button clicked');
   }
 
   handleSelect (e) {
@@ -71,17 +57,8 @@ class PendRow extends Component {
         <td>{this.state.prompt}</td>
         <td>{this.state.answers}</td>
         <td>
-          <select onChange={this.handleSelect.bind(this)}>
-            <option value='1'>1</option>
-            <option value='2'>2</option>
-            <option value='3'>3</option>
-            <option value='4'>4</option>
-            <option value='5'>5</option>
-          </select>
-        </td>
-        <td>
           <div>
-            <button onClick={this.approveRequest.bind(this)}>Approve!</button>
+            <button onClick={this.approveRequest.bind(this)}>Details</button>
           </div>
         </td>
       </tr>
@@ -99,5 +76,5 @@ function mapStateToProps (state) {
 function mapDispachToProps (dispatch) {
   return bindActionCreators(actionCreators, dispatch);
 }
-export default connect(mapStateToProps, mapDispachToProps)(PendRow);
+export default connect(mapStateToProps, mapDispachToProps)(LibRow);
 

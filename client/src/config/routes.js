@@ -9,9 +9,13 @@ import ModeSelect from '../components/ModeSelect';
 import Invite from '../components/Invite';
 import AuthContainer from '../containers/AuthContainer';
 import RequestPrompt from '../components/RequestPrompt';
-import PendRequest from '../components/PendRequest';
+import PendRequest from '../components/Admin/PendRequest';
 import CoinStore from '../components/CoinStore';
 import LogoutContainer from '../containers/LogoutContainer';
+
+import Library from '../components/Admin/Library';
+import LibPrompt from '../components/Admin/LibPrompt';
+
 export default function getRoutes (checkAuth) {
   return (
     <Router history={history}>
@@ -19,10 +23,12 @@ export default function getRoutes (checkAuth) {
         <Route path='login' component={AuthContainer} onEnter={checkAuth} />
         <Route path='mode' component={ModeSelect} onEnter={checkAuth} />
         <Route path='request' component={RequestPrompt} onEnter={checkAuth} />
-        <Route path='pendrequest' component={PendRequest} onEnter={checkAuth} />
+        <Route path='admin/pendrequest' component={PendRequest} onEnter={checkAuth} />
         <Route path='invite' component={Invite} onEnter={checkAuth} />
         <Route path='chat/:roomID' component={Chat} onEnter={checkAuth} />
-        <Route path='coinstore' component={CoinStore} />
+        <Route path='coinstore' component={CoinStore} onEnter={checkAuth} />
+        <Route path='admin/library' component={Library} onEnter={checkAuth} />
+        <Route path='admin/libprompt/:promptID' component={LibPrompt} onEnter={checkAuth} />
         <IndexRoute component={AuthContainer} onEnter={checkAuth} />
       </Route>
       <Route path='logout' component={LogoutContainer} />

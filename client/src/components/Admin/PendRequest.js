@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actionCreators from '../actions/actionCreators.js';
+import * as actionCreators from '../../actions/actionCreators.js';
 import axios from 'axios';
 import PendRow from './PendRow';
 
@@ -14,7 +14,7 @@ class PendRequest extends Component {
   }
 
   componentDidMount () {
-    axios.get('/api/pendPrompts')
+    axios.get('/api/prompts/pend')
     .then(result => {
       console.log('pending Prompts', result.data);
       if (result) {
