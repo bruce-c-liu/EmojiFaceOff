@@ -22,4 +22,4 @@ if (protocol.indexOf('https') > -1) {
 export const socketURL = protocol + '//' + host + ':' + port + Path;
 // url = protocol + "//" + host + ":" + port + path;
 
-export const inviteBaseURL = 'http://emojifaceoff.com/chat/';
+export const inviteBaseURL = 'http://www.emojifaceoff.com/chat/';
