@@ -119,7 +119,7 @@ function startGame (msg, io, openConnections, TESTING_NUM_ROUNDS, RedisControlle
           rm.roundNum = 1;
           botResponse.roundNum = rm.roundNum;
 
-          io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
+          io.sockets.in(msg.roomId).emit('newPrompt', rm.hints[rm.prompt].length);
           io.sockets.in(msg.roomId).emit('message', botResponse);
           io.sockets.in(msg.roomId).emit('gameStarted');
 
@@ -152,7 +152,7 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   rm.roundNum++;
   botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`;
   botResponse.roundNum = rm.roundNum;
-  io.sockets.in(msg.roomId).emit('newRound', rm.hints[rm.prompt].length);
+  io.sockets.in(msg.roomId).emit('newPrompt', rm.hints[rm.prompt].length);
   socket.emit('score', openConnections[socket.id].score);
   io.sockets.in(msg.roomId).emit('message', botResponse);
 }

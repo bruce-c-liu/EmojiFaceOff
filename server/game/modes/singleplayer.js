@@ -1,63 +1,54 @@
 const ignoredCodePoints = require('../helpers/ignoredCodePoints.js');
+const RedisController = require('../../db/Redis/RedisController.js');
 
 module.exports = {
-  play: function (io, msg, RedisController, openConnections, socket) {
-    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
-
-    let botResponse = { user: 'ebot' };
+  play: function (io, socket, clients, rm, msg) {
     if (rm.gameStarted && msg.text.codePointAt(0) > 0x03FF) {
       if (checkAnswer(msg.text, rm.prompt, rm.solutions)) {          // A user replied with a correct answer.
-        openConnections[socket.id].score++;                           // Increment the user's score.
         if (rm.roundNum < rm.totalRounds) {
-          nextRound(botResponse, msg, io, rm, openConnections, socket);
+          nextRound(socket, clients, rm, msg);
         } else if (rm.roundNum === rm.totalRounds) {              // Current game's selected round num has been reached.
-          endGame(botResponse, msg, io, socket, openConnections, rm);
+          endGame(socket, clients, rm, msg);
         }
       } else {                                       // A user replied with an incorrect answer.
         wrongAnswer(msg, io, rm);
       }
     } else {
       msg.type = 'chat';
-      msg.roundNum = rm.roundNum;
       socket.emit('message', msg);
     }
   },
 
-  createRoom: function (msg, io, socket, TESTING_DIFFICULTY) {
-    socket.join(msg.roomId);
-    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+  createRoom: function (io, socket, rooms, data) {
+    socket.join(data.roomId);
+    let rm = rooms[data.roomId];
     Object.assign(rm, {
-      level: TESTING_DIFFICULTY,
+      gameStarted: false,
+      level: data.level,
       roundNum: 0,
-      totalRounds: msg.totalRounds,
+      totalRounds: data.totalRounds,
       prompt: '',
       prompts: [],
       solutions: {},
       hints: {},
-      type: msg.type,               // options: 'SINGLE_PLAYER', 'FRIENDS_VS_FRIENDS', 'RANKED'
-      host: ''                      // IMPLEMENT LATER
+      type: 'SINGLE_PLAYER'
     });
-    console.log('Joined room:', msg.roomId);
     socket.emit('playerJoinedRoom', {
-      room: msg.roomId,
-      playerName: msg.user,
-      playerAvatar: msg.avatar
+      playerName: data.user,
+      playerAvatar: data.avatar
     });
-    console.log('Sockets in this room:', io.nsps['/'].adapter.rooms[msg.roomId].sockets);
     socket.emit('message', {
       user: 'ebot',
-      text: `\xa0\xa0🎉 Welcome to Emoji Face Off! 🎉\xa0\xa0
-             \xa0\xa0\xa0\xa0\xa0\xa0\xa0 🙏 Mode: Single Player 🙏
+      text: `🎉 Welcome to Emoji Face Off! 🎉
+             🙏 Mode: Single Player 🙏
              
-             \xa0\xa0\xa0\xa0 Press Start when you're ready.`
+             Press Start when you're ready.`
     });
   },
 
-  startGame: function (msg, io, socket, RedisController) {
-    let botResponse = { user: 'ebot' };
-    let rm = io.nsps['/'].adapter.rooms[msg.roomId];
+  startGame: function (io, socket, rm) {
     rm.gameStarted = true;
-    RedisController.getPrompts()      // CHANGE BACK LATER: RedisController.getPrompts(rm.level)
+    RedisController.getPrompts()      // TODO: CHANGE BACK to RedisController.getPrompts(rm.level)
       .then(filteredPrompts => {
         // randomly populate the room's "prompts" object from our library.
         while (rm.prompts.length < rm.totalRounds) {
@@ -77,14 +68,17 @@ module.exports = {
 
             console.log('Hints Object:', rm.hints);
             rm.prompt = rm.prompts.pop();
-            botResponse.text = `Round 1: Emojify [${rm.prompt}] ! 🤔`;
             rm.roundNum = 1;
-            botResponse.roundNum = rm.roundNum;
 
             socket.emit('gameStarted');
-            socket.emit('newRound', rm.hints[rm.prompt].length);
+            socket.emit('newPrompt', rm.hints[rm.prompt].length);
             socket.emit('score', 0);
-            socket.emit('message', botResponse);
+            socket.emit('message', {
+              user: 'ebot',
+              roundNum: rm.roundNum,
+              text: `Round 1: 
+                     <em>${rm.prompt}</em>`
+            });
 
             rm.startTime = Date.now();
 
@@ -102,51 +96,38 @@ module.exports = {
 
 function checkAnswer (guess, prompt, solutions) {
   let msgCodePoints = [...guess];
-  let msgWithoutToneModifiers = '';
+  let msgWithoutModifiers = '';
   for (let codePoint of msgCodePoints) {
     if (!ignoredCodePoints[codePoint]) {     // check to see if it's an ignoredCodePoint
-      msgWithoutToneModifiers += codePoint;
+      msgWithoutModifiers += codePoint;
     }
   }
-  return solutions[prompt][msgWithoutToneModifiers];
+  return solutions[prompt][msgWithoutModifiers];
 }
 
-function nextRound (botResponse, msg, io, rm, openConnections, socket) {
+function nextRound (socket, clients, rm, msg) {
+  clients[socket.id].score++;
   msg.type = 'correctGuess';
   socket.emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`;
-  botResponse.roundNum = rm.roundNum;
-  socket.emit('newRound', rm.hints[rm.prompt].length);
-  socket.emit('score', openConnections[socket.id].score);
-  socket.emit('message', botResponse);
+  socket.emit('newPrompt', rm.hints[rm.prompt].length);
+  socket.emit('score', clients[socket.id].score);
+  socket.emit('message', {
+    user: 'ebot',
+    roundNum: rm.roundNum,
+    text: `Round ${rm.roundNum}:
+           <em>${rm.prompt}</em>`
+  });
 }
 
-function endGame (botResponse, msg, io, socket, openConnections, rm) {
+function endGame (socket, clients, rm, msg) {
   let timeElapsed = ((Date.now() - rm.startTime) / 1000).toFixed(2);
   let secondsPerRnd = (timeElapsed / rm.totalRounds).toFixed(2);
 
+  clients[socket.id].score++;
   msg.type = 'correctGuess';
-  io.sockets.in(msg.roomId).emit('message', msg);
-  // // First, notify everyone the final answer was correct.
-  // botResponse.text = `Good job, ${msg.user} won Round ${rm.roundNum}!`;
-  // socket.emit('message', botResponse);
-
-  // Reset all users' scores
-  socket.emit('score', null);
-  // Emit winner/final scores.
-  botResponse.text = `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
-                      
-                      ${timeElapsed} seconds to complete ${rm.totalRounds} rounds.
-                      ${secondsPerRnd} seconds / round.
-
-                      That was 💩\xa0...\xa0try harder next time!
-
-                      Press 'start' to begin a new game. 🙌`;
-  socket.emit('newRound', 0);
-  socket.emit('message', botResponse);
-  socket.emit('gameEnded');
+  socket.emit('message', msg);
 
   // Reset the room's data.
   rm.roundNum = 0;
@@ -157,8 +138,24 @@ function endGame (botResponse, msg, io, socket, openConnections, rm) {
   rm.gameStarted = false;
   rm.startTime = null;
 
+  socket.emit('message', {
+    user: 'ebot',
+    roundNum: rm.roundNum,
+    text: `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
+
+           ${timeElapsed} seconds to complete ${rm.totalRounds} rounds.
+           ${secondsPerRnd} seconds / round.
+
+           That was 💩\xa0...\xa0try harder next time!
+
+           Press 'start' to begin a new game. 🙌`
+  });
+  socket.emit('score', 0);
+  socket.emit('newPrompt', 0);
+  socket.emit('gameEnded');
+
   // Reset user's score to 0.
-  openConnections[socket.id].score = 0;
+  clients[socket.id].score = 0;
 }
 
 function wrongAnswer (msg, io, rm) {

@@ -1,11 +1,17 @@
 const initialState = {
   roomID: 'POOP',
-  roundCount: 10,
-  isHost: false
+  roundCount: 3,
+  isHost: false,
+  roomType: null,
+  inviteURL: ''
 };
 
 function session (state = initialState, action) {
   switch (action.type) {
+    // case 'SET_ROOM_ID':
+    //   return Object.assign({}, state, {
+    //     roomID: action.payload
+    //   });
     case 'FETCH_ROOM':
       return Object.assign({}, state, {
         roomID: action.payload

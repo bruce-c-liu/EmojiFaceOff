@@ -45,7 +45,6 @@ class ModeSelect extends Component {
   initGameRanked (e) {
     e.preventDefault();
     mixpanel.track('Click Ranked');
-    // this.props.fetchRoomId('ranked', this.props.users.profile.auth);
     this.props.fetchRoomId('ranked', this.props.users.profile.ELO);
     this.props.setRoomType('RANKED');
     this.props.playSFX('tap');
