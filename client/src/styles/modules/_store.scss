@@ -1,9 +1,18 @@
 .store-items{
+<<<<<<< HEAD
 	background-color: $white;
+=======
+	//background-color: $white;
+	h1{
+		border-bottom: 1px solid $turq;
+		padding-bottom: 1rem;
+	}
+>>>>>>> Store done
 }
 
 .store-item{
 	width: 100%;
+	height: 70px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -26,20 +35,36 @@
 }
 
 .store-balance{
+<<<<<<< HEAD
+=======
+
+>>>>>>> Store done
 	width: 100%;
 	display: flex;
+	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
+<<<<<<< HEAD
 
+=======
+	margin-top: 2rem;
+	//background-color: $blue-pale;
+>>>>>>> Store done
 	p{
-		font-size: 2rem;
+		font-size: 1.5rem;
+		font-weight: 600;
 		color: $gray;
 	}
+	.dotted{
+		height: 1px;
+		flex-grow: 1;
+		border-bottom: 2px dashed lighten($turq, 30%);
 
+	}
 	h4{
 		font-family: $font-display;
-		font-size: 2rem;
-		color: $gray-dk;
-		margin-right: .5rem;
+		font-size: 4rem;
+		color: $orange;
+		margin: .5rem;
 	}
 }
