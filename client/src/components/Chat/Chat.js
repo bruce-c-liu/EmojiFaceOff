@@ -53,6 +53,7 @@ class Chat extends Component {
   componentDidUpdate () {
     const node = this.refs.chatScroll;
     node.scrollTop = node.scrollHeight + 300;
+    console.log("scrollHeight", node.scrollTop)
   }
 
   componentWillUnmount () {
@@ -166,7 +167,10 @@ class Chat extends Component {
           {chatList}
         </div>
         <div className='hint-bar'>
-          <HintBar hintInfo={this.state} clickHint={this.requestHint.bind(this)} />
+            <HintBar hintInfo={this.state} 
+                            clickHint={this.requestHint.bind(this)} 
+                            startProp={this.startGame.bind(this)} 
+                            hostStatus={this.props.session.isHost}/>
         </div>
         <div className='chat-form_wrap'>
 

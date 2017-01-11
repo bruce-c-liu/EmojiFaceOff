@@ -20,17 +20,14 @@ class Bubble extends Component {
       backgroundImage: `url(${avatarSrc})`
     };
     return (
-      <Motion defaultStyle={{x: 0}} style={{x: spring(1, presets.stiff)}}>
-        {value => <div className={bubbleClass} style={{transform: `scale(${value.x})`, opacity: value.x}}>
+
+      <div className={bubbleClass} >
           <Interweave
             tagName='span'
             content={this.props.deets.text}
           />
           <div className='bubble-name' style={avatarBG} />
         </div>
-      }
-
-      </Motion>
 
     );
   }
