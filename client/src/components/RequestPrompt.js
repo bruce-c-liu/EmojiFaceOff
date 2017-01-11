@@ -38,7 +38,6 @@ class RequestPrompt extends Component {
 
   requestNewPrompt (e) {
     e.preventDefault();
-    mixpanel.track('Click Request Prompt');
     console.log('Request sent to server', this.state);
     let tmpStorage = {};
     let answerOptions = this.state.reqAnswer
@@ -51,7 +50,7 @@ class RequestPrompt extends Component {
                         });
     if (answerOptions.length > 0 && this.state.reqPrompt.length > 0) {
       console.log(`Sending to the server => prompt: ${this.state.reqPrompt} ; answers: `, answerOptions);
-
+      mixpanel.track('Click Request Prompt');
       mixpanel.people.increment('Prompts Requested');
       this.setState({
         submitRequest: true
