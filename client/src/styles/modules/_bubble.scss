@@ -7,11 +7,9 @@
 	margin-right: 2.5rem;
 	border-radius: 15px;
 	background-color: $gray-xlt;
-	max-width: 55%;
+	max-width: 60%;
 	font-size: 1.5rem;
-	
-
-
+	flex-shrink: 0;
 	&.on-left{
 		align-self: flex-start;
 		margin-left: 2.5rem;
