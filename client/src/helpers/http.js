@@ -58,6 +58,17 @@ export function shortenLink (longURL) {
   });
 }
 
+export function postFormData(formData){
+  return axios.post('/api/feedback', {
+    name: formData.name,
+    email: formData.email,
+    message: formData.message
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+}
+
 export function getRankedRoom (elo) {
   return axios.get(`/api/rankedQueue?elo=${elo}`)
     .then(result => {
