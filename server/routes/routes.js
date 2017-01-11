@@ -1,5 +1,4 @@
 
-const RoomController = require('../db/Room/RoomController.js');
 const TwilioController = require('../services/Twilio/TwilioController.js');
 const LibraryController = require('../db/Library/LibraryController.js');
 const UserController = require('../db/User/UserController.js');
@@ -8,10 +7,9 @@ const BitlyController = require('../services/Bitly/BitlyController.js');
 const QueueController = require('../game/helpers/rankedQueue.js');
 const SolutionController = require('../db/Solution/SolutionController.js');
 const StripeController = require('../services/Stripe/StripeController.js');
+const SendGridController = require('../services/SendGrid/SendGridController.js');
 
 module.exports = (app, express) => {
-  // app.get('/api/getRoom', RoomController.getRoom); // deprecated
-
   app.post('/api/sendInvite', TwilioController.textMessage);
   app.post('/api/shortenURL', BitlyController.shortURL);
 
@@ -35,6 +33,8 @@ module.exports = (app, express) => {
   app.get('/api/adminCache', RedisController.getAdminsCache);
 
   app.post('/api/chargeUser', StripeController.chargeUser);
+
+  app.post('/api/feedback', SendGridController.emailFeedback);
 
   app.put('/api/updateSolution', SolutionController.updateSolution);
   app.put('/api/deleteSolution', SolutionController.deleteSolution);
