@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Link } from 'react-router';
 import { connect } from 'react-redux';
 import {logoutAndUnauth} from '../actions/actionCreators.js';
 import mixpanel from 'mixpanel-browser';
@@ -11,8 +12,12 @@ class LogoutContainer extends Component {
   render () {
     mixpanel.track('Nav Logout');
     return (
-      <div>
-        <h1>LOGGED OUT</h1>
+      <div className="inner-container is-center">
+        <h1 className='brand-title'>Emoji Faceoff</h1>
+        <h1>You have been logged out</h1>
+        <Link to={`/mode`} className='btn-login' style={{marginTop: '2rem'}}>
+                    Log Back In 
+         </Link>
 
       </div>
     );

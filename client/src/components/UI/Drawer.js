@@ -10,7 +10,6 @@ class Drawer extends Component {
 
   }
   render () {
-    mixpanel.track('Nav Drawer');
   	const drawerClass = classNames({
   		'drawer': true,
   		'is-open': this.props.opened
@@ -18,6 +17,7 @@ class Drawer extends Component {
   	const linkData = [
   		{path: '/mode', icon: '🎉', text: 'Start New Game'},
   		{path: '/request', icon: '❔', text: 'Suggest a Question '},
+              {path: '/contact', icon: '📫', text: 'Feedback / Contact '},
   		{path: '/logout', icon: '✌', text: 'Logout'},
             {path: '/coinstore', icon: '🤑', text: 'Coin Store'}
   	];
