@@ -21,7 +21,7 @@ export default function getRoutes (checkAuth) {
   return (
     <Router history={history}>
       <Route path='/' component={MainContainer} >
-        <Route path='login' component={AuthContainer} onEnter={checkAuth} />
+        <Route path='login' component={AuthContainer} />
         <Route path='mode' component={ModeSelect} onEnter={checkAuth} />
         <Route path='request' component={RequestPrompt} onEnter={checkAuth} />
         <Route path='admin/pendrequest' component={PendRequest} onEnter={checkAuth} />

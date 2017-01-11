@@ -6,7 +6,7 @@ const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE';
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS';
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER';
 const SET_USER_DATA = 'SET_USER_DATA';
-const COINS_SPENT = 'COINS_SPENT';
+// const COINS_SPENT = 'COINS_SPENT';
 
 const initialState = {
   isFetching: true,
@@ -16,7 +16,7 @@ const initialState = {
 };
 
 export default function users (state = initialState, action) {
-  switch (action.type) { 
+  switch (action.type) {
     case AUTH_USER :
       return {
         ...state,
@@ -48,15 +48,15 @@ export default function users (state = initialState, action) {
           profile: action.payload
         };
     case FETCHING_USER_DB:
-    console.log("case FETCHING_USER_DB", action.payload )    
+      console.log('case FETCHING_USER_DB', action.payload);
       return {
         ...state,
         isFetching: false,
         profile: action.payload
       };
-      case SET_USER_DATA:
-      console.log("USER DATA SET TO STORE", action.payload )    
-        return {
+    case SET_USER_DATA:
+      console.log('USER DATA SET TO STORE', action.payload);
+      return {
           ...state,
           isFetching: false,
           profile: action.payload

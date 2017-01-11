@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router';
 import classNames from 'classnames';
-import mixpanel from 'mixpanel-browser';
+// import mixpanel from 'mixpanel-browser';
 class Drawer extends Component {
   closeDrawer () {
     this.props.drawerAction();

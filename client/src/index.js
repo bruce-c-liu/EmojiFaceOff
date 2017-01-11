@@ -6,7 +6,7 @@ import getRoutes from './config/routes.js';
 import store from './store/store.js';
 import {firebaseAuth} from './config/constants';
 import mixpanel from 'mixpanel-browser';
-
+import firebase from 'firebase';
 mixpanel.init('a4ef7ec7ead2231829a3ff9f5d73647c');
 
 const checkLocalStorage = () => {
@@ -29,14 +29,14 @@ function checkAuth (nextState, replace) {
       '$last_name': name[1],
       '$email': userExists.email
     });
-    let profile = JSON.parse(window.localStorage.profile) || null;
-    if (profile) {
-      mixpanel.register_once({
-        'name': profile.name,
-        'gender': profile.gender,
-        'device': profile.devices[0].os || null
-      });
-    }
+    // let profile = JSON.parse(window.localStorage.profile) || null;
+    // if (profile) {
+    //   mixpanel.register_once({
+    //     'name': profile.name,
+    //     'gender': profile.gender,
+    //     'device': profile.devices[0].os || null
+    //   });
+    // }
   }
   if (!firebaseAuth().currentUser && nextState.location.pathname !== '/login' && !userExists) {
     replace({
