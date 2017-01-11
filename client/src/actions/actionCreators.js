@@ -1,6 +1,6 @@
-import { logout, saveUserFirebase } from '../helpers/auth';
-import { SMSInvite, getUser, saveNewUser, coinsForHint, getRankedRoom, enqueueRankedRoom } from '../helpers/http.js';
-// import { formatUserInfo } from '../helpers/utils';
+import auth, { logout, saveUserFirebase } from '../helpers/auth';
+import { SMSInvite, getUser, saveNewUser, coinsForHint, getRankedRoom, enqueueRankedRoom, postFormData } from '../helpers/http.js';
+import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 import * as shortid from 'shortid';
 import firebase from 'firebase';
@@ -223,6 +223,19 @@ export function spendCoins (uid) {
       .then(res => console.log('COINS_SPENT', res));
   };
 }
+
+export function sendContactForm(formData) {
+    return function(dispatch) {
+        dispatch({
+            type: 'FORM_SENDING'
+        });
+        // postFormData(formData)
+        // .then(resp=>{
+        //   console.log("sendContactForm", resp)
+        // })
+    }
+}
+
 
 export function roundInc () {
   return {
