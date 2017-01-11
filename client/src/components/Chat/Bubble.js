@@ -3,8 +3,22 @@ import Interweave from 'interweave';
 import {Motion, spring, presets} from 'react-motion';
 import classNames from 'classnames';
 import nerd from '../../assets/emoji_nerd.png';
+import axios from 'axios';
 
 class Bubble extends Component {
+  // constructor (props) {
+  //   super(props);
+  // }
+
+  requestPrompt (e) {
+    e.preventDefault();
+    axios.post('/api/requestPrompt', {
+      userFbId: this.props.profile.auth,
+      prompt: 'TESTING TESTING TESTING',
+      answers: [this.props.deets.text]
+    });
+  }
+
   render () {
     const bubbleClass = classNames({
       'chat-bubble': true,
@@ -19,16 +33,27 @@ class Bubble extends Component {
     const avatarBG = {
       backgroundImage: `url(${avatarSrc})`
     };
+
+    const bubble = this.props.deets.type === 'incorrectGuess'
+                    ? (<a href='#' onClick={this.requestPrompt.bind(this)}>
+                      <Interweave
+                        tagName='span'
+                        content={this.props.deets.text}
+                      />
+                    </a>)
+                    : (
+                      <Interweave
+                        tagName='span'
+                        content={this.props.deets.text}
+                      />
+                    );
+
     return (
 
       <div className={bubbleClass} >
-          <Interweave
-            tagName='span'
-            content={this.props.deets.text}
-          />
-          <div className='bubble-name' style={avatarBG} />
-        </div>
-
+        {bubble}
+        <div className='bubble-name' style={avatarBG} />
+      </div>
     );
   }
 }
