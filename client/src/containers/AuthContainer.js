@@ -4,34 +4,53 @@ import { bindActionCreators } from 'redux';
 import { Link, browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions/actionCreators.js';
-// import { formatUserInfo } from '../helpers/utils';
-// import { firebaseAuth } from '../config/constants.js';
+import firebase from 'firebase';
+import { firebaseAuth } from '../config/constants.js';
 
 class AuthContainer extends Component {
 
   handleAuth (e) {
     e.preventDefault();
-    this.props.fetchAndHandleAuthedUser();
+    // this.props.fetchAndHandleAuthedUser();
+    if (this.props.routing.locationBeforeTransitions.state) {
+      let nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
+      window.localStorage.setItem('nextPath', nextPath);
+    }
+    firebaseAuth().signInWithRedirect(new firebase.auth.FacebookAuthProvider());
   }
 
-  componentWillUpdate() {
-      let nextPath;
-      console.log('component will update AUTH', this.props.routing.locationBeforeTransitions.state);
-      if (this.props.routing.locationBeforeTransitions.state) {
-          nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
-      } else nextPath = '/login';
+  componentWillUpdate () {
+    let nextPath;
+    if (window.localStorage.nextPath) {
+      // nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
+      nextPath = window.localStorage.nextPath;
+      window.localStorage.setItem('nextPath', null);
+    } else nextPath = '/login';
 
-      if (this.checkLocalStorage()) {
-          console.log("LOCAL STORAGE NOAUTH:", nextPath)
-          if (nextPath === '/' || nextPath === '/login') this.props.history.push(`/mode`);
-          //else this.props.history.push(`${nextPath}`);
-          else {
-              console.log("NAVIGATING TO NEXT PATH:", nextPath)
-              browserHistory.push(`${nextPath}`);
-          }
+    if (this.checkLocalStorage()) {
+      firebaseAuth().getRedirectResult()
+      .then(result => {
+        if (result) {
+          console.log('firebase redirect result auth cotainer', result);
+          let user = {
+            name: result.user.displayName,
+            uid: result.user.uid,
+            photoURL: result.user.photoURL
+          };
+          this.props.postUserData(user);
+        } else {
+          console.log('NOOOOOOOOOOOO auth from firebase redirect');
+        }
+      });
+
+      console.log('LOCAL STORAGE NOAUTH:', nextPath);
+      if (nextPath === '/' || nextPath === '/login') this.props.history.push(`/mode`);
+      else {
+        console.log('NAVIGATING TO NEXT PATH:', nextPath);
+        browserHistory.push(`${nextPath}`);
       }
+    }
   }
-
 
   checkLocalStorage () {
     for (let key in window.localStorage) {

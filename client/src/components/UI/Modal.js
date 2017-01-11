@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import mixpanel from 'mixpanel-browser';
 
-class Modal  extends Component{
+class Modal extends Component {
 
-  componentDidMount(){
+  componentDidMount () {
     setTimeout(() => {
       this.setState({
         announceBar: false
@@ -12,11 +11,11 @@ class Modal  extends Component{
     }, 3500);
   }
   render () {
-  const { modalOpen }	 = this.props
-  const modalClass = classNames({
+    const { modalOpen }	 = this.props;
+    const modalClass = classNames({
   	'modal': true,
   	'is-open': modalOpen
-  })
+  });
 
     return (
       <div className={modalClass}>

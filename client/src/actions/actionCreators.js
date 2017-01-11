@@ -1,14 +1,16 @@
-import auth, { logout, saveUserFirebase } from '../helpers/auth';
+import { logout, saveUserFirebase } from '../helpers/auth';
 import { SMSInvite, getUser, saveNewUser, coinsForHint, getRankedRoom, enqueueRankedRoom } from '../helpers/http.js';
-import { formatUserInfo } from '../helpers/utils';
+// import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 import * as shortid from 'shortid';
+import firebase from 'firebase';
+import { firebaseAuth } from '../config/constants.js';
 
 const AUTH_USER = 'AUTH_USER';
 const UNAUTH_USER = 'UNAUTH_USER';
 const FETCHING_USER = 'FETCHING_USER';
 const FETCHING_USER_DB = 'FETCHING_USER_DB';
-const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE';
+// const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE';
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS';
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER';
 const SET_ROOM_TYPE = 'SET_ROOM_TYPE';
@@ -42,13 +44,13 @@ function fetchingUser () {
   };
 }
 
-function fetchingUserFailure (error) {
-  console.warn(error);
-  return {
-    type: FETCHING_USER_FAILURE,
-    error: 'Error fetching user.'
-  };
-}
+// function fetchingUserFailure (error) {
+//   console.warn(error);
+//   return {
+//     type: FETCHING_USER_FAILURE,
+//     error: 'Error fetching user.'
+//   };
+// }
 
 export function fetchingUserSuccess (uid, user, timestamp) {
   return {
@@ -60,12 +62,12 @@ export function fetchingUserSuccess (uid, user, timestamp) {
 }
 
 export function updateUserData (payload) {
-console.log("updateUserData", payload)
+  console.log('updateUserData', payload);
   return function (dispatch) {
-      dispatch({
-        type: SET_USER_DATA,
-        payload: payload.data
-      });
+    dispatch({
+      type: SET_USER_DATA,
+      payload: payload.data
+    });
   };
 }
 
@@ -108,14 +110,38 @@ export function postUserData (user) {
 }
 
 export function fetchAndHandleAuthedUser () {
+  console.log('fetchandhandleAuth user 1');
   return function (dispatch) {
     dispatch(fetchingUser());
-    return auth().then(({ user, credential }) => {
-      const userData = user.providerData[0];
-      const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
-      return dispatch(postUserData(userInfo));
-    })
-    .catch((error) => dispatch(fetchingUserFailure(error)));
+    let stuff = new Promise((resolve, reject) => {
+      firebaseAuth().signInWithRedirect(new firebase.auth.FacebookAuthProvider());
+    });
+
+    stuff.then((result) => {
+      console.log('got stuff', result);
+      if (result) console.log('got if result', result);
+      // firebaseAuth().getRedirectResult()
+      // .then(result => {
+      //   console.log('redirect result', result);
+      //   if (result) console.log('firebase result', result);
+      // });
+
+      // firebaseAuth().onAuthStateChanged((user) => {
+      //   if (user) {
+      //   // User is signed in.
+      //     console.log('firebase result user', user);
+      //   }
+      // });
+    });
+
+    // return auth().then(({user, credential}) => {
+    //   //console.log('inner loop', user, credential);
+    //   // const userData = user.providerData[0];
+    //   // const userInfo = formatUserInfo(userData.displayName, userData.photoURL, user.uid);
+    //   // console.log('fetchandhandleAuth user inner loop', userInfo);
+    //   // return dispatch(postUserData(userInfo));
+    // })
+    // .catch((error) => dispatch(fetchingUserFailure(error)));
   };
 }
 

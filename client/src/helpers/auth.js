@@ -1,5 +1,5 @@
 import { ref, firebaseAuth } from '../config/constants.js';
-import { saveNewUser } from '../helpers/http.js';
+// import { saveNewUser } from '../helpers/http.js';
 import firebase from 'firebase';
 
 // export default function auth () {
@@ -7,9 +7,8 @@ import firebase from 'firebase';
 // }
 
 export default function auth () {
-  return firebaseAuth().signInWithRedirect(new firebase.auth.FacebookAuthProvider());
+  firebaseAuth().signInWithRedirect(new firebase.auth.FacebookAuthProvider());
 }
-
 
 export function checkIfAuthed (store) {
   console.log('checkIfAuthed called', store.getState());

@@ -160,6 +160,7 @@ module.exports = {
    * the displayName and the auth. Ex: 'John:23EFE343dsthqw'
    */
   addUser: (req, res, next) => {
+    console.log('adding user', req.body);
     if (req.body.displayName) {
       let displayName = req.body.displayName;
       let email = req.body.email || '';
