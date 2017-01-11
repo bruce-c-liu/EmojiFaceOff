@@ -30,10 +30,10 @@ export default function getRoutes (checkAuth) {
         <Route path='coinstore' component={CoinStore} onEnter={checkAuth} />
         <Route path='admin/library' component={Library} onEnter={checkAuth} />
         <Route path='admin/libprompt/:promptID' component={LibPrompt} onEnter={checkAuth} />
+        <Route path='contact' component={Contact} />
         <IndexRoute component={AuthContainer} onEnter={checkAuth} />
       </Route>
       <Route path='logout' component={LogoutContainer} />
-      <Route path='contact' component={Contact} />
     </Router>
   );
 }
