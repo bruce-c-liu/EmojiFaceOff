@@ -24,18 +24,18 @@ class AuthContainer extends Component {
     if (window.localStorage.nextPath) {
       // nextPath = this.props.routing.locationBeforeTransitions.state.nextPathname;
       nextPath = window.localStorage.nextPath;
-      window.localStorage.setItem('nextPath', null);
+      window.localStorage.removeItem('nextPath');
     } else nextPath = '/login';
 
     if (this.checkLocalStorage()) {
       firebaseAuth().getRedirectResult()
       .then(result => {
-        if (result) {
+        if (result.user) {
           console.log('firebase redirect result auth cotainer', result);
           let user = {
             name: result.user.displayName,
             uid: result.user.uid,
-            photoURL: result.user.photoURL
+            avatar: result.user.photoURL
           };
           this.props.postUserData(user);
         } else {
@@ -44,7 +44,7 @@ class AuthContainer extends Component {
       });
 
       console.log('LOCAL STORAGE NOAUTH:', nextPath);
-      if (nextPath === '/' || nextPath === '/login') this.props.history.push(`/mode`);
+      if (nextPath === '/' || nextPath === '/login' || nextPath === null) this.props.history.push(`/mode`);
       else {
         console.log('NAVIGATING TO NEXT PATH:', nextPath);
         browserHistory.push(`${nextPath}`);
