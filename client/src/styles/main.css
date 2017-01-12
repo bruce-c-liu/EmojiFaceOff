@@ -123,26 +123,6 @@ h1, h2, h3, h4, h5, h6 {
     width: 45%;
     background-color: #9B9F9F; }
 
-.steps-list {
-  margin: 1rem 0; }
-  .steps-list li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1.25rem;
-    color: #eceff2;
-    font-weight: 600; }
-    .steps-list li span {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-      margin-right: 1rem;
-      border-radius: 50%;
-      background-color: #41CBCC;
-      color: #FFFFFF;
-      font-family: "Fredoka One", cursive;
-      text-align: center; }
-
 html, body {
   -webkit-overflow-scrolling: touch; }
 
@@ -527,6 +507,8 @@ nav.menu a {
   .modal.is-open {
     transform: scale(1);
     opacity: 1; }
+  .modal .font-display {
+    font-size: 6vw; }
 
 .room-warning {
   padding: 1rem;
@@ -890,6 +872,43 @@ nav.menu a {
   .input-inline .btn-input {
     position: absolute;
     right: 10px; }
+
+.steps-list {
+  width: 100%;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 4px;
+  background-color: #eceff2; }
+  .steps-list h3 {
+    font-size: 5vw;
+    font-weight: 600;
+    margin: .5rem;
+    color: #FF6B6B;
+    text-align: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #41CBCC; }
+  .steps-list > img {
+    display: inherit;
+    max-width: 17%;
+    margin: 0 auto;
+    text-align: center; }
+  .steps-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    color: #424242;
+    font-weight: 600; }
+    .steps-list li span {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      margin-right: 1rem;
+      border-radius: 50%;
+      background-color: #41CBCC;
+      color: #FFFFFF;
+      font-family: "Fredoka One", cursive;
+      text-align: center; }
 
 .onboard-wrap {
   position: absolute;
