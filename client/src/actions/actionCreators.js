@@ -62,7 +62,6 @@ export function fetchingUserSuccess (uid, user, timestamp) {
 }
 
 export function updateUserData (payload) {
-  console.log('updateUserData', payload);
   return function (dispatch) {
     dispatch({
       type: SET_USER_DATA,
@@ -87,14 +86,12 @@ export function setUserData (uid) {
 }
 
 export function postUserData (user) {
-  console.log('postUserData', user);
   return function (dispatch) {
     dispatch({
       type: FETCHING_USER
     });
     saveNewUser(user)
     .then((user) => {
-      console.log('please get here saveNewUser', user.data);
       dispatch({
         type: SET_USER_DATA,
         payload: user.data
@@ -110,7 +107,7 @@ export function postUserData (user) {
 }
 
 export function fetchAndHandleAuthedUser () {
-  console.log('fetchandhandleAuth user 1');
+
   return function (dispatch) {
     dispatch(fetchingUser());
     let stuff = new Promise((resolve, reject) => {
@@ -118,7 +115,7 @@ export function fetchAndHandleAuthedUser () {
     });
 
     stuff.then((result) => {
-      console.log('got stuff', result);
+
       if (result) console.log('got if result', result);
       // firebaseAuth().getRedirectResult()
       // .then(result => {
@@ -206,7 +203,6 @@ export function sendSMS (userName, roomUrl, numbers) {
     });
     SMSInvite(userName, roomUrl, numbers)
      .then((resp) => {
-       console.log('SMS RESP', resp);
        dispatch({
          type: 'IS_LOADED'
        });
@@ -220,7 +216,6 @@ export function spendCoins (uid) {
       type: 'COINS_SPENT'
     });
     coinsForHint(uid)
-      .then(res => console.log('COINS_SPENT', res));
   };
 }
 

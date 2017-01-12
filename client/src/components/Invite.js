@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
-import {Motion, spring, presets} from 'react-motion';
-import ReactDOM from 'react-dom';
 import {Link} from 'react-router';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators';
-import { inviteBaseURL, loading } from '../helpers/utils';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import { inviteBaseURL } from '../helpers/utils';
 import ClipboardButton from 'react-clipboard.js';
 import btnIcon from '../assets/Messenger_Icon.png';
 import Header from './Header';
 import Modal from './UI/Modal';
 import mixpanel from 'mixpanel-browser';
 import stop_sign from '../assets/stop_hand.svg';
-import ProgressBar from './UI/ProgressBar';
+
 
 class Invite extends Component {
   constructor () {
@@ -82,9 +79,6 @@ class Invite extends Component {
   render () {
     const { session } = this.props;
     const encodedURL = `fb-messenger://share/?link=http%3A%2F%2Femojifaceoff.com%2Fchat%2F${this.props.session.roomID}`;
-    const loaderUI = this.props.ui.loading
-                            ? <div className='loader'><p>Sending Invitation</p></div>
-                            : null;
     const clipboardData =
 `${this.props.users.profile.displayName} is challenging you to an Emoji Faceoff.
 Click here to Play: ${this.state.longRoomURL}`;

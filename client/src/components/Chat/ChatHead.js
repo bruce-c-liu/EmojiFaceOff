@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
-import {Motion, spring, presets} from 'react-motion';
+import {Motion, spring} from 'react-motion';
 // import Hint from './Hint';
 
 class ChatHead extends Component {
