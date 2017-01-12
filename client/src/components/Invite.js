@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators';
 import { inviteBaseURL, loading } from '../helpers/utils';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import  ClipboardButton from 'react-clipboard.js';
 import btnIcon from '../assets/Messenger_Icon.png';
 import Header from './Header';
 import Modal from './UI/Modal';
@@ -73,13 +74,13 @@ class Invite extends Component {
 
 
   popModal(type) {
-      if (type === 'sms') {
         this.hideShowModal()
-          this.revealStartAction()
-      } else {
+        this.revealStartAction()
 
-      }
   }
+  onSuccess() {
+      console.log('successfully coppied');
+   }
 
 
   render () {
@@ -126,10 +127,12 @@ const stopStart = this.state.startShown
           </div>
         </div>
 
-        <CopyToClipboard text={clipboardData}
-          onCopy={this.popModal.bind(this, 'sms')}>
-          <button className='btn-fbshare'>Send text message to friends</button>
-        </CopyToClipboard>
+              <ClipboardButton component="button" 
+                                                 className='btn-fbshare' 
+                                                 data-clipboard-text={clipboardData}
+                                                 onClick={this.popModal.bind(this)}>
+                Send text message to friends
+              </ClipboardButton>
         <h6 className='or-split'>OR</h6>
         <a className='btn-fbshare' href={encodedURL} onClick={this.revealStartAction.bind(this)}>
           <img src={btnIcon} alt='' />Invite Facebook Friends
