@@ -39,10 +39,10 @@ module.exports = {
     });
     socket.emit('message', {
       user: 'ebot',
-      text: `🎉 Welcome to Emoji Face Off! 🎉
-             🙏 Mode: Single Player 🙏
-             
-             Press Start when you're ready.`
+      text: `Welcome to Emoji Face Off!
+             🙏 \xa0Mode: Single Player 🙏
+
+             Press Start Game to begin.`
     });
   },
 
@@ -51,7 +51,7 @@ module.exports = {
     RedisController.getPrompts()      // TODO: CHANGE BACK to RedisController.getPrompts(rm.level)
       .then(filteredPrompts => {
         // randomly populate the room's "prompts" object from our library.
-        while (rm.prompts.length < 30) {
+        while (rm.prompts.length < rm.totalRounds) {
           let promptIndex = Math.floor(Math.random() * filteredPrompts.length);
           if (!rm.prompts.includes(filteredPrompts[promptIndex])) {
             rm.prompts.push(filteredPrompts[promptIndex]);
@@ -147,14 +147,14 @@ function endGame (socket, clients, rm, msg) {
   socket.emit('message', {
     user: 'ebot',
     roundNum: rm.roundNum,
-    text: `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
+    text: `🏁 \xa0Game Completed 🏁
 
            ${timeElapsed} seconds to complete ${rm.totalRounds} rounds.
            ${secondsPerRnd} seconds / round.
 
            That was 💩\xa0...\xa0try harder next time!
 
-           Press 'start' to begin a new game. 🙌`
+           Press Start Game to go again! 🙌`
   });
   socket.emit('score', 0);
   socket.emit('newPrompt', {

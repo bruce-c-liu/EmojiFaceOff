@@ -53,9 +53,12 @@ module.exports = {
             io.sockets.in(roomId).emit('message', {
               user: 'ebot',
               roundNum: rm.roundNum,
-              text: `${host.name} has started the game.
-
-                     Round 1:
+              text: `<em>${host.name} has started the game.</em>`
+            });
+            io.sockets.in(roomId).emit('message', {
+              user: 'ebot',
+              roundNum: rm.roundNum,
+              text: `Round 1:
                      <em>${rm.prompt}</em>`
             });
 
@@ -92,14 +95,11 @@ module.exports = {
     });
     socket.emit('message', {
       user: 'ebot',
-      text: `
-            You are the Host! Wait for friends 
-            to join before starting the game.`
-    });
-    socket.emit('message', {
-      user: 'ebot',
-      text: `Wait for other friends to join room.
-            💩 - talk each other while you wait!`
+      text: `You are the Host! Wait for friends to join before starting the game.
+
+             You can send the current game url to friends at any time. 😎
+
+             💩 - talk each other while you wait!`
     });
   },
 
@@ -250,14 +250,14 @@ function endGame (io, socket, clients, rm, msg) {
   io.sockets.in(msg.roomId).emit('message', {
     user: 'ebot',
     roundNum: rm.roundNum,
-    text: `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
+    text: `🏁 \xa0Game Completed 🏁
 
            Congrats ${winner.name}!
 
            Final Scores:
            ${finalRankings}
 
-           Press START to begin a new game. \xa0🙌`
+           Press Start Game to go again! 🙌`
   });
   io.sockets.in(msg.roomId).emit('gameEnded');
 
