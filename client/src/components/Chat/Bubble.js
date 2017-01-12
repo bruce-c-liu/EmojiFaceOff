@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Interweave from 'interweave';
-import {Motion, spring, presets} from 'react-motion';
 import classNames from 'classnames';
 import nerd from '../../assets/emoji_nerd.png';
 import axios from 'axios';

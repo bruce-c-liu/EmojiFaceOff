@@ -10,7 +10,6 @@ import ChatHead from './ChatHead';
 import ChatHeadPractice from './ChatHeadPractice';
 import Bubble from './Bubble';
 import HintBar from './HintBar';
-import OnBoard from '../UI/OnBoard';
 import Modal from '../UI/Modal';
 import { initSocketListeners, createOrJoinRoom, sendMessage } from '../../helpers/socketEvents.js';
 import mixpanel from 'mixpanel-browser';

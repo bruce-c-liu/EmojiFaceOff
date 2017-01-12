@@ -1,12 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import getRoutes from './config/routes.js';
 import store from './store/store.js';
 import {firebaseAuth} from './config/constants';
 import mixpanel from 'mixpanel-browser';
-import firebase from 'firebase';
 mixpanel.init('a4ef7ec7ead2231829a3ff9f5d73647c');
 
 const checkLocalStorage = () => {

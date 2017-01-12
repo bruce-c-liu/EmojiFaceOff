@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import auth from '../helpers/auth.js';
 import { bindActionCreators } from 'redux';
-import { Link, browserHistory } from 'react-router';
+import {  browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions/actionCreators.js';
 import firebase from 'firebase';
@@ -32,7 +32,6 @@ class AuthContainer extends Component {
       firebaseAuth().getRedirectResult()
       .then(result => {
         if (result.user) {
-          console.log('firebase redirect result auth cotainer', result);
           let user = {
             name: result.user.displayName,
             uid: result.user.uid,
@@ -40,14 +39,13 @@ class AuthContainer extends Component {
           };
           this.props.postUserData(user);
         } else {
-          console.log('NOOOOOOOOOOOO auth from firebase redirect');
+
         }
       });
 
-      console.log('LOCAL STORAGE NOAUTH:', nextPath);
+
       if (nextPath === '/' || nextPath === '/login' || nextPath === null) this.props.history.push(`/mode`);
       else {
-        console.log('NAVIGATING TO NEXT PATH:', nextPath);
         browserHistory.push(`${nextPath}`);
       }
     }
