@@ -10,6 +10,10 @@
     <meta property="og:description" content="The game where you face off against others to guess the emoji." />
     <meta property="og:image"              content="%PUBLIC_URL%/EFO_TN.jpg" />
     <title>Emoji Faceofff - Can you guess the emoji?</title>
+    <style>
+      
+      
+    </style>
  
   </head>
   <body>
@@ -38,8 +42,18 @@
        console.log("iPHONE DETECTED" )
        document.querySelector('body').classList.add('safari-mobile');  
     }
+    try {
+      // try to use localStorage
+      localStorage.test = 2;        
+    } catch (e) {
+      // there was an error so...
+      alert('You are in Privacy Mode\nPlease deactivate Privacy Mode and then reload the page.');
+    }
   </script>
-
+    <div class="landscape"> 
+        <img src="icon-horizontal.png" alt="">
+        <h4>Please rotate your device for  the best experience.</h4>
+    </div>
     <div id="root"></div>
 
 
