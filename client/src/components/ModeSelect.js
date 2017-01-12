@@ -6,6 +6,8 @@ import * as actionCreators from '../actions/actionCreators.js';
 import mixpanel from 'mixpanel-browser';
 import Header from './Header';
 import _ from 'lodash';
+import emoji_nerd from '../assets/emoji_nerd.png'
+import icon_friends from '../assets/glyph_friends.png'
 
 class ModeSelect extends Component {
   constructor () {
@@ -75,8 +77,8 @@ class ModeSelect extends Component {
           <div>
             <div className='mode-select_vs'>
               <div className='avatar is-md' style={avatarBG} />
-              <div className='avatar is-md' style={{backgroundImage: `url('http://static1.comicvine.com/uploads/original/11129/111293347/5489718-9865121372-52705.png')`}} />
-              <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/4b/93/4b932980a0fe8f7ad711a8c2fcc68ce4.png')`}} />
+             <h4>vs</h4>
+              <div className='avatar is-md' style={{backgroundImage: `url(${icon_friends})`}} />
             </div>
             <button className='btn-login is-full' onClick={this.initGameFriends.bind(this)}>
               Challenge Your Friends!
@@ -87,8 +89,8 @@ class ModeSelect extends Component {
           <div>
             <div className='mode-select_vs'>
               <div className='avatar is-md' style={avatarBG} />
-              <div className='avatar is-md' style={{backgroundImage: `url('http://static1.comicvine.com/uploads/original/11129/111293347/5489718-9865121372-52705.png')`}} />
-              <div className='avatar is-md' style={{backgroundImage: `url('http://emojipedia-us.s3.amazonaws.com/cache/a5/43/a543b730ddcf70dfd638f41223e3969e.png')`}} />
+             <h4>vs</h4>
+              <div className='avatar is-md' style={{backgroundImage: `url(${emoji_nerd})`}} />
             </div>
             <button className='btn-login is-full' onClick={this.initGameSolo.bind(this)} >
                 Single Player Mode

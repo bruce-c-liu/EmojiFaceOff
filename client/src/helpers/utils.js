@@ -23,3 +23,17 @@ export const socketURL = protocol + '//' + host + ':' + port + Path;
 // url = protocol + "//" + host + ":" + port + path;
 
 export const inviteBaseURL = 'http://www.emojifaceoff.com/chat/';
+
+export const loading = function (interval, increment, progress) {
+   window.setTimeout(()=>{
+     progress+=increment;
+     console.log(progress + '%');
+     
+     if(progress !== 100) {
+       loading(interval, increment, progress);  
+     }
+   }, interval);
+  this.setState({
+  progress: progress
+  })
+};

@@ -1,7 +1,8 @@
 const initialState = {
   loading: false,
   drawer: false,
-  formSending: false
+  formSending: false,
+  formSent: false
 };
 
 function ui (state = initialState, action) {
@@ -24,7 +25,8 @@ function ui (state = initialState, action) {
         });
       case 'FORM_SENT':
         return Object.assign({}, state, {
-          formSending:false
+          formSending:false,
+          formSent: true
         });
     default:
       return state;

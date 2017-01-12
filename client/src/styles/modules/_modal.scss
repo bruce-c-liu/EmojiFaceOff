@@ -20,3 +20,20 @@
 		opacity: 1;
 	}
 }
+
+.room-warning{
+	padding: 1rem;
+	text-align: center;
+	border: 2px solid $gray-lt;
+	border-radius: 4px;
+	padding: 2rem;
+	background-color: rgba($black, 0.5);
+	h3{
+		font-family: $font-display;
+		font-size: 2rem;
+		color: $orange;
+	}
+	p{
+		color: $gray-lt;
+	}
+}
