@@ -1,0 +1,25 @@
+
+
+.landscape{
+	display: none;
+	position: fixed;
+	top: 0 ; left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 100;
+	background-color: rgba($black, 0.9);
+	color: $gray-lt;
+	text-align: center;
+	h4{
+		font-weight: 600;
+		text-align: center;
+	}
+}
+
+@media only screen 
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: landscape) { 
+	.landscape{
+		display:block;
+	}
+}
