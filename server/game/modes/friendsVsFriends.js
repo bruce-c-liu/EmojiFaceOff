@@ -46,7 +46,10 @@ module.exports = {
             console.log(rm.hints);
             rm.prompt = rm.prompts.pop();
             io.sockets.in(roomId).emit('gameStarted');
-            io.sockets.in(roomId).emit('newPrompt', rm.hints[rm.prompt].length);
+            socket.emit('newPrompt', {
+              solutionLength: rm.hints[rm.prompt].length,
+              prompt: rm.prompt
+            });
             io.sockets.in(roomId).emit('message', {
               user: 'ebot',
               roundNum: rm.roundNum,
@@ -131,7 +134,10 @@ module.exports = {
       });
     } else if (rm.gameStarted) {
       socket.emit('gameStarted');
-      socket.emit('newPrompt', rm.hints[rm.prompt].length);
+      socket.emit('newPrompt', {
+        solutionLength: rm.hints[rm.prompt].length,
+        prompt: rm.prompt
+      });
       socket.emit('message', {
         user: 'ebot',
         text: `You joined a game that
@@ -189,7 +195,10 @@ function nextRound (io, socket, clients, rm, msg) {
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
 
-  io.sockets.in(msg.roomId).emit('newPrompt', rm.hints[rm.prompt].length);
+  io.sockets.in(msg.roomId).emit('newPrompt', {
+    solutionLength: rm.hints[rm.prompt].length,
+    prompt: rm.prompt
+  });
   socket.emit('score', clients[socket.id].score);
   io.sockets.in(msg.roomId).emit('message', {
     user: 'ebot',
@@ -233,7 +242,10 @@ function endGame (io, socket, clients, rm, msg) {
   // Reset all users' scores client side.
   io.sockets.in(msg.roomId).emit('score', 0);
   // Wipe clues on client side.
-  io.sockets.in(msg.roomId).emit('newPrompt', 0);
+  io.sockets.in(msg.roomId).emit('newPrompt', {
+    solutionLength: 0,
+    prompt: rm.prompt
+  });
   // Emit winner/final scores.
   io.sockets.in(msg.roomId).emit('message', {
     user: 'ebot',

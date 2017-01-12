@@ -24,6 +24,7 @@ class Chat extends Component {
       round: 0,
       score: 0,
       chats: [],
+      prompt: '',
       solution: [],
       numHintsReceived: 0,
       gameStarted: false,

@@ -91,36 +91,37 @@ class LibPrompt extends Component {
     });
 
     return (
-      <div>
-        <div className='request-prompt_wrap'>
-          <h3>{`Edit Changes for answers for "${this.state.prompt}"`}</h3>
-          <table>
-            <thead />
-            <tbody>
-              <tr>
-                <th>id</th>
-                <th>Status</th>
-                <th>Orig Sol</th>
-                <th>New Sol</th>
-                <th>Edit</th>
-                <th />
-              </tr>
-              {promptRows}
-            </tbody>
-          </table>
-          <form onSubmit={this.addAnswer.bind(this)}>
-            <h3>{`Add new answers for "${this.state.prompt}"`}</h3>
-            <input className='reqAnswer'
-              type='text' value={this.state.reqAnswer}
-              onChange={this.handleChangeAnswer.bind(this)}
-              placeholder='Answer to prompt: 😀' />
-            <p />
-            <input className='btn-input' type='submit' value='Submit' disabled={this.state.reqAnswer.length <= 0} />
-          </form>
-          <div>
-            {this.state.submitRequest ? <h6>Your request has been submitted for approval!</h6> : null}
-          </div>
+      <div className='admin-container'>
+        <p>Testing</p>
+        <h3>Edit Changes for answers for {this.state.prompt}</h3>
+
+        <table>
+          <thead />
+          <tbody>
+            <tr>
+              <th>id</th>
+              <th>Status</th>
+              <th>Orig Sol</th>
+              <th>New Sol</th>
+              <th>Edit</th>
+              <th />
+            </tr>
+            {promptRows}
+          </tbody>
+        </table>
+        <form onSubmit={this.addAnswer.bind(this)}>
+          <h3>{`Add new answers for "${this.state.prompt}"`}</h3>
+          <input className='reqAnswer'
+            type='text' value={this.state.reqAnswer}
+            onChange={this.handleChangeAnswer.bind(this)}
+            placeholder='Answer to prompt: 😀' />
+          <p />
+          <input className='btn-input' type='submit' value='Submit' disabled={this.state.reqAnswer.length <= 0} />
+        </form>
+        <div>
+          {this.state.submitRequest ? <h6>Your request has been submitted for approval!</h6> : null}
         </div>
+
       </div>
     );
   }

@@ -71,7 +71,10 @@ module.exports = {
             rm.roundNum = 1;
 
             socket.emit('gameStarted');
-            socket.emit('newPrompt', rm.hints[rm.prompt].length);
+            socket.emit('newPrompt', {
+              solutionLength: rm.hints[rm.prompt].length,
+              prompt: rm.prompt
+            });
             socket.emit('score', 0);
             socket.emit('message', {
               user: 'ebot',
@@ -111,7 +114,10 @@ function nextRound (socket, clients, rm, msg) {
   socket.emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  socket.emit('newPrompt', rm.hints[rm.prompt].length);
+  socket.emit('newPrompt', {
+    solutionLength: rm.hints[rm.prompt].length,
+    prompt: rm.prompt
+  });
   socket.emit('score', clients[socket.id].score);
   socket.emit('message', {
     user: 'ebot',
@@ -151,7 +157,10 @@ function endGame (socket, clients, rm, msg) {
            Press 'start' to begin a new game. 🙌`
   });
   socket.emit('score', 0);
-  socket.emit('newPrompt', 0);
+  socket.emit('newPrompt', {
+    solutionLength: 0,
+    prompt: ''
+  });
   socket.emit('gameEnded');
 
   // Reset user's score to 0.

@@ -10,11 +10,11 @@ class Bubble extends Component {
   //   super(props);
   // }
 
-  requestPrompt (e) {
+  requestAsSolution (e) {
     e.preventDefault();
     axios.post('/api/requestPrompt', {
       userFbId: this.props.profile.auth,
-      prompt: 'TESTING TESTING TESTING',
+      prompt: this.props.deets.prompt,
       answers: [this.props.deets.text]
     });
   }
@@ -35,7 +35,7 @@ class Bubble extends Component {
     };
 
     const bubble = this.props.deets.type === 'incorrectGuess'
-                    ? (<a href='#' onClick={this.requestPrompt.bind(this)}>
+                    ? (<a href='#' onClick={this.requestAsSolution.bind(this)}>
                       <Interweave
                         tagName='span'
                         content={this.props.deets.text}
