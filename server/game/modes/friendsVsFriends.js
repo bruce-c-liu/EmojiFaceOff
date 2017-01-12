@@ -38,15 +38,15 @@ module.exports = {
         RedisController.getAllAnswers(rm.prompts)
           .then(solutions => {
             rm.solutions = solutions;
-            console.log('SOLUTIONS:', solutions);
+            // console.log('SOLUTIONS:', solutions);
             for (let prompt in solutions) {
               rm.hints[prompt] = [...Object.keys(solutions[prompt])[0]];
             }
 
-            console.log(rm.hints);
+            // console.log(rm.hints);
             rm.prompt = rm.prompts.pop();
             io.sockets.in(roomId).emit('gameStarted');
-            socket.emit('newPrompt', {
+            io.sockets.in(roomId).emit('newPrompt', {
               solutionLength: rm.hints[rm.prompt].length,
               prompt: rm.prompt
             });
