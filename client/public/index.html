@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <meta property="og:title"              content="Emoji Faceoff" />
     <meta property="og:description" content="The game where you face off against others to guess the emoji." />
-    <meta property="og:image"              content="%PUBLIC_URL%/EFO_TN.jpg" />
+    <meta property="og:image" content="%PUBLIC_URL%/EFO_TN.jpg" />
     <title>Emoji Faceofff - Can you guess the emoji?</title>
     <style>
       .landscape{
@@ -33,11 +33,28 @@
           display:block;
         }
       }
+      .alert-desktop{display: none;}
+      .no-touch .alert-desktop{
+        height: 100%;
+        width: 100%;
+        top: 0 ; left: 0; bottom: 0; right: 0;
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        -ms-align-items: center;
+        align-items: center;
+        background-color: rgba(0,0,0, 0.9);
+        z-index: 1000;
+        color: #efefef;
+        text-align: center;
+      }
       
     </style>
  
   </head>
   <body>
+  <script src="modernizr-custom.js"></script>
   <script>
     window.fbAsyncInit = function() {
       FB.init({
@@ -70,10 +87,16 @@
       // there was an error so...
       alert('You are in Privacy Mode\nPlease deactivate Privacy Mode and then reload the page.');
     }
+    if (Modernizr.touchevents) {
+      // supported
+    } else {
+    document.querySelector('body').classList.add('no-touch');  
+    }
   </script>
-
-    <div id="root"></div>
-
-
+      <div class="alert-desktop">
+         <h2> This game is intended for touch screens</h2>
+         <p> Please open on your phone</p>
+      </div>
+      <div id="root"></div>
   </body>
 </html>
