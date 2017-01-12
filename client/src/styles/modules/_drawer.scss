@@ -6,9 +6,10 @@
 	padding:3rem  2rem;
 	//background: linear-gradient(to bottom, rgba($gray-lt, 1) 0%, rgba($gray, 1) 100%);
 	background-color: #c7f0f0;
+	background-color: $turq;
 	box-shadow: -3px 0px 5px 0px rgba(0,0,0,0.48);
-	transform: translateX(100%);
-	transition: transform .3s cubic-bezier(0.645, 0.045, 0.355, 1);
+	transform: translateX(101%);
+	transition: transform .35s cubic-bezier(0.645, 0.045, 0.355, 1);
 	&.is-open{
 		transform: translateX(0);
 	}
@@ -21,7 +22,7 @@ nav.menu{
 		//border-bottom: 1px solid darken($blue-dk, 5%);
 		font-size: 1.5rem;
 		font-weight: 600;
-		color: #32b8b9;
+		color: lighten($turq, 40%);
 		letter-spacing: 1px;
 	}
 }

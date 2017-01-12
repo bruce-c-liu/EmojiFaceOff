@@ -5,7 +5,7 @@ module.exports = {
 
   emailFeedback: (req, res, next) => {
     let fromEmail = new mailClient.Email(req.body.email);
-    let toEmail = new mailClient.Email('khoa@emojifaceoff.com;bruce@emojifaceoff.com;patrick@emojifaceoff.com;');
+    let toEmail = new mailClient.Email('patrick@emojifaceoff.com');
     let subject = 'User Feedback';
     let content = new mailClient.Content('text/plain', `${req.body.name} has said: \n ${req.body.message}`);
     let mail = new mailClient.Mail(fromEmail, subject, toEmail, content);

@@ -169,7 +169,8 @@ body {
   background-repeat: repeat;
   background-position: center center;
   z-index: 10;
-  box-shadow: 0px 3px 14px 7px rgba(0, 0, 0, 0.52); }
+  box-shadow: 0px 3px 14px 7px rgba(0, 0, 0, 0.52);
+  overflow: hidden; }
 
 .safari-mobile #root {
   position: fixed;
@@ -389,6 +390,17 @@ button {
   outline: none;
   opacity: 1;
   -webkit-appearance: none; }
+  .input-submit > img {
+    vertical-align: middle;
+    max-height: 40px;
+    max-width: 70%; }
+
+.success-msg {
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #009d7e; }
 
 .header {
   position: absolute;
@@ -412,9 +424,10 @@ button {
   height: 100%;
   padding: 3rem  2rem;
   background-color: #c7f0f0;
+  background-color: #41CBCC;
   box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.48);
-  transform: translateX(100%);
-  transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1); }
+  transform: translateX(101%);
+  transition: transform 0.35s cubic-bezier(0.645, 0.045, 0.355, 1); }
   .drawer.is-open {
     transform: translateX(0); }
 
@@ -423,7 +436,7 @@ nav.menu a {
   padding: 1rem .5rem;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #32b8b9;
+  color: #e2f7f7;
   letter-spacing: 1px; }
 
 .example-enter {
@@ -514,6 +527,20 @@ nav.menu a {
   .modal.is-open {
     transform: scale(1);
     opacity: 1; }
+
+.room-warning {
+  padding: 1rem;
+  text-align: center;
+  border: 2px solid #eceff2;
+  border-radius: 4px;
+  padding: 2rem;
+  background-color: rgba(33, 33, 35, 0.5); }
+  .room-warning h3 {
+    font-family: "Fredoka One", cursive;
+    font-size: 2rem;
+    color: #FF6B6B; }
+  .room-warning p {
+    color: #eceff2; }
 
 .chat-view {
   height: 100%;
@@ -641,8 +668,9 @@ nav.menu a {
   margin-right: 2.5rem;
   border-radius: 15px;
   background-color: #f7f7f7;
-  max-width: 55%;
-  font-size: 1.5rem; }
+  max-width: 60%;
+  font-size: 1.5rem;
+  flex-shrink: 0; }
   .chat-bubble.on-left {
     align-self: flex-start;
     margin-left: 2.5rem;
@@ -760,7 +788,10 @@ nav.menu a {
   background-position: center center; }
   .avatar.is-md {
     height: 60px;
-    width: 60px; }
+    width: 60px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    box-shadow: 0 0 0 1px #FFFFFF, 0 0 0 4px #41CBCC; }
 
 .mode-select_wrap {
   width: 95%;
@@ -785,6 +816,8 @@ nav.menu a {
   margin: 1rem auto; }
   .mode-select_vs .avatar {
     margin: 0 1rem; }
+  .mode-select_vs h4 {
+    font-family: "Fredoka One", cursive; }
 
 .invite-wrap {
   position: relative;
@@ -1096,3 +1129,20 @@ nav.menu a {
   overflow-y: auto; }
   .admin-container.is-center {
     justify-content: center; }
+
+.CircularProgressbar {
+  max-width: 150px; }
+
+.CircularProgressbar .CircularProgressbar-path {
+  stroke: #FF6B6B;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease 0s; }
+
+.CircularProgressbar .CircularProgressbar-trail {
+  stroke: #d6d6d6; }
+
+.CircularProgressbar .CircularProgressbar-text {
+  fill: #FF6B6B;
+  font-size: 20px;
+  dominant-baseline: middle;
+  text-anchor: middle; }
