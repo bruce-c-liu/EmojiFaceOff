@@ -89,9 +89,7 @@ module.exports = {
     });
     socket.emit('message', {
       user: 'ebot',
-      text: `🎉 Welcome to Emoji Face Off! 🎉
-            \xa0👩 \xa0 Mode: Friends vs Friends \xa0👨
-
+      text: `
             You are the Host! Wait for friends 
             to join before starting the game.`
     });

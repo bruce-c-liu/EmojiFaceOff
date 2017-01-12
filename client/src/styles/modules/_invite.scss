@@ -83,3 +83,45 @@
 		right: 10px;
 	}
 }
+
+.steps-list{
+	width: 100%;
+	margin: 1rem 0;
+	padding:  1rem;
+	border-radius: 4px;
+	background-color: $gray-lt;
+	h3{
+		font-size: 5vw;
+		font-weight: 600;
+		margin: .5rem;
+		color: $orange;
+		text-align: center;
+		padding-bottom: 1rem;
+		border-bottom: 1px solid $turq;
+	}
+	>img{
+		display: inherit;
+		max-width: 17%;
+		margin: 0 auto;
+		text-align: center;
+	}
+	li{
+		display: flex;
+		align-items: center;
+		margin-bottom:1.25rem;
+		color: $gray-dk;
+		font-weight: 600;
+		span{
+			display: inline-block;
+			width: 40px;
+			height: 40px;
+			line-height: 40px;
+			margin-right: 1rem;
+			border-radius: 50%;
+			background-color: $turq;
+			color: $white;
+			font-family: $font-display;
+			text-align: center;
+		}
+	}
+}

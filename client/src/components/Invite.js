@@ -99,7 +99,7 @@ const stopStart = this.state.startShown
                             ?           <Link to={`/chat/${session.roomID}`} className='btn-login'>
                                           Start Game <span>🎉🏁</span>
                                           </Link>
-                              : <img className="glyph-stop" src={stop_sign} alt=""/>;
+                              : null
 
 
     return (
@@ -127,16 +127,18 @@ const stopStart = this.state.startShown
           </div>
         </div>
 
-              <ClipboardButton component="button" 
+  
+              <a className='btn-fbshare' href={encodedURL} onClick={this.revealStartAction.bind(this)}>
+                <img src={btnIcon} alt='' />Invite Facebook Friends
+              </a>
+              <h6 className='or-split'>OR</h6>
+              <ClipboardButton component="a" 
                                                  className='btn-fbshare' 
                                                  data-clipboard-text={clipboardData}
                                                  onClick={this.popModal.bind(this)}>
-                Send text message to friends
+                Invite Friends via Text Message
               </ClipboardButton>
-        <h6 className='or-split'>OR</h6>
-        <a className='btn-fbshare' href={encodedURL} onClick={this.revealStartAction.bind(this)}>
-          <img src={btnIcon} alt='' />Invite Facebook Friends
-        </a>
+       
         { this.state.startBtnReveal
                                       ?  <Link to={`/chat/${session.roomID}`} className='btn-login' style={{marginTop: '2rem'}}>
                                             Start Game <span>🎉🏁</span>
@@ -147,18 +149,16 @@ const stopStart = this.state.startShown
         
     
         <Modal modalOpen={this.state.showModal} toggleModal={ this.hideShowModal.bind(this)}>
-          <span className='emoji-glyph'>👍</span>
-          <h1 className='font-display'>Invite Link Copied!</h1>
+          <h1 className='font-display'>Invite Copied to Clipboard!</h1>
           <ul className='steps-list'>
-            <li><span>1</span> Open your text message app</li>
-            <li><span>2</span> Text the invite link out to friends</li>
+            <img className="glyph-stop" src={stop_sign} alt=""/>
+            <h3>Now Invite Your Friends:</h3>
+            <li><span>1</span> Open your text messaging app</li>
+            <li><span>2</span> Paste and send invite  to friends</li>
             <li><span>3</span> Come back here and Start Game!</li>
           </ul>
-              <ProgressBar 
-                  classForPercentage={(percentage)=>{
-                      return percentage === 100 ? 'Complete' : '';
-                  }}
-              />
+          {stopStart}
+  
          </Modal>
       </div>
     );
