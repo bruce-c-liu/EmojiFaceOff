@@ -140,11 +140,13 @@ module.exports = {
       });
       socket.emit('message', {
         user: 'ebot',
-        text: `You joined a game that
-               is already in progress!
-               BETTER CATCH UP! 😱
-               \n
-               Round ${rm.roundNum}:
+        text: `You joined a game that is already in progress!
+               BETTER CATCH UP! 😱`,
+        roundNum: rm.roundNum
+      });
+      socket.emit('message', {
+        user: 'ebot',
+        text: `Round ${rm.roundNum}:
                <em>[${rm.prompt}]</em>`,
         roundNum: rm.roundNum
       });

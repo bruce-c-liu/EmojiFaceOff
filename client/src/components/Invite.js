@@ -126,7 +126,7 @@ Click here to Play: ${this.state.longRoomURL}`;
           className='btn-fbshare'
           data-clipboard-text={clipboardData}
           onClick={this.popModal.bind(this)}>
-                Invite Friends via Text Message
+                Invite Friends via Invite Link
         </ClipboardButton>
 
         { this.state.startBtnReveal
