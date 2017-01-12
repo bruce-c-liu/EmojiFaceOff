@@ -123,25 +123,6 @@ h1, h2, h3, h4, h5, h6 {
     width: 45%;
     background-color: #9B9F9F; }
 
-.landscape {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 100;
-  background-color: rgba(33, 33, 35, 0.9);
-  color: #eceff2;
-  text-align: center; }
-  .landscape h4 {
-    font-weight: 600;
-    text-align: center; }
-
-@media only screen and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
-  .landscape {
-    display: block; } }
-
 html, body {
   -webkit-overflow-scrolling: touch; }
 
@@ -273,7 +254,7 @@ button {
   color: #FFFFFF;
   text-align: center; }
   .btn-login span {
-    font-size: 2rem;
+    font-size: 1.5rem;
     vertical-align: middle; }
   .btn-login.is-full {
     display: block; }
@@ -782,6 +763,20 @@ nav.menu a {
   color: #FF6B6B;
   font-size: 3.2rem;
   text-align: center; }
+
+.login-inner {
+  width: 100%;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  .login-inner > img {
+    max-height: 200px; }
+  .login-inner h2 {
+    font-family: "Fredoka One", cursive;
+    color: #41CBCC;
+    font-size: 9vw;
+    text-align: center; }
 
 .avatar {
   border-radius: 50%;
