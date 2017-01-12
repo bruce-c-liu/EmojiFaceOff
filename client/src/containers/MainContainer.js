@@ -9,6 +9,7 @@ import { firebaseAuth } from '../config/constants.js';
 import wallpaper from '../assets/wallpaper.png';
 import Drawer from '../components/UI/Drawer.js';
 import mixpanel from 'mixpanel-browser';
+import dot_loader from '../assets/loader_three_dots.svg';
 
 class MainContainer extends Component {
   componentWillMount () {
@@ -35,7 +36,10 @@ class MainContainer extends Component {
     }
 
     return this.props.isFetching === true
-                    ? <div className='loader'><p>Loading...</p></div>
+                    ? <div className='loader'>
+                          <p>Loading...</p>
+                          <img src={dot_loader} alt=""/>  
+                       </div>
                     : <div className='inner-container'> {children}<Drawer opened={this.props.drawer} logOut={this.props.logoutAndUnauth} drawerAction={this.props.toggleDrawer} /></div>;
   }
 

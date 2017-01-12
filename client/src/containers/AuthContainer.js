@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import * as actionCreators from '../actions/actionCreators.js';
 import firebase from 'firebase';
 import { firebaseAuth } from '../config/constants.js';
+import Login from '../components/Login.js'
 
 class AuthContainer extends Component {
 
@@ -63,8 +64,7 @@ class AuthContainer extends Component {
     return (
       <div className='login-wrap'>
         <h1 className='brand-title'>Emoji Faceoff</h1>
-        {this.props.users.isAuthed ? <Link to='/mode'>YOU ARE LOGGED IN</Link> : null}
-
+        <Login/>
         <button className='btn-login' onClick={this.handleAuth.bind(this)}>
           Login With Facebook to Start!
         </button>
