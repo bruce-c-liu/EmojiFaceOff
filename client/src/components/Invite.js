@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators';
 import { inviteBaseURL, loading } from '../helpers/utils';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import  ClipboardButton from 'react-clipboard.js';
+import ClipboardButton from 'react-clipboard.js';
 import btnIcon from '../assets/Messenger_Icon.png';
 import Header from './Header';
 import Modal from './UI/Modal';
@@ -35,12 +35,10 @@ class Invite extends Component {
     this.setState({
       longRoomURL: inviteBaseURL + this.props.session.roomID
     });
-
   }
   componentDidMount () {
     // this.props.fetchBitlyLink(this.state.longRoomURL);
     mixpanel.track('Nav Invite');
-
   }
 
   RoundCountInc () {
@@ -56,35 +54,30 @@ class Invite extends Component {
     }
   }
 
- revealStartAction() {
-      setTimeout(() => {
-          this.setState({
-              startShown: true,
-              startBtnReveal: true
-
-          });
-      }, 8000);
+  revealStartAction () {
+    setTimeout(() => {
+      this.setState({
+        startShown: true,
+        startBtnReveal: true
+      });
+    }, 8000);
   }
 
-  hideShowModal(){
+  hideShowModal () {
     this.setState({
       showModal: !this.state.showModal
-    })
+    });
   }
 
-
-  popModal(type) {
-        this.hideShowModal()
-        this.revealStartAction()
-
+  popModal (type) {
+    this.hideShowModal();
+    this.revealStartAction();
   }
-  onSuccess() {
-      console.log('successfully coppied');
-   }
-
+  onSuccess () {
+    console.log('successfully coppied');
+  }
 
   render () {
-
     const { session } = this.props;
     const encodedURL = `fb-messenger://share/?link=http%3A%2F%2Femojifaceoff.com%2Fchat%2F${this.props.session.roomID}`;
     const loaderUI = this.props.ui.loading
@@ -94,13 +87,11 @@ class Invite extends Component {
 `${this.props.users.profile.displayName} is challenging you to an Emoji Faceoff.
 Click here to Play: ${this.state.longRoomURL}`;
 
-
-const stopStart = this.state.startShown
-                            ?           <Link to={`/chat/${session.roomID}`} className='btn-login'>
-                                          Start Game <span>🎉🏁</span>
-                                          </Link>
-                              : null
-
+    const stopStart = this.state.startShown
+                            ? <Link to={`/chat/${session.roomID}`} className='btn-login'>
+                              <span>🎉 Start Game 🏁</span>
+                            </Link>
+                              : null;
 
     return (
       <div className='inner-container is-center invite-wrap'>
@@ -127,39 +118,37 @@ const stopStart = this.state.startShown
           </div>
         </div>
 
-  
-              <a className='btn-fbshare' href={encodedURL} onClick={this.revealStartAction.bind(this)}>
-                <img src={btnIcon} alt='' />Invite Facebook Friends
-              </a>
-              <h6 className='or-split'>OR</h6>
-              <ClipboardButton component="a" 
-                                                 className='btn-fbshare' 
-                                                 data-clipboard-text={clipboardData}
-                                                 onClick={this.popModal.bind(this)}>
+        <a className='btn-fbshare' href={encodedURL} onClick={this.revealStartAction.bind(this)}>
+          <img src={btnIcon} alt='' />Invite Facebook Friends
+        </a>
+        <h6 className='or-split'>OR</h6>
+        <ClipboardButton component='a'
+          className='btn-fbshare'
+          data-clipboard-text={clipboardData}
+          onClick={this.popModal.bind(this)}>
                 Invite Friends via Text Message
-              </ClipboardButton>
-       
+        </ClipboardButton>
+
         { this.state.startBtnReveal
-                                      ?  <Link to={`/chat/${session.roomID}`} className='btn-login' style={{marginTop: '2rem'}}>
-                                            Start Game <span>🎉🏁</span>
-                                          </Link>
-                                       :  null
+                                      ? <Link to={`/chat/${session.roomID}`} className='btn-login' style={{marginTop: '2rem'}}>
+                                        <span>🎉 Start Game 🏁</span>
+                                      </Link>
+                                       : null
         }
 
-        
-    
-        <Modal modalOpen={this.state.showModal} toggleModal={ this.hideShowModal.bind(this)}>
-          <h1 className='font-display'>Invite Copied to Clipboard!</h1>
+        <Modal modalOpen={this.state.showModal} toggleModal={this.hideShowModal.bind(this)}>
+
           <ul className='steps-list'>
-            <img className="glyph-stop" src={stop_sign} alt=""/>
-            <h3>Now Invite Your Friends:</h3>
-            <li><span>1</span> Open your text messaging app</li>
-            <li><span>2</span> Paste and send invite  to friends</li>
-            <li><span>3</span> Come back here and Start Game!</li>
+            <h3 className='font-display'>Invite Copied to Clipboard!</h3>
+            <img className='glyph-stop' src={stop_sign} alt='' />
+            <h3>Getting the Party Started:</h3>
+            <li><span>1</span> Open your messaging app.</li>
+            <li><span>2</span> Send invite link to friends.</li>
+            <li><span>3</span> Come back and Start Game!</li>
           </ul>
           {stopStart}
-  
-         </Modal>
+
+        </Modal>
       </div>
     );
   }

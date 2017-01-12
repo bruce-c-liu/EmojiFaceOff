@@ -24,6 +24,7 @@ class Chat extends Component {
       round: 0,
       score: 0,
       chats: [],
+      prompt: '',
       solution: [],
       numHintsReceived: 0,
       gameStarted: false,
@@ -54,7 +55,7 @@ class Chat extends Component {
   componentDidUpdate () {
     const node = this.refs.chatScroll;
     node.scrollTop = node.scrollHeight + 300;
-    console.log("scrollHeight", node.scrollTop)
+    // console.log("scrollHeight", node.scrollTop)
   }
 
   componentWillUnmount () {
@@ -168,11 +169,11 @@ class Chat extends Component {
           {chatList}
         </div>
         <div className='hint-bar'>
-            <HintBar hintInfo={this.state} 
-                            clickHint={this.requestHint.bind(this)} 
-                            startProp={this.startGame.bind(this)} 
-                            hostStatus={this.props.session.isHost}
-                            coinBal={this.state.coinBalance}/>
+          <HintBar hintInfo={this.state}
+            clickHint={this.requestHint.bind(this)}
+            startProp={this.startGame.bind(this)}
+            hostStatus={this.props.session.isHost}
+            coinBal={this.state.coinBalance} />
         </div>
         <div className='chat-form_wrap'>
 
@@ -186,11 +187,11 @@ class Chat extends Component {
           </form>
         </div>
         <Modal modalOpen={!this.state.roomExists}>
-          <div className="room-warning">
-              <h3>You have entered an inactive room.</h3>
-              <p> Please click on the link below to start a new game.</p>
-              <Link to={`/mode`} className="btn-outline"> Start New Game</Link>
-          </div>    
+          <div className='room-warning'>
+            <h3>You have entered an inactive room.</h3>
+            <p> Please click on the link below to start a new game.</p>
+            <Link to={`/mode`} className='btn-outline'> Start New Game</Link>
+          </div>
         </Modal>
       </div>
     );

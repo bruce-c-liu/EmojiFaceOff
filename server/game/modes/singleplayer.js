@@ -39,10 +39,10 @@ module.exports = {
     });
     socket.emit('message', {
       user: 'ebot',
-      text: `🎉 Welcome to Emoji Face Off! 🎉
-             🙏 Mode: Single Player 🙏
-             
-             Press Start when you're ready.`
+      text: `Welcome to Emoji Face Off!
+             🙏 \xa0Mode: Single Player 🙏
+
+             Press Start Game to begin.`
     });
   },
 
@@ -71,7 +71,10 @@ module.exports = {
             rm.roundNum = 1;
 
             socket.emit('gameStarted');
-            socket.emit('newPrompt', rm.hints[rm.prompt].length);
+            socket.emit('newPrompt', {
+              solutionLength: rm.hints[rm.prompt].length,
+              prompt: rm.prompt
+            });
             socket.emit('score', 0);
             socket.emit('message', {
               user: 'ebot',
@@ -111,7 +114,10 @@ function nextRound (socket, clients, rm, msg) {
   socket.emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
-  socket.emit('newPrompt', rm.hints[rm.prompt].length);
+  socket.emit('newPrompt', {
+    solutionLength: rm.hints[rm.prompt].length,
+    prompt: rm.prompt
+  });
   socket.emit('score', clients[socket.id].score);
   socket.emit('message', {
     user: 'ebot',
@@ -141,17 +147,20 @@ function endGame (socket, clients, rm, msg) {
   socket.emit('message', {
     user: 'ebot',
     roundNum: rm.roundNum,
-    text: `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
+    text: `🏁 \xa0Game Completed 🏁
 
            ${timeElapsed} seconds to complete ${rm.totalRounds} rounds.
            ${secondsPerRnd} seconds / round.
 
            That was 💩\xa0...\xa0try harder next time!
 
-           Press 'start' to begin a new game. 🙌`
+           Press Start Game to go again! 🙌`
   });
   socket.emit('score', 0);
-  socket.emit('newPrompt', 0);
+  socket.emit('newPrompt', {
+    solutionLength: 0,
+    prompt: ''
+  });
   socket.emit('gameEnded');
 
   // Reset user's score to 0.

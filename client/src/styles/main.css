@@ -650,7 +650,7 @@ nav.menu a {
   margin-right: 2.5rem;
   border-radius: 15px;
   background-color: #f7f7f7;
-  max-width: 60%;
+  max-width: 85%;
   font-size: 1.5rem;
   flex-shrink: 0; }
   .chat-bubble.on-left {

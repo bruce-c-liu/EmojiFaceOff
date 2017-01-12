@@ -119,7 +119,10 @@ function startGame (msg, io, openConnections, TESTING_NUM_ROUNDS, RedisControlle
           rm.roundNum = 1;
           botResponse.roundNum = rm.roundNum;
 
-          io.sockets.in(msg.roomId).emit('newPrompt', rm.hints[rm.prompt].length);
+          io.sockets.in(msg.roomId).emit('newPrompt', {
+            solutionLength: rm.hints[rm.prompt].length,
+            prompt: rm.prompt
+          });
           io.sockets.in(msg.roomId).emit('message', botResponse);
           io.sockets.in(msg.roomId).emit('gameStarted');
 
@@ -152,7 +155,10 @@ function nextRound (botResponse, msg, io, rm, openConnections, socket) {
   rm.roundNum++;
   botResponse.text = `Round ${rm.roundNum}: Emojify [${rm.prompt}] ! 🤔`;
   botResponse.roundNum = rm.roundNum;
-  io.sockets.in(msg.roomId).emit('newPrompt', rm.hints[rm.prompt].length);
+  io.sockets.in(msg.roomId).emit('newPrompt', {
+    solutionLength: rm.hints[rm.prompt].length,
+    prompt: rm.prompt
+  });
   socket.emit('score', openConnections[socket.id].score);
   io.sockets.in(msg.roomId).emit('message', botResponse);
 }
@@ -178,6 +184,11 @@ function endGameByLeaving (msg, io, socket, rm, openConnections) {
       winner = openConnections[client];
     }
   }
+
+  io.sockets.in(msg.roomId).emit('newPrompt', {
+    solutionLength: 0,
+    prompt: ''
+  });
   io.sockets.in(msg.roomId).emit('message', {
     user: 'ebot',
     text: `Your opponent has left the room. 
@@ -229,6 +240,10 @@ function endGame (botResponse, msg, io, rm, openConnections) {
   elo.updateELOs(winner.fbId, winner.elo, loser.fbId, loser.elo);
 
   msg.type = 'correctGuess';
+  io.sockets.in(msg.roomId).emit('newPrompt', {
+    solutionLength: 0,
+    prompt: ''
+  });
   io.sockets.in(msg.roomId).emit('message', msg);
   io.sockets.in(msg.roomId).emit('message', botResponse);
 

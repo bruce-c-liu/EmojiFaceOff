@@ -46,13 +46,19 @@ module.exports = {
             console.log(rm.hints);
             rm.prompt = rm.prompts.pop();
             io.sockets.in(roomId).emit('gameStarted');
-            io.sockets.in(roomId).emit('newPrompt', rm.hints[rm.prompt].length);
+            socket.emit('newPrompt', {
+              solutionLength: rm.hints[rm.prompt].length,
+              prompt: rm.prompt
+            });
             io.sockets.in(roomId).emit('message', {
               user: 'ebot',
               roundNum: rm.roundNum,
-              text: `${host.name} has started the game.
-
-                     Round 1:
+              text: `<em>${host.name} has started the game.</em>`
+            });
+            io.sockets.in(roomId).emit('message', {
+              user: 'ebot',
+              roundNum: rm.roundNum,
+              text: `Round 1:
                      <em>${rm.prompt}</em>`
             });
 
@@ -89,14 +95,11 @@ module.exports = {
     });
     socket.emit('message', {
       user: 'ebot',
-      text: `
-            You are the Host! Wait for friends 
-            to join before starting the game.`
-    });
-    socket.emit('message', {
-      user: 'ebot',
-      text: `Wait for other friends to join room.
-            💩 - talk each other while you wait!`
+      text: `You are the Host! Wait for friends to join before starting the game.
+
+             You can send the current game url to friends at any time. 😎
+
+             💩 - talk each other while you wait!`
     });
   },
 
@@ -131,7 +134,10 @@ module.exports = {
       });
     } else if (rm.gameStarted) {
       socket.emit('gameStarted');
-      socket.emit('newPrompt', rm.hints[rm.prompt].length);
+      socket.emit('newPrompt', {
+        solutionLength: rm.hints[rm.prompt].length,
+        prompt: rm.prompt
+      });
       socket.emit('message', {
         user: 'ebot',
         text: `You joined a game that
@@ -189,7 +195,10 @@ function nextRound (io, socket, clients, rm, msg) {
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
 
-  io.sockets.in(msg.roomId).emit('newPrompt', rm.hints[rm.prompt].length);
+  io.sockets.in(msg.roomId).emit('newPrompt', {
+    solutionLength: rm.hints[rm.prompt].length,
+    prompt: rm.prompt
+  });
   socket.emit('score', clients[socket.id].score);
   io.sockets.in(msg.roomId).emit('message', {
     user: 'ebot',
@@ -233,19 +242,22 @@ function endGame (io, socket, clients, rm, msg) {
   // Reset all users' scores client side.
   io.sockets.in(msg.roomId).emit('score', 0);
   // Wipe clues on client side.
-  io.sockets.in(msg.roomId).emit('newPrompt', 0);
+  io.sockets.in(msg.roomId).emit('newPrompt', {
+    solutionLength: 0,
+    prompt: rm.prompt
+  });
   // Emit winner/final scores.
   io.sockets.in(msg.roomId).emit('message', {
     user: 'ebot',
     roundNum: rm.roundNum,
-    text: `🏁 🏁 🏁 \xa0Game Completed 🏁 🏁 🏁
+    text: `🏁 \xa0Game Completed 🏁
 
            Congrats ${winner.name}!
 
            Final Scores:
            ${finalRankings}
 
-           Press START to begin a new game. \xa0🙌`
+           Press Start Game to go again! 🙌`
   });
   io.sockets.in(msg.roomId).emit('gameEnded');
 

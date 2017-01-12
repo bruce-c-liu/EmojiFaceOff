@@ -3,6 +3,7 @@ import mixpanel from 'mixpanel-browser';
 export function initSocketListeners () {
   this.socket.on('message', (message) => {
     console.log('Message from server:', message);
+    message.prompt = this.state.prompt;
     this.setState({
       chats: [...this.state.chats, message],
       round: message.roundNum ? message.roundNum : this.state.round
@@ -18,10 +19,11 @@ export function initSocketListeners () {
     }
   });
 
-  this.socket.on('newPrompt', solutionLength => {
+  this.socket.on('newPrompt', data => {
     this.setState({
-      solution: Array(solutionLength).fill(''),
-      numHintsReceived: 0
+      solution: Array(data.solutionLength).fill(''),
+      numHintsReceived: 0,
+      prompt: data.prompt
     });
   });
 
