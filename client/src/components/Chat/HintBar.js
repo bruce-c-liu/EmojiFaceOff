@@ -13,9 +13,10 @@ class HintBar extends Component {
       <div className='hint-bar'>
             {
                 this.props.hostStatus && !hintInfo.gameStarted  
-                              ? <button className='btn-hint'  onClick={debounce(200,(e) => this.props.clickHint(e))}
+                
+                              ? <button className='btn-hint is-green'  onClick={(e) => this.props.startProp(e)} > START GAME</button>
+                               : <button className='btn-hint'  onClick={debounce(200,(e) => this.props.clickHint(e))}
                                   disabled={hintInfo.numHintsReceived === hintInfo.solution.length || this.props.coinBal < 30} > HINT</button>
-                               : <button className='btn-hint is-green'  onClick={(e) => this.props.startProp(e)} > START GAME</button>
             }
             {
                 this.props.coinBal < 30
