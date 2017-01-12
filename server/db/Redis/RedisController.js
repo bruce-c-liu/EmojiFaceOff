@@ -12,8 +12,8 @@ module.exports = {
     if (level) {
       return redClient.smembers(`L${level}P`);
     } else {
-      // return redClient.sunion(`L0P`, `L1P`, `L2P`, `L3P`, `L4P`, `L5P`);
-      return redClient.sunion(`L0P`, `L1P`, `L2P`, `L3P`);
+      return redClient.sunion(`L1P`, `L2P`, `L3P`, `L4P`, `L5P`);
+      // return redClient.sunion(`L1P`, `L2P`, `L3P`);
     }
   },
 

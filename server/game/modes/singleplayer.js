@@ -51,7 +51,7 @@ module.exports = {
     RedisController.getPrompts()      // TODO: CHANGE BACK to RedisController.getPrompts(rm.level)
       .then(filteredPrompts => {
         // randomly populate the room's "prompts" object from our library.
-        while (rm.prompts.length < rm.totalRounds) {
+        while (rm.prompts.length < 30) {
           let promptIndex = Math.floor(Math.random() * filteredPrompts.length);
           if (!rm.prompts.includes(filteredPrompts[promptIndex])) {
             rm.prompts.push(filteredPrompts[promptIndex]);

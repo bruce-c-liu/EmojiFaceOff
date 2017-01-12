@@ -61,9 +61,22 @@ class LibPrompt extends Component {
                         .filter(answer => {
                           if (answer.length > 0 && !tmpStorage[answer] && answer.codePointAt(0) > 0x03FF) {
                             tmpStorage[answer] = true;
-                            return answer;
+                            return true;
+                          } else {
+                            return false;
                           }
                         });
+
+    answerOptions = answerOptions.map((answer) => {
+      let answerWithoutModifiers = '';
+      for (let codePoint of [...answer]) {
+        if (codePoint !== '\uFE0F') {
+          answerWithoutModifiers += codePoint;
+        }
+      }
+      return answerWithoutModifiers;
+    });
+
     if (answerOptions.length > 0) {
       console.log(`Sending to the server => prompt: ${this.state.prompt} ; answers: `, answerOptions);
       axios.post('/api/requestPrompt', {
