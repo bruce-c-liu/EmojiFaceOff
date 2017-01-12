@@ -229,12 +229,15 @@ export function sendContactForm(formData) {
         dispatch({
             type: 'FORM_SENDING'
         });
-        // postFormData(formData)
-        // .then(resp=>{
-        //   console.log("sendContactForm", resp)
-        // })
+        postFormData(formData)
+            .then(resp => {
+                dispatch({
+                    type: 'FORM_SENT'
+                });
+            })
     }
 }
+
 
 
 export function roundInc () {

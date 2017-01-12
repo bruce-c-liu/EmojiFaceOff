@@ -79,20 +79,20 @@ class RequestPrompt extends Component {
         <Header />
         <div className='request-prompt_wrap'>
           <h1>Have any clever suggestions for prompts?</h1>
-          <form className='RequestPrompt-form' onSubmit={this.requestNewPrompt.bind(this)}>
+          <form className='contact-form' onSubmit={this.requestNewPrompt.bind(this)}>
             <h3>Send us your requests</h3>
             <h3>Get 200 coins on approval!</h3>
-            <input className='reqPrompt'
+            <input className='input-txt'
               type='text' value={this.state.reqPrompt}
               onChange={this.handleChangePrompt.bind(this)}
               placeholder='Your custom prompt. For example: happy' />
             <p />
-            <input className='reqAnswer'
+            <input className='input-txt'
               type='text' value={this.state.reqAnswer}
               onChange={this.handleChangeAnswer.bind(this)}
               placeholder='Answer to prompt: 😀' />
             <p />
-            <input className='btn-input' type='submit' value='Submit' disabled={this.state.reqPrompt.length <= 0} />
+            <input className='input-submit' type='submit' value='Submit' disabled={this.state.reqPrompt.length <= 0} />
           </form>
 
           <div>

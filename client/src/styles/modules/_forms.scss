@@ -40,4 +40,17 @@
 	outline: none;
 	opacity: 1;
 	-webkit-appearance: none;
+	>img{
+		vertical-align: middle;
+		max-height: 40px;
+		max-width: 70%;
+	}
+}
+
+.success-msg{
+	margin-top: 1rem;
+	text-align: center;
+	font-weight: 600;
+	font-size: 1.25rem;
+	color: $green;
 }

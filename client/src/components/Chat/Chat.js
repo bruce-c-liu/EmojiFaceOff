@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -170,7 +171,8 @@ class Chat extends Component {
             <HintBar hintInfo={this.state} 
                             clickHint={this.requestHint.bind(this)} 
                             startProp={this.startGame.bind(this)} 
-                            hostStatus={this.props.session.isHost}/>
+                            hostStatus={this.props.session.isHost}
+                            coinBal={this.state.coinBalance}/>
         </div>
         <div className='chat-form_wrap'>
 
@@ -184,7 +186,11 @@ class Chat extends Component {
           </form>
         </div>
         <Modal modalOpen={!this.state.roomExists}>
-          <p className='lead'>You have entered an inactive room. Please click on the link below to start a new game.</p>
+          <div className="room-warning">
+              <h3>You have entered an inactive room.</h3>
+              <p> Please click on the link below to start a new game.</p>
+              <Link to={`/mode`} className="btn-outline"> Start New Game</Link>
+          </div>    
         </Modal>
       </div>
     );
