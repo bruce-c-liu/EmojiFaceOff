@@ -11,7 +11,28 @@
     <meta property="og:image"              content="%PUBLIC_URL%/EFO_TN.jpg" />
     <title>Emoji Faceofff - Can you guess the emoji?</title>
     <style>
-      
+      .landscape{
+        display: none;
+        position: fixed;
+        top: 0 ; left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 100;
+        background-color: rgba(0,0,0,0, 0.9);
+        color: #efefef;
+        text-align: center;
+      }
+      .landscape h4{
+          font-weight: 600;
+        text-align: center;
+      }
+      @media only screen 
+        and (-webkit-min-device-pixel-ratio: 2)
+        and (orientation: landscape) { 
+        .landscape{
+          display:block;
+        }
+      }
       
     </style>
  

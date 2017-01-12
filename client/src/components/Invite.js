@@ -55,6 +55,7 @@ class Invite extends Component {
   }
 
   revealStartAction () {
+    this.props.playSFX('tap');
     setTimeout(() => {
       this.setState({
         startShown: true,
@@ -70,6 +71,7 @@ class Invite extends Component {
   }
 
   popModal (type) {
+    this.props.playSFX('tap');
     this.hideShowModal();
     this.revealStartAction();
   }

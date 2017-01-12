@@ -15,3 +15,20 @@
 	font-size: 3.2rem;
 	text-align: center;
 }
+
+.login-inner{
+	width: 100%;
+	padding: 0 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	>img{
+		max-height: 200px;
+	}
+	h2{
+		font-family: $font-display;
+		color: $turq;
+		font-size: 9vw;
+		text-align: center;
+	}
+}
