@@ -2,7 +2,6 @@ import mixpanel from 'mixpanel-browser';
 
 export function initSocketListeners () {
   this.socket.on('message', (message) => {
-    console.log('Message from server:', message);
     message.prompt = this.state.prompt;
     this.setState({
       chats: [...this.state.chats, message],
@@ -71,7 +70,6 @@ export function initSocketListeners () {
   });
 
   this.socket.on('roomDoesNotExist', () => {
-    console.log('User tried to access a room that does not exist.');
     this.setState({
       roomExists: false
       // Set some kind of state to display a component that:

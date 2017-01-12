@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Motion, spring, presets} from 'react-motion';
+import {Motion, spring} from 'react-motion';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/actionCreators.js';

@@ -21,7 +21,7 @@ class Contact extends Component {
   render () {
     const { ui } = this.props;
     const btnLabel = ui.formSending
-                                  ? <img src={dot_loader}/>
+                                  ? <img src={dot_loader} role="presentation"/>
                                   : 'Submit'
 
     const successMsg = ui.formSent

@@ -48,14 +48,12 @@ export default function users (state = initialState, action) {
           profile: action.payload
         };
     case FETCHING_USER_DB:
-      console.log('case FETCHING_USER_DB', action.payload);
       return {
         ...state,
         isFetching: false,
         profile: action.payload
       };
     case SET_USER_DATA:
-      console.log('USER DATA SET TO STORE', action.payload);
       return {
           ...state,
           isFetching: false,
