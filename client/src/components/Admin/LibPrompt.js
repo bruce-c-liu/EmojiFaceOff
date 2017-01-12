@@ -92,8 +92,7 @@ class LibPrompt extends Component {
 
     return (
       <div className='admin-container'>
-        <p>Testing</p>
-        <h3>Edit Changes for answers for {this.state.prompt}</h3>
+        <h3>Edit Changes for answers for "{this.state.prompt}"</h3>
 
         <table>
           <thead />
