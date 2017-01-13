@@ -657,7 +657,7 @@ nav.menu a {
   margin-right: 2.5rem;
   border-radius: 15px;
   background-color: #f7f7f7;
-  max-width: 85%;
+  max-width: 75%;
   font-size: 1.5rem;
   flex-shrink: 0; }
   .chat-bubble.on-left {
@@ -691,6 +691,8 @@ nav.menu a {
       font-size: 1.1rem;
       line-height: 30px;
       text-align: center; }
+    .chat-bubble.is-correct img {
+      max-height: 170px; }
   .chat-bubble.is-wrong {
     border: 1px solid #c9172c;
     background-color: rgba(201, 23, 44, 0.2);
