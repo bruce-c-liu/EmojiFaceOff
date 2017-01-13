@@ -1,4 +1,3 @@
-let Promise = require('bluebird');
 const axios = require('axios');
 
 module.exports = {
@@ -11,7 +10,6 @@ module.exports = {
       }
     })
     .then(result => {
-        // console.log('success getting shortened URL!', result);
       res.json(result.data);
     })
     .catch((err) => {

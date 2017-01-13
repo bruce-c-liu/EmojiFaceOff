@@ -1,6 +1,6 @@
-import auth, { logout, saveUserFirebase } from '../helpers/auth';
+import { logout, saveUserFirebase } from '../helpers/auth';
 import { SMSInvite, getUser, saveNewUser, coinsForHint, getRankedRoom, enqueueRankedRoom, postFormData } from '../helpers/http.js';
-import { formatUserInfo } from '../helpers/utils';
+// import { formatUserInfo } from '../helpers/utils';
 import { browserHistory } from 'react-router';
 import * as shortid from 'shortid';
 import firebase from 'firebase';
@@ -107,7 +107,6 @@ export function postUserData (user) {
 }
 
 export function fetchAndHandleAuthedUser () {
-
   return function (dispatch) {
     dispatch(fetchingUser());
     let stuff = new Promise((resolve, reject) => {
@@ -115,7 +114,6 @@ export function fetchAndHandleAuthedUser () {
     });
 
     stuff.then((result) => {
-
       if (result) console.log('got if result', result);
       // firebaseAuth().getRedirectResult()
       // .then(result => {
@@ -215,22 +213,22 @@ export function spendCoins (uid) {
     dispatch({
       type: 'COINS_SPENT'
     });
-    coinsForHint(uid)
+    coinsForHint(uid);
   };
 }
 
-export function sendContactForm(formData) {
-    return function(dispatch) {
-        dispatch({
-            type: 'FORM_SENDING'
+export function sendContactForm (formData) {
+  return function (dispatch) {
+      dispatch({
+          type: 'FORM_SENDING'
         });
-        postFormData(formData)
+      postFormData(formData)
             .then(resp => {
-                dispatch({
-                    type: 'FORM_SENT'
+              dispatch({
+                  type: 'FORM_SENT'
                 });
-            })
-    }
+            });
+    };
 }
 
 export function roundInc () {

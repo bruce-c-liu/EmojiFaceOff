@@ -5,7 +5,6 @@ const UserController = require('../../db/User/UserController.js');
 module.exports = {
 
   chargeUser: (req, res, next) => {
-    console.log('Receiving charge request');
     const chargeAmount = {
       'corn': 100,
       'hot': 500,
@@ -21,7 +20,6 @@ module.exports = {
     let fbId = req.body.fbId || null;
     let cashMoola = chargeAmount[req.body.coinPack] || null;
     let coins = coinAmount[req.body.coinPack] || null;
-    console.log('Creating charge for token', token, fbId, cashMoola, coins);
     if (token && fbId && cashMoola) {
       stripe.charges.create({
         amount: cashMoola,
@@ -43,7 +41,6 @@ module.exports = {
         throw err;
       });
     } else {
-      console.log('invalid input', token, fbId, cashMoola);
       res.json('Please provide valid input');
     }
   }

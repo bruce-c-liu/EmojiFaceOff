@@ -11,5 +11,4 @@ module.exports = (app, express) => {
   } else {
     app.use('/', express.static(path.join(__dirname, 'public')));
   }
-  // app.use(express.static(__dirname + '/../../client'));
 };

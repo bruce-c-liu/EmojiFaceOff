@@ -20,7 +20,6 @@ module.exports = {
         body: message
       });
     }).then(result => {
-      console.log('success sending game invites via texts!');
       res.json(result);
     })
     .catch(err => {
