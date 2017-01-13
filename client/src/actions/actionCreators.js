@@ -199,11 +199,7 @@ export function spendCoins (uid , coinBal) {
     dispatch({
       type: 'COINS_SPENT'
     });
-<<<<<<< HEAD
-    coinsForHint(uid);
-=======
     coinsForHint(uid, coinBal)
->>>>>>> coinStore
   };
 }
 
