@@ -7,7 +7,7 @@ let io, rooms;
 let clients = {}; // Currently connected clients.
 
 module.exports = function initSocketIO (server) {
-  io = require('socket.io')(server, {'pingInterval': 15000, 'pingTimeout': 30000});
+  io = require('socket.io')(server, {'pingInterval': 25000, 'pingTimeout': 360000});
   rooms = io.nsps['/'].adapter.rooms;
 
   io.on('connection', socket => {

@@ -11,7 +11,7 @@ module.exports = {
           endGame(io, socket, clients, rm, msg);
         }
       } else {                                       // A user replied with an incorrect answer.
-        wrongAnswer(io, msg);
+        wrongAnswer(io, msg, rm);
       }
     } else {
       // Emit user's message to all sockets connected to this room.
@@ -72,6 +72,12 @@ module.exports = {
             // }, 7000);
           });
       });
+    RedisController.getCommends().then((commends) => {
+      rm.commends = commends;
+    });
+    RedisController.getInsults().then((insults) => {
+      rm.insults = insults;
+    });
   },
 
   createRoom: function (io, socket, rooms, data) {
@@ -82,6 +88,8 @@ module.exports = {
       level: data.level,
       totalRounds: data.totalRounds,
       roundNum: 0,
+      commends: [],
+      insults: [],
       prompt: '',
       prompts: [],
       solutions: {},
@@ -193,6 +201,9 @@ function checkAnswer (guess, prompt, solutions) {
 function nextRound (io, socket, clients, rm, msg) {
   clients[socket.id].score++;                           // Increment the user's score.
   msg.type = 'correctGuess';
+  if (Math.random() < 0.4) {
+    msg.gifUrl = rm.commends[Math.floor(Math.random() * rm.commends.length)];
+  }
   io.sockets.in(msg.roomId).emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
@@ -277,7 +288,10 @@ function endGame (io, socket, clients, rm, msg) {
   }
 }
 
-function wrongAnswer (io, msg) {
+function wrongAnswer (io, msg, rm) {
+  if (Math.random() < 0.45) {
+    msg.gifUrl = rm.insults[Math.floor(Math.random() * rm.insults.length)];
+  }
   msg.type = 'incorrectGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
 }

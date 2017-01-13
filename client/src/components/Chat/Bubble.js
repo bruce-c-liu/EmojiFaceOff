@@ -19,32 +19,38 @@ class Bubble extends Component {
   }
 
   render () {
+    const deets = this.props.deets;
+
     const bubbleClass = classNames({
       'chat-bubble': true,
-      'on-left': this.props.deets.user === 'ebot',
-      'on-left is-correct': this.props.deets.type === 'correctGuess',
-      'is-wrong': this.props.deets.type === 'incorrectGuess'
+      'on-left': deets.user === 'ebot',
+      'on-left is-correct': deets.type === 'correctGuess',
+      'is-wrong': deets.type === 'incorrectGuess'
     });
 
-    const avatarSrc = this.props.deets.user === 'ebot'
+    const avatarSrc = deets.user === 'ebot'
                                     ? nerd
-                                    : this.props.deets.imgUrl;
+                                    : deets.imgUrl;
     const avatarBG = {
       backgroundImage: `url(${avatarSrc})`
     };
 
-    const bubble = this.props.deets.type === 'incorrectGuess'
+    let gif = deets.gifUrl ? (<img src={deets.gifUrl} />) : '';
+
+    const bubble = deets.type === 'incorrectGuess'
                     ? (<a href='#' onClick={this.requestAsSolution.bind(this)}>
                       <Interweave
                         tagName='span'
-                        content={this.props.deets.text}
+                        content={deets.text}
                       />
+                      {gif}
                     </a>)
                     : (<div>
                       <Interweave
                         tagName='span'
-                        content={this.props.deets.text}
+                        content={deets.text}
                       />
+                      {gif}
                     </div>
                     );
 
