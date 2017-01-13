@@ -22,7 +22,7 @@ if (protocol.indexOf('https') > -1) {
 export const socketURL = protocol + '//' + host + ':' + port + Path;
 // url = protocol + "//" + host + ":" + port + path;
 
-export const inviteBaseURL = 'http://www.emojifaceoff.com/chat/';
+export const inviteBaseURL = `http://${host}/chat/`;
 
 export const loading = function (interval, increment, progress) {
    window.setTimeout(()=>{

@@ -76,8 +76,7 @@ class RequestPrompt extends Component {
         <Header />
         <div className='request-prompt_wrap'>
           <h1>Have any clever suggestions for prompts?</h1>
-          <form className='contact-form' onSubmit={this.requestNewPrompt.bind(this)}>
-            <h3>Send us your requests</h3>
+          <form className='contact-form' style={{padding: 0}} onSubmit={this.requestNewPrompt.bind(this)}>
             <h3>Get 200 coins on approval!</h3>
             <input className='input-txt'
               type='text' value={this.state.reqPrompt}

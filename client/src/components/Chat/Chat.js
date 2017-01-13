@@ -140,8 +140,7 @@ class Chat extends Component {
     };
     const annouceClass = classNames({
       'player-announce': true,
-      // 'is-showing': this.state.announceBar,
-      'is-showing': true
+       'is-showing': this.state.announceBar
     });
     const chatMsgClass = classNames({
       'chat-messages': true,
