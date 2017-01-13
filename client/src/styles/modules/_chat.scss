@@ -68,7 +68,7 @@
 .player-announce{
 	height: 0;
 	width: 100%;
-	background-color: $turq;
+	background-color: lighten($turq, 10%);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -76,15 +76,16 @@
 	transition: height .2s ease;
 	p{
 		margin-left: 1rem;
-		color: $white;
-		font-size: 1.1rem;
+		color: darken($turq, 20%);
+		font-size: 1.15rem;
+		font-weight: 500;
 		transform: translateX(100%);
 		transition: transform .3s ease;
 		transition-delay: .3s;
 		span{
-			font-weight: 600;
+			color: darken($turq, 25%);
+			font-weight: 800;
 		}
-
 	}
 	.bubble-name{
 		transform: translateX(-100%);

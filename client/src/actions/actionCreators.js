@@ -15,6 +15,7 @@ const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS';
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER';
 const SET_ROOM_TYPE = 'SET_ROOM_TYPE';
 const SET_USER_DATA = 'SET_USER_DATA';
+const REDUCE_COIN = 'REDUCE_COIN';
 
 export function authUser (uid) {
   return function (dispatch) {
@@ -185,32 +186,20 @@ export function fetchRoomId (type, userELO) {
     }
   };
 }
-export function updateCoinBalance (uid, amount) {
-  return function (dispatch) {
 
-  };
+export function decCoinBalance (amount) {
+  return{
+    type: REDUCE_COIN,
+  }
 }
 
-export function sendSMS (userName, roomUrl, numbers) {
-  return function (dispatch) {
-    dispatch({
-      type: 'IS_LOADING'
-    });
-    SMSInvite(userName, roomUrl, numbers)
-     .then((resp) => {
-       dispatch({
-         type: 'IS_LOADED'
-       });
-     });
-  };
-}
 
-export function spendCoins (uid) {
+export function spendCoins (uid , coinBal) {
   return function (dispatch) {
     dispatch({
       type: 'COINS_SPENT'
     });
-    coinsForHint(uid);
+    coinsForHint(uid, coinBal)
   };
 }
 
