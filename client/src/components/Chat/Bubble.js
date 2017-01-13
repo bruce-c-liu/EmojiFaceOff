@@ -5,10 +5,6 @@ import nerd from '../../assets/emoji_nerd.png';
 import axios from 'axios';
 
 class Bubble extends Component {
-  // constructor (props) {
-  //   super(props);
-  // }
-
   requestAsSolution (e) {
     e.preventDefault();
     axios.post('/api/requestPrompt', {

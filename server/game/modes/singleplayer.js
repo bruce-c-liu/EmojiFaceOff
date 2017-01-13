@@ -29,6 +29,7 @@ module.exports = {
       totalRounds: data.totalRounds,
       commends: [],
       insults: [],
+      numGuesses: 0,
       prompt: '',
       prompts: [],
       solutions: {},
@@ -118,10 +119,11 @@ function checkAnswer (guess, prompt, solutions) {
 
 function nextRound (socket, clients, rm, msg) {
   clients[socket.id].score++;
-  msg.type = 'correctGuess';
-  if (Math.random() < 0.4) {
+  rm.numGuesses++;
+  if (rm.numGuesses % 2 === 0) {
     msg.gifUrl = rm.commends[Math.floor(Math.random() * rm.commends.length)];
   }
+  msg.type = 'correctGuess';
   socket.emit('message', msg);
   rm.prompt = rm.prompts.pop();
   rm.roundNum++;
@@ -154,6 +156,7 @@ function endGame (socket, clients, rm, msg) {
   rm.solutions = {};
   rm.gameStarted = false;
   rm.startTime = null;
+  rm.numGuesses = 0;
 
   socket.emit('message', {
     user: 'ebot',
@@ -179,10 +182,10 @@ function endGame (socket, clients, rm, msg) {
 }
 
 function wrongAnswer (msg, socket, rm) {
-  msg.type = 'incorrectGuess';
-  msg.roundNum = rm.roundNum;
-  if (Math.random() < 0.45) {
+  rm.numGuesses++;
+  if (rm.numGuesses % 2 === 0) {
     msg.gifUrl = rm.insults[Math.floor(Math.random() * rm.insults.length)];
   }
+  msg.type = 'incorrectGuess';
   socket.emit('message', msg);
 }
