@@ -292,9 +292,7 @@ function endGame (io, socket, clients, rm, msg) {
 }
 
 function wrongAnswer (io, msg, rm) {
-  if (rm.numGuesses % 2 === 0) {
-    msg.gifUrl = rm.insults[Math.floor(Math.random() * rm.insults.length)];
-  }
+  msg.gifUrl = rm.insults[Math.floor(Math.random() * rm.insults.length)];
   msg.type = 'incorrectGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
 }
