@@ -13,7 +13,6 @@ module.exports = {
   },
 
   prompt: (req, res, next) => {
-    console.log('Getting 1 prompt', req.params.promptId);
     models.Library.findOne({
       where: {
         id: req.params.promptId
@@ -32,7 +31,6 @@ module.exports = {
   },
 
   pendPrompts: (req, res, next) => {
-    console.log('in pending prompts');
     let approved = true;
     if (req.params.type.startsWith('pend')) {
       approved = false;
@@ -70,8 +68,6 @@ module.exports = {
   updatePendPrompt: (req, res, next) => {
     let promptId = req.body.promptId;
     let promptLevel = req.body.promptLevel;
-
-    console.log('prompt id and level requested', promptId, promptLevel);
     models.Solution.update(
       {
         approved: true
@@ -107,7 +103,6 @@ module.exports = {
   },
 
   addPrompt: (req, res, next) => {
-    // console.log('request to add prompt', req.body, req.body.answers);
     let prompt = req.body.prompt;
     let answers = req.body.answers;
     let elength = answers.length;

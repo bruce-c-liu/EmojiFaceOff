@@ -38,7 +38,6 @@ class RequestPrompt extends Component {
 
   requestNewPrompt (e) {
     e.preventDefault();
-    console.log('Request sent to server', this.state);
     let tmpStorage = {};
     let answerOptions = this.state.reqAnswer
                         .split(';')
@@ -49,7 +48,6 @@ class RequestPrompt extends Component {
                           }
                         });
     if (answerOptions.length > 0 && this.state.reqPrompt.length > 0) {
-      console.log(`Sending to the server => prompt: ${this.state.reqPrompt} ; answers: `, answerOptions);
       mixpanel.track('Click Request Prompt');
       mixpanel.people.increment('Prompts Requested');
       this.setState({
@@ -61,7 +59,6 @@ class RequestPrompt extends Component {
         answers: answerOptions
       })
       .then(result => {
-        console.log('response from server', result.status);
         this.setState({
           reqPrompt: '',
           reqAnswer: ''
@@ -85,18 +82,18 @@ class RequestPrompt extends Component {
             <input className='input-txt'
               type='text' value={this.state.reqPrompt}
               onChange={this.handleChangePrompt.bind(this)}
-              placeholder='Your custom prompt. For example: happy' />
+              placeholder='Your prompt. Ex: happy' />
             <p />
             <input className='input-txt'
               type='text' value={this.state.reqAnswer}
               onChange={this.handleChangeAnswer.bind(this)}
-              placeholder='Answer to prompt: 😀' />
+              placeholder='Answer: 😀' />
             <p />
             <input className='input-submit' type='submit' value='Submit' disabled={this.state.reqPrompt.length <= 0} />
           </form>
 
           <div>
-            {this.state.submitRequest ? <h6>Your request has been submitted for approval!</h6> : null}
+            {this.state.submitRequest ? <h6 className='success-msg'>Your request has been submitted for approval!</h6> : null}
           </div>
         </div>
       </div>

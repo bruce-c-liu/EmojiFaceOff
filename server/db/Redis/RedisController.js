@@ -20,17 +20,10 @@ module.exports = {
   // Deprecated
   checkAnswer: (prompt, answer) => {
     let tmp = answer;
-    // console.log('\u{1F4AA}' === '💪');
-    console.log('checking answer....', prompt, tmp);
     return redClient.smembers(`PTA:${prompt}`)
       .then(answers => {
-        console.log('ANSWERS:', answers);
-
         for (let a of answers) {
-          console.log(a, tmp, a === tmp);
-          if (a === tmp) {
-            return true;
-          }
+          if (a === tmp) return true;
         }
         return false;
       })

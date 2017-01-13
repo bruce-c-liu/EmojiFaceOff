@@ -1,4 +1,4 @@
-console.log('IN REDIS CONFIG');
+
 const Promise = require('bluebird');
 
 const redis = require('promise-redis')(resolver => {
