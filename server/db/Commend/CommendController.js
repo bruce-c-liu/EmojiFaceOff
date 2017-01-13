@@ -3,16 +3,21 @@ const models = require('../../config/db.config.js');
 
 module.exports = {
 
-  addCommend: (imgUrl, insultFlag) => {
-    if (imgUrl && insultFlag) {
-      return models.Commend.findOrCreate({
-        where: {url: imgUrl},
-        defaults: {
-          url: imgUrl,
-          insultFlag: insultFlag
-        }
-      });
-    } else return null;
+  addCommend: (req, res) => {
+    let imgUrl = req.body.imgUrl;
+    let insultFlag = JSON.parse(req.body.insultFlag);
+
+    models.Commend.findOrCreate({
+      where: {
+        url: imgUrl
+      },
+      defaults: {
+        url: imgUrl,
+        insultFlag: insultFlag
+      }
+    }).then(() => {
+      res.status(203).json('Commend added successfully.');
+    });
   },
 
   getAll: () => {

@@ -1,6 +1,7 @@
 
 const TwilioController = require('../services/Twilio/TwilioController.js');
 const LibraryController = require('../db/Library/LibraryController.js');
+const CommendController = require('../db/Commend/CommendController.js');
 const UserController = require('../db/User/UserController.js');
 const RedisController = require('../db/Redis/RedisController.js');
 const BitlyController = require('../services/Bitly/BitlyController.js');
@@ -12,6 +13,8 @@ const SendGridController = require('../services/SendGrid/SendGridController.js')
 module.exports = (app, express) => {
   app.post('/api/sendInvite', TwilioController.textMessage);
   app.post('/api/shortenURL', BitlyController.shortURL);
+
+  app.post('/api/commend', CommendController.addCommend);
 
   app.get('/api/users', UserController.getAllUsers);
   app.get('/api/leaderBoard/:type', UserController.leaderBoard);
