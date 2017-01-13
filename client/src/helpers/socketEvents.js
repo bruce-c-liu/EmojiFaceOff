@@ -21,6 +21,7 @@ export function initSocketListeners () {
   this.socket.on('newPrompt', data => {
     this.setState({
       solution: Array(data.solutionLength).fill(''),
+      userInput: '',
       numHintsReceived: 0,
       prompt: data.prompt
     });
