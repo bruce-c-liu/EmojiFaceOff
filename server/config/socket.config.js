@@ -43,7 +43,7 @@ module.exports = function initSocketIO (server) {
 
 function messageHandler (msg, socket) {
   let room = rooms[msg.roomId];
-  if (room === undefined) {
+  if (room === undefined || clients[socket.id].roomId === undefined) {
     socket.emit('message', {
       user: 'ebot',
       text: `Sorry, you have idled for more than 10 minutes and have been disconnected. 😰
@@ -105,7 +105,7 @@ function joinRoomHandler (data, socket) {
 
 function startGameHandler (roomId, socket) {
   let room = rooms[roomId];
-  if (room === undefined) {
+  if (room === undefined || clients[socket.id].roomId === undefined) {
     socket.emit('message', {
       user: 'ebot',
       text: `Sorry, you have idled for more than 10 minutes and have been disconnected. 😰
@@ -124,7 +124,7 @@ function startGameHandler (roomId, socket) {
 
 function hintHandler (msg, socket) {
   let rm = rooms[msg.roomId];
-  if (rm === undefined) {
+  if (rm === undefined || clients[socket.id].roomId === undefined) {
     socket.emit('message', {
       user: 'ebot',
       text: `Sorry, you have idled for more than 10 minutes and have been disconnected. 😰
