@@ -32,6 +32,11 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	.chat-head_status{
+		font-weight: 600;
+		font-size: 1rem;
+		color: $gray-lt;
+	}
 
 }//chat-head_inner
 .chat-head_active{

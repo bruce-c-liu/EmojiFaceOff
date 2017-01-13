@@ -391,7 +391,8 @@ button {
   display: flex;
   justify-content: space-between;
   padding: 0 .5rem;
-  background-color: #41CBCC; }
+  background-color: #41CBCC;
+  box-shadow: 0px 2px 3px 0px rgba(33, 33, 35, 0.4); }
   .header h3 {
     font-family: "Fredoka One", cursive;
     color: #FFFFFF; }
@@ -402,7 +403,7 @@ button {
   right: 0;
   width: 90%;
   height: 100%;
-  padding: 3rem  2rem;
+  padding: 3rem  1rem;
   background-color: #c7f0f0;
   background-color: #41CBCC;
   box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.48);
@@ -556,6 +557,10 @@ nav.menu a {
   display: flex;
   justify-content: space-between;
   align-items: center; }
+  .chat-head_inner .chat-head_status {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #eceff2; }
 
 .chat-head_active {
   width: 100%;
@@ -819,7 +824,7 @@ nav.menu a {
 
 .invite-wrap {
   position: relative;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.4);
   padding: 2rem; }
 
 .round-select_wrap h1 {
