@@ -167,9 +167,6 @@ export function fetchRoomId (type, userELO) {
       type: 'FETCH_ROOM',
       payload: roomId
     });
-    dispatch({
-      type: 'SET_ROOM'
-    });
     if (type === 'friends') {
       browserHistory.push(`/invite`);
     } else if (type === 'ranked') {
