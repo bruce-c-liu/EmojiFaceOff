@@ -143,7 +143,7 @@ body {
 #root {
   position: relative;
   width: 100%;
-  max-width: 540px;
+  max-width: 700px;
   height: 100vh;
   background-image: url("/static/media/wallpaper.063f4ab6.png");
   background-repeat: repeat;
@@ -588,7 +588,7 @@ nav.menu a {
 .player-announce {
   height: 0;
   width: 100%;
-  background-color: #41CBCC;
+  background-color: #69d6d7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -596,13 +596,15 @@ nav.menu a {
   transition: height .2s ease; }
   .player-announce p {
     margin-left: 1rem;
-    color: #FFFFFF;
-    font-size: 1.1rem;
+    color: #238384;
+    font-size: 1.15rem;
+    font-weight: 500;
     transform: translateX(100%);
     transition: transform .3s ease;
     transition-delay: .3s; }
     .player-announce p span {
-      font-weight: 600; }
+      color: #1e6f70;
+      font-weight: 800; }
   .player-announce .bubble-name {
     transform: translateX(-100%);
     transition: transform .3s ease;

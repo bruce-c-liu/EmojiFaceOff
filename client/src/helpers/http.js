@@ -14,9 +14,10 @@ export function writeUser (fbID, amount) {
         });
 }
 
-export function coinsForHint (fbId) {
+export function coinsForHint (fbId, coinBal) {
   return axios.put(`/api/hintUsed`, {
-    fbId: fbId
+    fbId: fbId,
+    coinBal: coinBal
   })
   .catch((err) => {
     console.log(err);

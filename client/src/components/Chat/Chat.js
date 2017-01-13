@@ -45,6 +45,12 @@ class Chat extends Component {
       coinBalance: this.props.users.profile.coins
     });
   }
+  componentWillReceiveProps(nextProps){
+    console.log("nextProps", nextProps )
+    this.setState({
+      coinBalance: nextProps.users.profile.coins
+    });
+  }
 
   componentDidMount () {
     createOrJoinRoom.call(this);
@@ -54,13 +60,13 @@ class Chat extends Component {
   componentDidUpdate () {
     const node = this.refs.chatScroll;
     node.scrollTop = node.scrollHeight + 300;
-    // console.log("scrollHeight", node.scrollTop)
   }
 
   componentWillUnmount () {
     this.props.setHost(false);
     this.props.setRoomType(null);
     this.socket.disconnect();
+    this.props.spendCoins(this.props.users.profile.auth, this.state.coinBalance);
   }
 
   announceNewPlayer () {
@@ -95,30 +101,26 @@ class Chat extends Component {
     this.props.playSFX('chime');
     this.socket.emit('startGame', this.state.roomId);
   }
-  sendMessage (e) {
-    e.preventDefault();
-    sendMessage.call(this);
+  sendMessage(e) {
+      e.preventDefault();
+      sendMessage.call(this);
+      if (this.state.userInput.codePointAt(0) > 0x03FF && this.state.gameStarted) {
+          mixpanel.people.increment('Answer Attempt');
+      }
 
-    if (this.state.userInput.codePointAt(0) > 0x03FF && this.state.gameStarted) {
-      mixpanel.people.increment('Answer Attempt');
-    }
-
-    this.setState({
-      userInput: '',
-      hasFocus: true
-    });
+      this.setState({
+          userInput: '',
+          hasFocus: true
+      });
   }
+
   requestHint (e) {
-    // e.preventDefault();
     e.persist();
     mixpanel.track('Click Hints');
     mixpanel.people.increment('Hints Requsted');
     this.socket.emit('hint', { roomId: this.state.roomId, index: this.state.numHintsReceived });
     this.props.playSFX('hint');
-    this.props.spendCoins(this.props.users.profile.auth);
-    this.setState({
-      coinBalance: this.state.coinBalance - 30
-    });
+    this.props.decCoinBalance()
   }
 
   render () {
@@ -138,7 +140,8 @@ class Chat extends Component {
     };
     const annouceClass = classNames({
       'player-announce': true,
-      'is-showing': this.state.announceBar
+      // 'is-showing': this.state.announceBar,
+      'is-showing': true
     });
     const chatMsgClass = classNames({
       'chat-messages': true,
@@ -162,7 +165,7 @@ class Chat extends Component {
         </div>
         <div className={annouceClass}>
           <div className='bubble-name' style={avatarBG} />
-          <p><span>{this.state.joinedPlayer}</span> has joined the challenge!</p>
+          <p><span>{this.state.joinedPlayer}</span> has joined!</p>
         </div>
         <div className={chatMsgClass} ref='chatScroll'>
           {chatList}
