@@ -115,7 +115,7 @@ Click here to Play: ${this.state.longRoomURL}`;
         </div>
 
         <a className='btn-fbshare' href={encodedURL} onClick={this.revealStartAction.bind(this)}>
-          <img src={btnIcon} alt='' />Invite Facebook Friends
+          <img src={btnIcon} alt='' />Invite Friends via Facebook
         </a>
         <h6 className='or-split'>OR</h6>
         <ClipboardButton component='a'

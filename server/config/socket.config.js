@@ -7,7 +7,7 @@ let io, rooms;
 let clients = {}; // Currently connected clients.
 
 module.exports = function initSocketIO (server) {
-  io = require('socket.io')(server);
+  io = require('socket.io')(server, {'pingInterval': 15000, 'pingTimeout': 30000});
   rooms = io.nsps['/'].adapter.rooms;
 
   io.on('connection', socket => {
@@ -43,6 +43,13 @@ module.exports = function initSocketIO (server) {
 
 function messageHandler (msg, socket) {
   let room = rooms[msg.roomId];
+  if (room === undefined) {
+    console.log('ISSUE FOUND IN MESSAGE HANDLER:');
+    console.log('msg.roomId:', msg.roomId);
+    console.log('rooms object:', rooms);
+    console.log('socket id is: ', socket.id);
+    return;
+  }
   switch (room.type) {
     case 'SINGLE_PLAYER': singlePlayer.play(io, socket, clients, room, msg); break;
     case 'FRIENDS_VS_FRIENDS': friendsVsFriends.play(io, socket, clients, room, msg); break;
