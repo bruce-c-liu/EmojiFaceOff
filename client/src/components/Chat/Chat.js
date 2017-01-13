@@ -45,8 +45,8 @@ class Chat extends Component {
       coinBalance: this.props.users.profile.coins
     });
   }
-  componentWillReceiveProps(nextProps){
-    console.log("nextProps", nextProps )
+  componentWillReceiveProps (nextProps) {
+    console.log('nextProps', nextProps);
     this.setState({
       coinBalance: nextProps.users.profile.coins
     });
@@ -101,17 +101,17 @@ class Chat extends Component {
     this.props.playSFX('chime');
     this.socket.emit('startGame', this.state.roomId);
   }
-  sendMessage(e) {
-      e.preventDefault();
-      sendMessage.call(this);
-      if (this.state.userInput.codePointAt(0) > 0x03FF && this.state.gameStarted) {
-          mixpanel.people.increment('Answer Attempt');
-      }
+  sendMessage (e) {
+    e.preventDefault();
+    sendMessage.call(this);
+    if (this.state.userInput.codePointAt(0) > 0x03FF && this.state.gameStarted) {
+      mixpanel.people.increment('Answer Attempt');
+    }
 
-      this.setState({
-          userInput: '',
-          hasFocus: true
-      });
+    this.setState({
+      userInput: '',
+      hasFocus: true
+    });
   }
 
   requestHint (e) {
@@ -120,7 +120,7 @@ class Chat extends Component {
     mixpanel.people.increment('Hints Requsted');
     this.socket.emit('hint', { roomId: this.state.roomId, index: this.state.numHintsReceived });
     this.props.playSFX('hint');
-    this.props.decCoinBalance()
+    this.props.decCoinBalance();
   }
 
   render () {

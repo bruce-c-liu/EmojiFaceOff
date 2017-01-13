@@ -44,10 +44,12 @@ module.exports = function initSocketIO (server) {
 function messageHandler (msg, socket) {
   let room = rooms[msg.roomId];
   if (room === undefined) {
-    console.log('ISSUE FOUND IN MESSAGE HANDLER:');
-    console.log('msg.roomId:', msg.roomId);
-    console.log('rooms object:', rooms);
-    console.log('socket id is: ', socket.id);
+    socket.emit('message', {
+      user: 'ebot',
+      text: `Sorry, you have idled for more than 10 minutes and have been disconnected. 😰
+             
+             Please enter Mode Select and begin a new game. `
+    });
     return;
   }
   switch (room.type) {
@@ -103,6 +105,15 @@ function joinRoomHandler (data, socket) {
 
 function startGameHandler (roomId, socket) {
   let room = rooms[roomId];
+  if (room === undefined) {
+    socket.emit('message', {
+      user: 'ebot',
+      text: `Sorry, you have idled for more than 10 minutes and have been disconnected. 😰
+             
+             Please enter Mode Select and begin a new game. `
+    });
+    return;
+  }
   switch (room.type) {
     case 'SINGLE_PLAYER': singlePlayer.startGame(io, socket, room); break;
     case 'FRIENDS_VS_FRIENDS': friendsVsFriends.startGame(io, socket, clients, room, roomId); break;
@@ -113,6 +124,15 @@ function startGameHandler (roomId, socket) {
 
 function hintHandler (msg, socket) {
   let rm = rooms[msg.roomId];
+  if (rm === undefined) {
+    socket.emit('message', {
+      user: 'ebot',
+      text: `Sorry, you have idled for more than 10 minutes and have been disconnected. 😰
+             
+             Please enter Mode Select and begin a new game. `
+    });
+    return;
+  }
   socket.emit('hint', rm.hints[rm.prompt][msg.index]);
 }
 
