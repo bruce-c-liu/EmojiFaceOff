@@ -6,7 +6,7 @@ const FETCHING_USER_FAILURE = 'FETCHING_USER_FAILURE';
 const FETCHING_USER_SUCCESS = 'FETCHING_USER_SUCCESS';
 const REMOVE_FETCHING_USER = 'REMOVE_FETCHING_USER';
 const SET_USER_DATA = 'SET_USER_DATA';
-// const COINS_SPENT = 'COINS_SPENT';
+const REDUCE_COIN = 'REDUCE_COIN';
 
 const initialState = {
   isFetching: true,
@@ -70,6 +70,19 @@ export default function users (state = initialState, action) {
         ...state,
         isFetching: false
       };
+    case REMOVE_FETCHING_USER :
+      return {
+        ...state,
+        isFetching: false
+      };
+      case REDUCE_COIN :
+        return {
+          ...state,
+         profile: {
+             ...state.profile,
+              coins: state.profile.coins -30
+          }
+        };
     default :
       return state;
   }

@@ -54,7 +54,7 @@
  
   </head>
   <body>
-  <script src="modernizr-custom.js"></script>
+  <script src="/modernizr-custom.js"></script>
   <script>
     window.fbAsyncInit = function() {
       FB.init({
@@ -86,11 +86,17 @@
       // there was an error so...
       alert('You are in Privacy Mode\nPlease deactivate Privacy Mode and then reload the page.');
     }
-    if (Modernizr.touchevents) {
-      // supported
-    } else {
-    document.querySelector('body').classList.add('no-touch');  
+
+    var isAdminPage = window.location.href.indexOf("admin") > -1
+
+    if(!isAdminPage){
+      if (Modernizr.touchevents) {
+        // supported
+      } else {
+      document.querySelector('body').classList.add('no-touch');  
+      }
     }
+
   </script>
       <div class="alert-desktop">
          <h2> This game is intended for touch screens</h2>

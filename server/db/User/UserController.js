@@ -102,7 +102,8 @@ module.exports = {
       .then(result => {
         if (result) {
           result.update({
-            coins: result.coins - 30
+            //coins: result.coins - 30
+            coins: req.body.coinBal
           })
           .then((result) => {
             if (result) {
