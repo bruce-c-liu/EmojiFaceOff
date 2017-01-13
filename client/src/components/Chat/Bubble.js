@@ -45,7 +45,6 @@ class Bubble extends Component {
                         tagName='span'
                         content={this.props.deets.text}
                       />
-                      <img src='http://s2.quickmeme.com/img/4b/4b30399fd87f9d9c6d34f6b0884ee41bf6822148b09fc40144dd1ad6c00051e0.jpg' />
                     </div>
                     );
 

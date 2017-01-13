@@ -6,8 +6,8 @@ import * as actionCreators from '../actions/actionCreators.js';
 import mixpanel from 'mixpanel-browser';
 import Header from './Header';
 import _ from 'lodash';
-import emoji_nerd from '../assets/emoji_nerd.png'
-import icon_friends from '../assets/glyph_friends.png'
+import emoji_nerd from '../assets/emoji_nerd.png';
+import icon_friends from '../assets/glyph_friends.png';
 
 class ModeSelect extends Component {
   constructor () {
@@ -38,9 +38,9 @@ class ModeSelect extends Component {
   initGameFriends (e) {
     e.preventDefault();
     mixpanel.track('Click Multiplayer');
-    this.props.fetchRoomId('friends');
     this.props.setRoomType('FRIENDS_VS_FRIENDS');
     this.props.setHost(true);
+    this.props.fetchRoomId('friends');
     this.props.playSFX('tap');
   }
 
@@ -55,9 +55,9 @@ class ModeSelect extends Component {
   initGameSolo (e) {
     e.preventDefault();
     mixpanel.track('Click Solo');
-    this.props.fetchRoomId('solo');
     this.props.setRoomType('SINGLE_PLAYER');
     this.props.setHost(true);
+    this.props.fetchRoomId('solo');
     this.props.playSFX('tap');
   }
 
@@ -77,7 +77,7 @@ class ModeSelect extends Component {
           <div>
             <div className='mode-select_vs'>
               <div className='avatar is-md' style={avatarBG} />
-             <h4>vs</h4>
+              <h4>vs</h4>
               <div className='avatar is-md' style={{backgroundImage: `url(${icon_friends})`}} />
             </div>
             <button className='btn-login is-full' onClick={this.initGameFriends.bind(this)}>
@@ -85,11 +85,10 @@ class ModeSelect extends Component {
             </button>
           </div>
 
-
           <div>
             <div className='mode-select_vs'>
               <div className='avatar is-md' style={avatarBG} />
-             <h4>vs</h4>
+              <h4>vs</h4>
               <div className='avatar is-md' style={{backgroundImage: `url(${emoji_nerd})`}} />
             </div>
             <button className='btn-login is-full' onClick={this.initGameSolo.bind(this)} >

@@ -107,7 +107,6 @@ export function postUserData (user) {
 }
 
 export function fetchAndHandleAuthedUser () {
-
   return function (dispatch) {
     dispatch(fetchingUser());
     let stuff = new Promise((resolve, reject) => {
@@ -115,7 +114,6 @@ export function fetchAndHandleAuthedUser () {
     });
 
     stuff.then((result) => {
-
       if (result) console.log('got if result', result);
       // firebaseAuth().getRedirectResult()
       // .then(result => {
@@ -169,9 +167,6 @@ export function fetchRoomId (type, userELO) {
       type: 'FETCH_ROOM',
       payload: roomId
     });
-    dispatch({
-      type: 'SET_ROOM'
-    });
     if (type === 'friends') {
       browserHistory.push(`/invite`);
     } else if (type === 'ranked') {
@@ -215,22 +210,22 @@ export function spendCoins (uid) {
     dispatch({
       type: 'COINS_SPENT'
     });
-    coinsForHint(uid)
+    coinsForHint(uid);
   };
 }
 
-export function sendContactForm(formData) {
-    return function(dispatch) {
-        dispatch({
-            type: 'FORM_SENDING'
+export function sendContactForm (formData) {
+  return function (dispatch) {
+      dispatch({
+          type: 'FORM_SENDING'
         });
-        postFormData(formData)
+      postFormData(formData)
             .then(resp => {
-                dispatch({
-                    type: 'FORM_SENT'
+              dispatch({
+                  type: 'FORM_SENT'
                 });
-            })
-    }
+            });
+    };
 }
 
 export function roundInc () {
