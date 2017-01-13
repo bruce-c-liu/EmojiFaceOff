@@ -90,7 +90,8 @@ module.exports = {
       roundNum: 0,
       commends: [],
       insults: [],
-      numGuesses: 0,
+      numIncorrect: -1,
+      numCorrect: -1,
       prompt: '',
       prompts: [],
       solutions: {},
@@ -201,8 +202,8 @@ function checkAnswer (guess, prompt, solutions) {
 
 function nextRound (io, socket, clients, rm, msg) {
   clients[socket.id].score++;                           // Increment the user's score.
-  rm.numGuesses++;
-  if (rm.numGuesses % 2 === 0) {
+  rm.numCorrect++;
+  if (rm.numCorrect % 2 === 0) {
     msg.gifUrl = rm.commends[Math.floor(Math.random() * rm.commends.length)];
   }
   msg.type = 'correctGuess';
@@ -283,7 +284,8 @@ function endGame (io, socket, clients, rm, msg) {
   rm.hints = {};
   rm.solutions = {};
   rm.gameStarted = false;
-  rm.numGuesses = 0;
+  rm.numCorrect = 0;
+  rm.numIncorrect = 0;
 
   // Reset all scores of players in this room to 0.
   for (let id of socketIDsInRoom) {
@@ -292,7 +294,10 @@ function endGame (io, socket, clients, rm, msg) {
 }
 
 function wrongAnswer (io, msg, rm) {
-  msg.gifUrl = rm.insults[Math.floor(Math.random() * rm.insults.length)];
+  rm.numIncorrect++;
+  if (rm.numIncorrect % 3 === 0) {
+    msg.gifUrl = rm.insults[Math.floor(Math.random() * rm.insults.length)];
+  }
   msg.type = 'incorrectGuess';
   io.sockets.in(msg.roomId).emit('message', msg);
 }
